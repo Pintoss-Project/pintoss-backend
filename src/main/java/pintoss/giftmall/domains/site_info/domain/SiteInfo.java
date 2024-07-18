@@ -28,8 +28,6 @@ public class SiteInfo {
     private String email;
     private String kakao;
     private String openChat;
-    private String bannerTitle;
-    private String bannerLink;
 
     @CreatedDate
     private LocalDateTime createdAt;
