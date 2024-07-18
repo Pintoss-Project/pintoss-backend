@@ -24,6 +24,8 @@ public class Product {
     private int phoneDiscount;
     private String homePage;
     private String csCenter;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String publisher;
     private String category;
