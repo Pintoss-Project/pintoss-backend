@@ -17,6 +17,7 @@ public class PriceCategory {
     @Column(name = "category_id")
     private Long id;
 
+    @Column(length = 50)
     private String name;
     private int price;
 

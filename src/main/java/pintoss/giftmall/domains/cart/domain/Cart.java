@@ -17,6 +17,7 @@ public class Cart {
     private int quantity;
     private int price;
 
+    @Column(length = 20)
     private String checkoutMethod;
 
 }

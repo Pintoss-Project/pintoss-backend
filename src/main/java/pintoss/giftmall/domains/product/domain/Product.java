@@ -18,16 +18,26 @@ public class Product {
     @Column(name = "product_id")
     private Long id;
 
+    @Column(length = 50)
     private String name;
+
     private boolean isPopular;
     private int cardDiscount;
     private int phoneDiscount;
+
+    @Column(length = 100)
     private String homePage;
+
+    @Column(length = 20)
     private String csCenter;
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(length = 30)
     private String publisher;
+
+    @Column(length = 20)
     private String category;
 
     @CreatedDate

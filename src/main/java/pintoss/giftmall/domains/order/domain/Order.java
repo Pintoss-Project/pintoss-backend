@@ -18,15 +18,29 @@ public class Order {
     @Column(name ="order_id")
     private Long id;
 
+    @Column(length = 20)
     private String userName;
+
+    @Column(length = 254)
     private String userEmail;
+
+    @Column(length = 15)
     private String userPhone;
 
+    @Column(length = 50)
     private String orderNo;
-    private String orderPrice;
+
+    private int orderPrice;
+
+    @Column(length = 10)
     private String orderStatus;
+
+    @Column(length = 10)
     private String payStatus;
+
     private boolean isSend;
+
+    @Column(length = 10)
     private String payMethod;
 
     @CreatedDate

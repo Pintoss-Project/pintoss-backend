@@ -18,7 +18,10 @@ public class Banner {
     @Column(name = "banner_id")
     private Long id;
 
+    @Column(length = 100)
     private String bannerTitle;
+
+    @Column(length = 100)
     private String bannerLink;
 
     @CreatedDate

@@ -21,9 +21,16 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(length = 254)
     private String email;
+
+    @Column(length = 100)
     private String password;
+
+    @Column(length = 20)
     private String name;
+
+    @Column(length = 15)
     private String phone;
 
     @CreatedDate
