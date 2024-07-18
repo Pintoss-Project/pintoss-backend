@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class SIteInfo {
+public class SiteInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
