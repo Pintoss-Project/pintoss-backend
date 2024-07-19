@@ -38,7 +38,4 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardImage> images = new ArrayList<>();
-
 }

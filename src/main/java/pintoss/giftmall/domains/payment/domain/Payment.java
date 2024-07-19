@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import pintoss.giftmall.domains.order.domain.Order;
 
 import java.time.LocalDateTime;
 
@@ -28,5 +29,9 @@ public class Payment {
 
     @CreatedDate
     private LocalDateTime approvedAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
 }

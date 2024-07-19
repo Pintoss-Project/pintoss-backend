@@ -32,7 +32,4 @@ public class Banner {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "banner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BannerImage> images = new ArrayList<>();
-
 }

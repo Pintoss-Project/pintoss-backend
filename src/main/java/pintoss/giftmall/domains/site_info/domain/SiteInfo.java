@@ -56,7 +56,4 @@ public class SiteInfo {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "siteInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SiteInfoImage> images = new ArrayList<>();
-
 }
