@@ -10,6 +10,7 @@ import pintoss.giftmall.domains.cart.domain.Cart;
 import pintoss.giftmall.domains.order.domain.Order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,9 +41,9 @@ public class User {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Cart> cart;
+    private List<Cart> cart = new ArrayList<>();
 
 }

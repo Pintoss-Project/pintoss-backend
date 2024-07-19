@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @NoArgsConstructor
 public class Image {
@@ -25,4 +26,9 @@ public class Image {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    protected Image(String url) {
+        this.url = url;
+    }
+
 }
