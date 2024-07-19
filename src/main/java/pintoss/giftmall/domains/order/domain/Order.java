@@ -38,10 +38,7 @@ public class Order {
     @Column(length = 10)
     private String orderStatus;
 
-    @Column(length = 10)
-    private String payStatus;
-
-    private boolean isSend;
+    private boolean isSent;
 
     @Column(length = 10)
     private String payMethod;
