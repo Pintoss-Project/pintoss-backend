@@ -21,8 +21,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
-    List<User> findUsersByDateAndKeyword(LocalDateTime startDate, LocalDateTime endDate, String keyword);
-
     void deleteById(Long id);
 
 }
