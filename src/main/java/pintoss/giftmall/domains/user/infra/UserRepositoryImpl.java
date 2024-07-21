@@ -1,9 +1,11 @@
 package pintoss.giftmall.domains.user.infra;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import pintoss.giftmall.domains.user.domain.QUser;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.service.port.UserRepository;
@@ -47,23 +49,32 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findUsersByDateAndKeyword(LocalDateTime startDate, LocalDateTime endDate, String keyword) {
         QUser user = QUser.user;
-        BooleanBuilder builder = new BooleanBuilder();
 
-        if (startDate != null && endDate != null) {
-            builder.and(user.createdAt.between(startDate, endDate));
-        }
+        BooleanExpression dateCondition = betweenDates(user, startDate, endDate);
+        BooleanExpression keywordCondition = containKeyword(user, keyword);
 
-        if (keyword != null && !keyword.isEmpty()) {
-            builder.and(user.email.containsIgnoreCase(keyword).or(user.phone.containsIgnoreCase(keyword)));
-        }
-
-        return queryFactory.selectFrom(user).where(builder).fetch();
-
+        return queryFactory.selectFrom(user)
+                .where(dateCondition, keywordCondition)
+                .fetch();
     }
 
     @Override
     public void deleteById(Long id) {
         userJpaRepository.deleteById(id);
+    }
+
+    private BooleanExpression betweenDates(QUser user, LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate != null && endDate != null) {
+            return user.createdAt.between(startDate, endDate);
+        }
+        return null;
+    }
+
+    private BooleanExpression containKeyword(QUser user, String keyword) {
+        if (StringUtils.hasText(keyword) && !keyword.isEmpty()) {
+            return user.email.containsIgnoreCase(keyword).or(user.phone.containsIgnoreCase(keyword));
+        }
+        return null;
     }
 
 }
