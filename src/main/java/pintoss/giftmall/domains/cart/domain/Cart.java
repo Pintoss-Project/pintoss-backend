@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.cart.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.user.domain.User;
@@ -19,6 +20,7 @@ public class Cart {
     @Column(name = "cart_item_id")
     private Long id;
 
+    @Setter
     private int quantity;
     private int price;
 

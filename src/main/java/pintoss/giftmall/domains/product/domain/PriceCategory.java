@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.product.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,11 @@ public class PriceCategory {
 
     @Column(length = 50)
     private String name;
+
     private int price;
+
+    @Setter
+    private int stock;
 
     @CreatedDate
     private LocalDateTime createdAt;

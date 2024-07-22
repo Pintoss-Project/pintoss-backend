@@ -3,10 +3,12 @@ package pintoss.giftmall.domains.product.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,11 @@ public class Product {
     private String name;
 
     private boolean isPopular;
-    private int cardDiscount;
-    private int phoneDiscount;
+
+    @Setter
+    private BigDecimal cardDiscount;
+    @Setter
+    private BigDecimal phoneDiscount;
 
     @Column(length = 100)
     private String homePage;
