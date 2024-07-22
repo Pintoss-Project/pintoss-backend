@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private BooleanExpression containKeyword(QUser user, String keyword) {
-        if (StringUtils.hasText(keyword) && !keyword.isEmpty()) {
+        if (StringUtils.hasText(keyword)) {
             return user.email.containsIgnoreCase(keyword).or(user.phone.containsIgnoreCase(keyword));
         }
         return null;
