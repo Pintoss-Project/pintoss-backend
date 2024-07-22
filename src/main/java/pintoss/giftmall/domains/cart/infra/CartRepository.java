@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.cart.domain.Cart;
 
 import java.util.List;
 
-public interface CartJpaRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findByUserId(Long userId);
 

@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.board.domain.BoardImage;
 
 import java.util.List;
 
-public interface BoardImageJpaRepository extends JpaRepository<BoardImage, Long> {
+public interface BoardImageRepository extends JpaRepository<BoardImage, Long> {
 
     List<BoardImage> findAllByBoardId(Long boardId);
 

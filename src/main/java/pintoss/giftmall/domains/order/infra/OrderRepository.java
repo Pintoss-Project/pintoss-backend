@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.order.domain.Order;
 
 import java.util.List;
 
-public interface OrderJpaRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByUserId(Long userId);
 

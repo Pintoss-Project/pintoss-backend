@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.site_info.domain.SiteInfoImage;
 
 import java.util.List;
 
-public interface SiteInfoImageJpaRepository extends JpaRepository<SiteInfoImage, Long> {
+public interface SiteInfoImageRepository extends JpaRepository<SiteInfoImage, Long> {
 
     List<SiteInfoImage> findAllBySiteId(Long siteId);
 

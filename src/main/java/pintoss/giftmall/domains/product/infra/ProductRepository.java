@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.product.domain.Product;
 
 import java.util.List;
 
-public interface ProductJpaRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
     List<Product> findByCategory(String category);
 

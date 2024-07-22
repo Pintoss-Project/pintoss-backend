@@ -5,7 +5,7 @@ import pintoss.giftmall.domains.product.domain.ProductImage;
 
 import java.util.List;
 
-public interface ProductImageJpaRepository extends JpaRepository<ProductImage, Long> {
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
 
     List<ProductImage> findAllByProductId(Long productId);
 
