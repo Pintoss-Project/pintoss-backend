@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.site_info.infra;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
