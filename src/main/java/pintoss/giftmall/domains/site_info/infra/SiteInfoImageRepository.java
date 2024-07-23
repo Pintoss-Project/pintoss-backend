@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SiteInfoImageRepository extends JpaRepository<SiteInfoImage, Long> {
 
-    List<SiteInfoImage> findAllBySiteId(Long siteId);
+    List<SiteInfoImage> findAllBySiteInfoId(Long siteId);
 
 }
