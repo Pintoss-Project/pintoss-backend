@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
-    private final ProductRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -40,7 +39,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 throw new IllegalArgumentException("잘못된 타입입니다.");
         }
 
-        return productJpaRepository.save(foundProduct);
+        return foundProduct;
 
     }
 
