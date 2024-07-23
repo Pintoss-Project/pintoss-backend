@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.site_info.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -55,5 +56,32 @@ public class SiteInfo {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Builder
+    public SiteInfo(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
+        this.name = name;
+        this.tel = tel;
+        this.businessHour = businessHour;
+        this.address = address;
+        this.owner = owner;
+        this.businesses = businesses;
+        this.reportNumber = reportNumber;
+        this.email = email;
+        this.kakao = kakao;
+        this.openChat = openChat;
+    }
+
+    public void update(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
+        this.name = name;
+        this.tel = tel;
+        this.businessHour = businessHour;
+        this.address = address;
+        this.owner = owner;
+        this.businesses = businesses;
+        this.reportNumber = reportNumber;
+        this.email = email;
+        this.kakao = kakao;
+        this.openChat = openChat;
+    }
 
 }
