@@ -20,12 +20,14 @@ public class SiteInfoService {
     private final SiteInfoRepository siteInfoRepository;
     private final SiteInfoImageRepository siteInfoImageRepository;
 
+    @Transactional(readOnly = true)
     public List<SiteInfoResponseDTO> findAll() {
         return siteInfoRepository.findAll().stream()
                 .map(SiteInfoResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public SiteInfoResponseDTO findById(Long id) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id: " + id));

@@ -17,12 +17,14 @@ public class BannerService {
 
     private final BannerRepository bannerRepository;
 
+    @Transactional(readOnly = true)
     public List<BannerResponseDTO> findAll() {
         return bannerRepository.findAll().stream()
                 .map(BannerResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public BannerResponseDTO findById(Long id) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("banner_id: " + id));
