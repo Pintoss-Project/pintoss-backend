@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.site_info.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponseDTO;
 import pintoss.giftmall.domains.site_info.service.SiteInfoService;
 
@@ -16,15 +17,15 @@ public class SiteInfoController {
     private final SiteInfoService siteInfoService;
 
     @GetMapping
-    public ResponseEntity<List<SiteInfoResponseDTO>> getAllSiteInfo() {
+    public ApiResponse<List<SiteInfoResponseDTO>> getAllSiteInfo() {
         List<SiteInfoResponseDTO> siteInfoList = siteInfoService.findAll();
-        return ResponseEntity.ok(siteInfoList);
+        return ApiResponse.ok(siteInfoList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SiteInfoResponseDTO> getSiteInfoById(@PathVariable Long id) {
+    public ApiResponse<SiteInfoResponseDTO> getSiteInfoById(@PathVariable Long id) {
         SiteInfoResponseDTO siteInfo = siteInfoService.findById(id);
-        return ResponseEntity.ok(siteInfo);
+        return ApiResponse.ok(siteInfo);
     }
 
 }

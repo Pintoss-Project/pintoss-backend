@@ -54,4 +54,17 @@ public class Product {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public void setDiscountPolicy(BigDecimal discount, String type) {
+        switch (type.toLowerCase()) {
+            case "card":
+                this.cardDiscount = discount;
+                break;
+            case "phone":
+                this.phoneDiscount = discount;
+                break;
+            default:
+                throw new IllegalArgumentException("잘못된 타입입니다.");
+        }
+    }
+
 }

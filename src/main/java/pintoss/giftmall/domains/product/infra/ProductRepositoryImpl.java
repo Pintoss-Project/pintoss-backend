@@ -28,16 +28,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             throw new IllegalArgumentException("상품권 정보를 찾을 수 없습니다.");
         }
 
-        switch (type.toLowerCase()) {
-            case "card":
-                foundProduct.setCardDiscount(discount);
-                break;
-            case "phone":
-                foundProduct.setPhoneDiscount(discount);
-                break;
-            default:
-                throw new IllegalArgumentException("잘못된 타입입니다.");
-        }
+        foundProduct.setDiscountPolicy(discount, type);
 
         return foundProduct;
 
