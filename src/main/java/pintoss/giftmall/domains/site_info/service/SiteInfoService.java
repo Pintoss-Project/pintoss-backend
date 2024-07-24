@@ -9,6 +9,7 @@ import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequestDTO;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoImageRepository;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,16 +29,34 @@ public class SiteInfoService {
     public SiteInfoResponseDTO findById(Long id) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id: " + id));
-        return new SiteInfoResponseDTO(siteInfo);
+        return SiteInfoResponseDTO.fromEntity(siteInfo);
     }
 
     @Transactional
     public SiteInfoResponseDTO update(Long id, SiteInfoUpdateRequestDTO requestDTO) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id" + id));
-        siteInfo.update(requestDTO.getName(), requestDTO.getTel(), requestDTO.getBusinessHour(), requestDTO.getAddress(),
-                requestDTO.getOwner(), requestDTO.getBusinesses(), requestDTO.getReportNumber(), requestDTO.getEmail(), requestDTO.getKakao(), requestDTO.getOpenChat());
+
+        updateNonNullFields(requestDTO, siteInfo);
+
         return SiteInfoResponseDTO.fromEntity(siteInfo);
+    }
+
+    private void updateNonNullFields(Object source, Object target) {
+        Field[] fields = source.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                Object value = field.get(source);
+                if (value != null) {
+                    Field targetField = target.getClass().getDeclaredField(field.getName());
+                    targetField.setAccessible(true);
+                    targetField.set(target, value);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
