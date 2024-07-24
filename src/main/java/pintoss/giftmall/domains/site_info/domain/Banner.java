@@ -1,10 +1,12 @@
 package pintoss.giftmall.domains.site_info.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Banner {
 
     @Id
@@ -31,5 +34,16 @@ public class Banner {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Banner(String bannerTitle, String bannerLink) {
+        this.bannerTitle = bannerTitle;
+        this.bannerLink = bannerLink;
+    }
+
+    public void update(String bannerTitle, String bannerLink) {
+        if (bannerTitle != null) this.bannerTitle = bannerTitle;
+        if (bannerLink != null) this.bannerLink = bannerLink;
+    }
 
 }

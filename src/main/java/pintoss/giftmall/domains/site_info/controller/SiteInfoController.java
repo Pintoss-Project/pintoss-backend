@@ -15,6 +15,7 @@ public class SiteInfoController {
 
     private final SiteInfoService siteInfoService;
 
+    @GetMapping
     public ResponseEntity<List<SiteInfoResponseDTO>> getAllSiteInfo() {
         List<SiteInfoResponseDTO> siteInfoList = siteInfoService.findAll();
         return ResponseEntity.ok(siteInfoList);
