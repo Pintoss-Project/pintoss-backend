@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.product.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,6 +54,19 @@ public class Product {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Product(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, String category) {
+        this.name = name;
+        this.isPopular = isPopular;
+        this.cardDiscount = cardDiscount;
+        this.phoneDiscount = phoneDiscount;
+        this.homePage = homePage;
+        this.csCenter = csCenter;
+        this.description = description;
+        this.publisher = publisher;
+        this.category = category;
+    }
 
     public void setDiscountPolicy(BigDecimal discount, String type) {
         switch (type.toLowerCase()) {
