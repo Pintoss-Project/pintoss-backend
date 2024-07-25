@@ -28,7 +28,7 @@ public class PriceCategoryService {
     @Transactional(readOnly = true)
     public PriceCategoryResponse findByIdAndProductId(Long categoryId, Long productId) {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
-                .orElseThrow(() -> new IllegalArgumentException("PriceCategory not found or does not belong to the given Product"));
+                .orElseThrow(() -> new IllegalArgumentException("상품권 정보 또는 가격 카테고리 정보를 찾을 수 없습니다."));
         return PriceCategoryResponse.fromEntity(priceCategory);
     }
 
