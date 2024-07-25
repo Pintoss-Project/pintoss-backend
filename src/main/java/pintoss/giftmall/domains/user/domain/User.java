@@ -2,10 +2,12 @@ package pintoss.giftmall.domains.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pintoss.giftmall.domains.cart.domain.Cart;
 import pintoss.giftmall.domains.order.domain.Order;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -40,4 +43,11 @@ public class User {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Builder
+    public User(String email, String password, String name, String phone) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+    }
 }
