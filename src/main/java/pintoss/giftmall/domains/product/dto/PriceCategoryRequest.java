@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.product.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,10 +11,12 @@ import pintoss.giftmall.domains.product.domain.PriceCategory;
 @NoArgsConstructor
 public class PriceCategoryRequest {
 
-    @NotNull
+    @NotBlank
     private String name;
+
     @NotNull
     private int price;
+
     @NotNull
     private int stock;
 

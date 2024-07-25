@@ -1,5 +1,7 @@
 package pintoss.giftmall.domains.product.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +15,31 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductRequest {
 
+    @NotBlank
     private String name;
+
+    @NotNull
     private boolean isPopular = false;
-    private BigDecimal cardDiscount;
-    private BigDecimal phoneDiscount;
+
+    @NotNull
+    private BigDecimal cardDiscount = BigDecimal.ZERO;
+
+    @NotNull
+    private BigDecimal phoneDiscount = BigDecimal.ZERO;
+
+    @NotBlank
     private String homePage;
+
+    @NotBlank
     private String csCenter;
+
+    @NotBlank
     private String description;
+
+    @NotBlank
     private String publisher;
+
+    @NotBlank
     private String category;
 
     @Builder
