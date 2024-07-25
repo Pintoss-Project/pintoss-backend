@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.board.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,5 +38,13 @@ public class Board {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Board(String type, String title, String content, String writer) {
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
 
 }
