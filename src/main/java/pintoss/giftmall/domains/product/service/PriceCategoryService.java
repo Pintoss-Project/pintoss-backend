@@ -53,7 +53,7 @@ public class PriceCategoryService {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품권 정보 또는 가격 카테고리 정보를 찾을 수 없습니다."));
 
-        priceCategory.setStock(stock);
+        priceCategory.updateStock(stock);
 
         return priceCategory.getId();
     }

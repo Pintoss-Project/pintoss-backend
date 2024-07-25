@@ -26,7 +26,6 @@ public class PriceCategory {
 
     private int price;
 
-    @Setter
     private int stock;
 
     @CreatedDate
@@ -40,6 +39,10 @@ public class PriceCategory {
     public PriceCategory(String name, int price, int stock) {
         this.name = name;
         this.price = price;
+        this.stock = stock;
+    }
+
+    public void updateStock(int stock) {
         this.stock = stock;
     }
 
