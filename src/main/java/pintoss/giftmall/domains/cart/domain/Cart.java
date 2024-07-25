@@ -48,4 +48,8 @@ public class Cart {
         this.checkoutMethod = checkoutMethod;
     }
 
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
 }
