@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class Banner {
     }
 
     public void update(String bannerTitle, String bannerLink) {
-        if (bannerTitle != null) this.bannerTitle = bannerTitle;
-        if (bannerLink != null) this.bannerLink = bannerLink;
+        if (StringUtils.hasText(bannerTitle)) this.bannerTitle = bannerTitle;
+        if (StringUtils.hasText(bannerLink)) this.bannerLink = bannerLink;
     }
 
 }
