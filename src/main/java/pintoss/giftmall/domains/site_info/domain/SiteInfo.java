@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.util.StringUtils;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 
 import java.time.LocalDateTime;
@@ -73,16 +74,16 @@ public class SiteInfo {
     }
 
     public void update(SiteInfoUpdateRequest requestDTO) {
-        if (requestDTO.getName() != null) this.name = requestDTO.getName();
-        if (requestDTO.getTel() != null) this.tel = requestDTO.getTel();
-        if (requestDTO.getBusinessHour() != null) this.businessHour = requestDTO.getBusinessHour();
-        if (requestDTO.getAddress() != null) this.address = requestDTO.getAddress();
-        if (requestDTO.getOwner() != null) this.owner = requestDTO.getOwner();
-        if (requestDTO.getBusinesses() != null) this.businesses = requestDTO.getBusinesses();
-        if (requestDTO.getReportNumber() != null) this.reportNumber = requestDTO.getReportNumber();
-        if (requestDTO.getEmail() != null) this.email = requestDTO.getEmail();
-        if (requestDTO.getKakao() != null) this.kakao = requestDTO.getKakao();
-        if (requestDTO.getOpenChat() != null) this.openChat = requestDTO.getOpenChat();
+        if (StringUtils.hasText(requestDTO.getName())) this.name = requestDTO.getName();
+        if (StringUtils.hasText(requestDTO.getTel())) this.tel = requestDTO.getTel();
+        if (StringUtils.hasText(requestDTO.getBusinessHour())) this.businessHour = requestDTO.getBusinessHour();
+        if (StringUtils.hasText(requestDTO.getAddress())) this.address = requestDTO.getAddress();
+        if (StringUtils.hasText(requestDTO.getOwner())) this.owner = requestDTO.getOwner();
+        if (StringUtils.hasText(requestDTO.getBusinesses())) this.businesses = requestDTO.getBusinesses();
+        if (StringUtils.hasText(requestDTO.getReportNumber())) this.reportNumber = requestDTO.getReportNumber();
+        if (StringUtils.hasText(requestDTO.getEmail())) this.email = requestDTO.getEmail();
+        if (StringUtils.hasText(requestDTO.getKakao())) this.kakao = requestDTO.getKakao();
+        if (StringUtils.hasText(requestDTO.getOpenChat())) this.openChat = requestDTO.getOpenChat();
     }
 
 }

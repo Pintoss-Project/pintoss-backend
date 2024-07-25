@@ -43,13 +43,13 @@ class SiteInfoServiceTest {
 
         Long siteId = 1L;
         SiteInfoUpdateRequest updateRequest = SiteInfoUpdateRequest.builder()
-                .address("부산시 진구 개금동 220-4 1층")
+                .tel("1544-4202")
                 .build();
 
         SiteInfoResponse updatedSiteInfo = siteInfoService.update(siteId, updateRequest);
 
         assertThat(updatedSiteInfo).isNotNull();
-        assertThat(updatedSiteInfo.getAddress()).isEqualTo("부산시 진구 개금동 220-4 1층");
+        assertThat(updatedSiteInfo.getTel()).isEqualTo("1544-4202");
 
     }
 
