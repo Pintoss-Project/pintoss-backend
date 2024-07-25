@@ -34,11 +34,11 @@ public class PriceCategoryService {
 
 
     @Transactional
-    public PriceCategoryResponseDTO create(PriceCategoryRequestDTO requestDTO) {
+    public Long create(PriceCategoryRequestDTO requestDTO) {
         PriceCategory priceCategory = requestDTO.toEntity();
         priceCategoryRepository.save(priceCategory);
 
-        return PriceCategoryResponseDTO.fromEntity(priceCategory);
+        return priceCategory.getId();
     }
 
     @Transactional
@@ -49,13 +49,13 @@ public class PriceCategoryService {
     }
 
     @Transactional
-    public PriceCategoryResponseDTO updateStock(Long productId, Long categoryId, int stock) {
+    public Long updateStock(Long productId, Long categoryId, int stock) {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품권 정보 또는 가격 카테고리 정보를 찾을 수 없습니다."));
 
         priceCategory.setStock(stock);
 
-        return PriceCategoryResponseDTO.fromEntity(priceCategory);
+        return priceCategory.getId();
     }
 
 }

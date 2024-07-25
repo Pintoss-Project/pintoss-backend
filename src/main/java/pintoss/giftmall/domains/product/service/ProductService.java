@@ -35,20 +35,20 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO create(ProductRequestDTO requestDTO) {
+    public Long create(ProductRequestDTO requestDTO) {
         Product product = requestDTO.toEntity();
         productRepository.save(product);
-        return ProductResponseDTO.fromEntity(product);
+        return product.getId();
     }
 
     @Transactional
-    public ProductResponseDTO update(Long id, ProductRequestDTO requestDTO) {
+    public Long update(Long id, ProductRequestDTO requestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("product_id: " + id));
 
         updateNonNullFields(requestDTO, product);
 
-        return ProductResponseDTO.fromEntity(product);
+        return product.getId();
     }
 
     @Transactional
@@ -57,9 +57,8 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO updateDiscount(Long id, BigDecimal discount, String type) {
-        Product product = productRepository.updateDiscount(id, discount, type);
-        return ProductResponseDTO.fromEntity(product);
+    public Long updateDiscount(Long id, BigDecimal discount, String type) {
+        return productRepository.updateDiscount(id, discount, type);
     }
 
     public List<ProductResponseDTO> findByCategory(String category) {

@@ -17,15 +17,15 @@ public class ProductAdminController {
     private final ProductService productService;
 
     @PostMapping
-    public ApiResponse<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO requestDTO) {
-        ProductResponseDTO createdProduct = productService.create(requestDTO);
-        return ApiResponse.ok(createdProduct);
+    public ApiResponse<Long> createProduct(@RequestBody ProductRequestDTO requestDTO) {
+        Long createdProductId = productService.create(requestDTO);
+        return ApiResponse.ok(createdProductId);
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<ProductResponseDTO> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO requestDTO) {
-        ProductResponseDTO updatedProduct = productService.update(id, requestDTO);
-        return ApiResponse.ok(updatedProduct);
+    public ApiResponse<Long> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO requestDTO) {
+        Long updatedProductId = productService.update(id, requestDTO);
+        return ApiResponse.ok(updatedProductId);
     }
 
     @DeleteMapping("/{id}")
@@ -35,9 +35,9 @@ public class ProductAdminController {
     }
 
     @PatchMapping("/{id}/fee")
-    public ApiResponse<ProductResponseDTO> updateProductFee(@PathVariable Long id, @RequestParam BigDecimal discount, @RequestParam String type) {
-        ProductResponseDTO updatedProduct = productService.updateDiscount(id, discount, type);
-        return ApiResponse.ok(updatedProduct);
+    public ApiResponse<Long> updateProductFee(@PathVariable Long id, @RequestParam BigDecimal discount, @RequestParam String type) {
+        Long updatedProductId = productService.updateDiscount(id, discount, type);
+        return ApiResponse.ok(updatedProductId);
     }
 
 }

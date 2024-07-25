@@ -15,9 +15,9 @@ public class PriceCategoryAdminController {
     private final PriceCategoryService priceCategoryService;
 
     @PostMapping("/{id}/category")
-    public ApiResponse<PriceCategoryResponseDTO> createPriceCategory(@RequestBody PriceCategoryRequestDTO requestDTO) {
-        PriceCategoryResponseDTO createdPriceCategory = priceCategoryService.create(requestDTO);
-        return ApiResponse.ok(createdPriceCategory);
+    public ApiResponse<Long> createPriceCategory(@RequestBody PriceCategoryRequestDTO requestDTO) {
+        Long createdPriceCategoryId = priceCategoryService.create(requestDTO);
+        return ApiResponse.ok(createdPriceCategoryId);
     }
 
     @DeleteMapping("/{id}/category/{category_id}")
@@ -27,9 +27,9 @@ public class PriceCategoryAdminController {
     }
 
     @PatchMapping("/{id}/category/{category_id}/stock")
-    public ApiResponse<PriceCategoryResponseDTO> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestParam int stock) {
-        PriceCategoryResponseDTO updatedPriceCategory = priceCategoryService.updateStock(id, category_id, stock);
-        return ApiResponse.ok(updatedPriceCategory);
+    public ApiResponse<Long> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestParam int stock) {
+        Long updatedPriceCategoryId = priceCategoryService.updateStock(id, category_id, stock);
+        return ApiResponse.ok(updatedPriceCategoryId);
     }
 
 }

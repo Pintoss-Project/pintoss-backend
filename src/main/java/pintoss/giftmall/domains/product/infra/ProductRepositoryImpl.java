@@ -16,7 +16,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Product updateDiscount(Long id, BigDecimal discount, String type) {
+    public Long updateDiscount(Long id, BigDecimal discount, String type) {
         QProduct product = QProduct.product;
         BooleanExpression condition = product.id.eq(id);
 
@@ -30,7 +30,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         foundProduct.setDiscountPolicy(discount, type);
 
-        return foundProduct;
+        return foundProduct.getId();
 
     }
 

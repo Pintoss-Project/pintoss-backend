@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 
 public interface ProductRepositoryCustom {
 
-    Product updateDiscount(Long id, BigDecimal cardDiscount, String type);
+    Long updateDiscount(Long id, BigDecimal cardDiscount, String type);
 
 }
