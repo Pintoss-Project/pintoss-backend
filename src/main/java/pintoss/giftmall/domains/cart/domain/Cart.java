@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.cart.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,5 +38,14 @@ public class Cart {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public Cart(Product product, User user, int quantity, int price, String checkoutMethod) {
+        this.product = product;
+        this.user = user;
+        this.quantity = quantity;
+        this.price = price;
+        this.checkoutMethod = checkoutMethod;
+    }
 
 }
