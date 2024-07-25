@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.util.StringUtils;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 
@@ -72,15 +73,15 @@ public class Product {
     }
 
     public void update(ProductRequest requestDTO) {
-        if (requestDTO.getName() != null) this.name = requestDTO.getName();
+        if (StringUtils.hasText(requestDTO.getName())) this.name = requestDTO.getName();
         this.isPopular = requestDTO.isPopular();
-        if (requestDTO.getCardDiscount() != null) this.cardDiscount = requestDTO.getCardDiscount();
-        if (requestDTO.getPhoneDiscount() != null) this.phoneDiscount = requestDTO.getPhoneDiscount();
-        if (requestDTO.getHomePage() != null) this.homePage = requestDTO.getHomePage();
-        if (requestDTO.getCsCenter() != null) this.csCenter = requestDTO.getCsCenter();
-        if (requestDTO.getDescription() != null) this.description = requestDTO.getDescription();
-        if (requestDTO.getPublisher() != null) this.publisher = requestDTO.getPublisher();
-        if (requestDTO.getCategory() != null) this.category = requestDTO.getCategory();
+        this.cardDiscount = requestDTO.getCardDiscount();
+        this.phoneDiscount = requestDTO.getPhoneDiscount();
+        if (StringUtils.hasText(requestDTO.getHomePage())) this.homePage = requestDTO.getHomePage();
+        if (StringUtils.hasText(requestDTO.getCsCenter())) this.csCenter = requestDTO.getCsCenter();
+        if (StringUtils.hasText(requestDTO.getDescription())) this.description = requestDTO.getDescription();
+        if (StringUtils.hasText(requestDTO.getPublisher())) this.publisher = requestDTO.getPublisher();
+        if (StringUtils.hasText(requestDTO.getCategory())) this.category = requestDTO.getCategory();
     }
 
     public void setDiscountPolicy(BigDecimal discount, String type) {
