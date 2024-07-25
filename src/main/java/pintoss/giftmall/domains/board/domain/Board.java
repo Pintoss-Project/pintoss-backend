@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.util.StringUtils;
+import pintoss.giftmall.domains.board.dto.BoardRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,6 +47,13 @@ public class Board {
         this.title = title;
         this.content = content;
         this.writer = writer;
+    }
+
+    public void update(BoardRequest requestDTO) {
+        if(StringUtils.hasText(requestDTO.getTitle())) this.title = requestDTO.getTitle();
+        if(StringUtils.hasText(requestDTO.getType())) this.type = requestDTO.getType();
+        if(StringUtils.hasText(requestDTO.getContent())) this.content = requestDTO.getContent();
+        if(StringUtils.hasText(requestDTO.getWriter())) this.writer = requestDTO.getWriter();
     }
 
 }
