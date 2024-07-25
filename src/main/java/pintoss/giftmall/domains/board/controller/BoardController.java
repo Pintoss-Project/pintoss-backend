@@ -21,7 +21,7 @@ public class BoardController {
         return ApiResponse.ok(boards);
     }
 
-    @GetMapping("/{id")
+    @GetMapping("/{id}")
     public ApiResponse<BoardResponse> getBoardById(@PathVariable Long id) {
         BoardResponse board = boardService.findById(id);
         return ApiResponse.ok(board);
