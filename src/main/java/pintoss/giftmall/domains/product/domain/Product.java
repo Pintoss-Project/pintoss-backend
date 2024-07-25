@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.StringUtils;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 @DynamicUpdate
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
 
     @Id

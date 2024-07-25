@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
+import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
 import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
+import pintoss.giftmall.domains.product.infra.ProductRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class PriceCategoryService {
 
     private final PriceCategoryRepository priceCategoryRepository;
+    private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
     public List<PriceCategoryResponse> findAllByProductId(Long productId) {
@@ -35,7 +38,10 @@ public class PriceCategoryService {
 
     @Transactional
     public Long create(PriceCategoryRequest requestDTO) {
-        PriceCategory priceCategory = requestDTO.toEntity();
+        Product product = productRepository.findById(requestDTO.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("product_id : " + requestDTO.getProductId()));
+
+        PriceCategory priceCategory = requestDTO.toEntity(product);
         priceCategoryRepository.save(priceCategory);
 
         return priceCategory.getId();

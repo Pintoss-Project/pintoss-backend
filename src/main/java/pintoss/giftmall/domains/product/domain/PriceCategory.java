@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @DynamicUpdate
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class PriceCategory {
 
     @Id
@@ -36,10 +38,11 @@ public class PriceCategory {
     private Product product;
 
     @Builder
-    public PriceCategory(String name, int price, int stock) {
+    public PriceCategory(String name, int price, int stock, Product product) {
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.product = product;
     }
 
     public void updateStock(int stock) {
