@@ -3,8 +3,8 @@ package pintoss.giftmall.domains.site_info.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pintoss.giftmall.domains.site_info.dto.BannerRequestDTO;
-import pintoss.giftmall.domains.site_info.dto.BannerResponseDTO;
+import pintoss.giftmall.domains.site_info.dto.BannerRequest;
+import pintoss.giftmall.domains.site_info.dto.BannerResponse;
 
 import java.util.List;
 
@@ -18,14 +18,14 @@ class BannerServiceTest {
 
     @Test
     void testFindAll() {
-        List<BannerResponseDTO> banners = bannerService.findAll();
+        List<BannerResponse> banners = bannerService.findAll();
         assertThat(banners).isNotEmpty();
     }
 
     @Test
     void testFindById() {
         Long bannerId = 1L;
-        BannerResponseDTO foundBanner = bannerService.findById(bannerId);
+        BannerResponse foundBanner = bannerService.findById(bannerId);
 
         assertThat(foundBanner).isNotNull();
         assertThat(foundBanner.getBannerTitle()).isEqualTo("Test Title");
@@ -34,12 +34,12 @@ class BannerServiceTest {
 
     @Test
     void testCreate() {
-        BannerRequestDTO createRequest = BannerRequestDTO.builder()
+        BannerRequest createRequest = BannerRequest.builder()
                 .bannerTitle("Test Title")
                 .bannerLink("http://testlink.com")
                 .build();
 
-        BannerResponseDTO createdBanner = bannerService.create(createRequest);
+        BannerResponse createdBanner = bannerService.create(createRequest);
 
         assertThat(createdBanner).isNotNull();
         assertThat(createdBanner.getBannerTitle()).isEqualTo("Test Title");
@@ -50,12 +50,12 @@ class BannerServiceTest {
     void testUpdate() {
         Long bannerId = 1L;
 
-        BannerRequestDTO updateRequest = BannerRequestDTO.builder()
+        BannerRequest updateRequest = BannerRequest.builder()
                 .bannerTitle("Updated Title")
                 .bannerLink("http://updatedlink.com")
                 .build();
 
-        BannerResponseDTO updatedBanner = bannerService.update(bannerId, updateRequest);
+        BannerResponse updatedBanner = bannerService.update(bannerId, updateRequest);
 
         assertThat(updatedBanner).isNotNull();
         assertThat(updatedBanner.getBannerTitle()).isEqualTo("Updated Title");

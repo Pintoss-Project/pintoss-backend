@@ -8,7 +8,7 @@ import pintoss.giftmall.domains.product.domain.PriceCategory;
 
 @Getter
 @NoArgsConstructor
-public class PriceCategoryRequestDTO {
+public class PriceCategoryRequest {
 
     @NotNull
     private String name;
@@ -18,7 +18,7 @@ public class PriceCategoryRequestDTO {
     private int stock;
 
     @Builder
-    public PriceCategoryRequestDTO(String name, int price, int stock) {
+    public PriceCategoryRequest(String name, int price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;

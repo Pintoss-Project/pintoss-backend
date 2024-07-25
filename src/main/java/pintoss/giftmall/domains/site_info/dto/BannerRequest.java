@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.site_info.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,24 +8,24 @@ import pintoss.giftmall.domains.site_info.domain.Banner;
 
 @Getter
 @NoArgsConstructor
-public class BannerResponseDTO {
+public class BannerRequest {
 
-    private Long id;
+    @NotBlank
     private String bannerTitle;
+
+    @NotBlank
     private String bannerLink;
 
     @Builder
-    public BannerResponseDTO(Long id, String bannerTitle, String bannerLink) {
-        this.id = id;
+    public BannerRequest(String bannerTitle, String bannerLink) {
         this.bannerTitle = bannerTitle;
         this.bannerLink = bannerLink;
     }
 
-    public static BannerResponseDTO fromEntity(Banner banner) {
-        return BannerResponseDTO.builder()
-                .id(banner.getId())
-                .bannerTitle(banner.getBannerTitle())
-                .bannerLink(banner.getBannerLink())
+    public Banner toEntity() {
+        return Banner.builder()
+                .bannerTitle(this.bannerTitle)
+                .bannerLink(this.bannerLink)
                 .build();
     }
 

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoResponseDTO;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequestDTO;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoImageRepository;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
 
@@ -21,27 +21,27 @@ public class SiteInfoService {
     private final SiteInfoImageRepository siteInfoImageRepository;
 
     @Transactional(readOnly = true)
-    public List<SiteInfoResponseDTO> findAll() {
+    public List<SiteInfoResponse> findAll() {
         return siteInfoRepository.findAll().stream()
-                .map(SiteInfoResponseDTO::fromEntity)
+                .map(SiteInfoResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public SiteInfoResponseDTO findById(Long id) {
+    public SiteInfoResponse findById(Long id) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id: " + id));
-        return SiteInfoResponseDTO.fromEntity(siteInfo);
+        return SiteInfoResponse.fromEntity(siteInfo);
     }
 
     @Transactional
-    public SiteInfoResponseDTO update(Long id, SiteInfoUpdateRequestDTO requestDTO) {
+    public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id" + id));
 
         updateNonNullFields(requestDTO, siteInfo);
 
-        return SiteInfoResponseDTO.fromEntity(siteInfo);
+        return SiteInfoResponse.fromEntity(siteInfo);
     }
 
     private void updateNonNullFields(Object source, Object target) {

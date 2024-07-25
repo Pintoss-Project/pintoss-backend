@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductRequestDTO {
+public class ProductRequest {
 
     private String name;
     private boolean isPopular;
@@ -24,8 +24,8 @@ public class ProductRequestDTO {
     private String category;
 
     @Builder
-    public ProductRequestDTO(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                             String homePage, String csCenter, String description, String publisher, String category) {
+    public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
+                          String homePage, String csCenter, String description, String publisher, String category) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;

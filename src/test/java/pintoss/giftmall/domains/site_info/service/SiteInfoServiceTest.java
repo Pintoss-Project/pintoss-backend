@@ -3,9 +3,8 @@ package pintoss.giftmall.domains.site_info.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoResponseDTO;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequestDTO;
-import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ class SiteInfoServiceTest {
     @Test
     void testFindAll() {
 
-        List<SiteInfoResponseDTO> siteInfos = siteInfoService.findAll();
+        List<SiteInfoResponse> siteInfos = siteInfoService.findAll();
 
         assertThat(siteInfos).hasSize(1);
 
@@ -32,7 +31,7 @@ class SiteInfoServiceTest {
         Long siteId = 1L;
         String expectedBusinesses = "590-95-01527";
 
-        SiteInfoResponseDTO foundSiteInfo = siteInfoService.findById(siteId);
+        SiteInfoResponse foundSiteInfo = siteInfoService.findById(siteId);
 
         assertThat(foundSiteInfo).isNotNull();
         assertThat(foundSiteInfo.getBusinesses()).isEqualTo(expectedBusinesses);
@@ -43,11 +42,11 @@ class SiteInfoServiceTest {
     void testUpdate() {
 
         Long siteId = 1L;
-        SiteInfoUpdateRequestDTO updateRequest = SiteInfoUpdateRequestDTO.builder()
+        SiteInfoUpdateRequest updateRequest = SiteInfoUpdateRequest.builder()
                 .kakao("kakao123")
                 .build();
 
-        SiteInfoResponseDTO updatedSiteInfo = siteInfoService.update(siteId, updateRequest);
+        SiteInfoResponse updatedSiteInfo = siteInfoService.update(siteId, updateRequest);
 
         assertThat(updatedSiteInfo).isNotNull();
         assertThat(updatedSiteInfo.getKakao()).isEqualTo("kakao123");

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class SiteInfoResponseDTO {
+public class SiteInfoResponse {
 
     private Long id;
     private String name;
@@ -23,12 +23,12 @@ public class SiteInfoResponseDTO {
     private String email;
     private String kakao;
     private String openChat;
-    private List<SiteImageDTO> logoImages;
+    private List<SiteImage> logoImages;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    public SiteInfoResponseDTO(Long id, String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat, List<SiteImageDTO> logoImages, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public SiteInfoResponse(Long id, String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat, List<SiteImage> logoImages, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.tel = tel;
@@ -45,11 +45,11 @@ public class SiteInfoResponseDTO {
         this.updatedAt = updatedAt;
     }
 
-    public SiteInfoResponseDTO(SiteInfo siteInfo) {
+    public SiteInfoResponse(SiteInfo siteInfo) {
     }
 
-    public static SiteInfoResponseDTO fromEntity(SiteInfo siteInfo) {
-        return SiteInfoResponseDTO.builder()
+    public static SiteInfoResponse fromEntity(SiteInfo siteInfo) {
+        return SiteInfoResponse.builder()
                 .id(siteInfo.getId())
                 .name(siteInfo.getName())
                 .tel(siteInfo.getTel())

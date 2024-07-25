@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.product.domain.Product;
-import pintoss.giftmall.domains.product.dto.ProductRequestDTO;
-import pintoss.giftmall.domains.product.dto.ProductResponseDTO;
+import pintoss.giftmall.domains.product.dto.ProductRequest;
+import pintoss.giftmall.domains.product.dto.ProductResponse;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 
 import java.lang.reflect.Field;
@@ -21,28 +21,28 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductResponseDTO::fromEntity)
+                .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDTO findById(Long id) {
+    public ProductResponse findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("product_id: " + id));
-        return ProductResponseDTO.fromEntity(product);
+        return ProductResponse.fromEntity(product);
     }
 
     @Transactional
-    public Long create(ProductRequestDTO requestDTO) {
+    public Long create(ProductRequest requestDTO) {
         Product product = requestDTO.toEntity();
         productRepository.save(product);
         return product.getId();
     }
 
     @Transactional
-    public Long update(Long id, ProductRequestDTO requestDTO) {
+    public Long update(Long id, ProductRequest requestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("product_id: " + id));
 
@@ -61,15 +61,15 @@ public class ProductService {
         return productRepository.updateDiscount(id, discount, type);
     }
 
-    public List<ProductResponseDTO> findByCategory(String category) {
+    public List<ProductResponse> findByCategory(String category) {
         return productRepository.findByCategory(category).stream()
-                .map(ProductResponseDTO::fromEntity)
+                .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public List<ProductResponseDTO> findPopularProducts() {
+    public List<ProductResponse> findPopularProducts() {
         return productRepository.findByIsPopularTrue().stream()
-                .map(ProductResponseDTO::fromEntity)
+                .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 

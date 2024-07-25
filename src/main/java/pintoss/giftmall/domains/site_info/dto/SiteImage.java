@@ -6,13 +6,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SiteImageDTO {
+public class SiteImage {
 
     private String url;
     private String category;
 
     @Builder
-    public SiteImageDTO(String url, String category) {
+    public SiteImage(String url, String category) {
         this.url = url;
         this.category = category;
     }

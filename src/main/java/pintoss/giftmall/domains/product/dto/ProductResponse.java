@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
-public class ProductResponseDTO {
+public class ProductResponse {
 
     private Long id;
     private String name;
@@ -24,7 +24,7 @@ public class ProductResponseDTO {
     private LocalDateTime updatedAt;
 
     @Builder
-    public ProductResponseDTO(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, String category, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, String category, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.isPopular = isPopular;
@@ -39,11 +39,11 @@ public class ProductResponseDTO {
         this.updatedAt = updatedAt;
     }
 
-    public ProductResponseDTO(Product product) {
+    public ProductResponse(Product product) {
     }
 
-    public static ProductResponseDTO fromEntity(Product product) {
-        return ProductResponseDTO.builder()
+    public static ProductResponse fromEntity(Product product) {
+        return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .isPopular(product.isPopular())

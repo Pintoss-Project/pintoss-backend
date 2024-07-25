@@ -7,7 +7,7 @@ import pintoss.giftmall.domains.product.domain.PriceCategory;
 import java.time.LocalDateTime;
 
 @Getter
-public class PriceCategoryResponseDTO {
+public class PriceCategoryResponse {
 
     private Long id;
     private String name;
@@ -16,7 +16,7 @@ public class PriceCategoryResponseDTO {
     private LocalDateTime createdAt;
 
     @Builder
-    public PriceCategoryResponseDTO(Long id, String name, int price, int stock, LocalDateTime createdAt) {
+    public PriceCategoryResponse(Long id, String name, int price, int stock, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -24,8 +24,8 @@ public class PriceCategoryResponseDTO {
         this.createdAt = createdAt;
     }
 
-    public static PriceCategoryResponseDTO fromEntity(PriceCategory priceCategory) {
-        return PriceCategoryResponseDTO.builder()
+    public static PriceCategoryResponse fromEntity(PriceCategory priceCategory) {
+        return PriceCategoryResponse.builder()
                 .id(priceCategory.getId())
                 .name(priceCategory.getName())
                 .price(priceCategory.getPrice())

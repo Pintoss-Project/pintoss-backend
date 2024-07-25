@@ -8,7 +8,7 @@ import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 
 @Getter
 @NoArgsConstructor
-public class SiteInfoUpdateRequestDTO {
+public class SiteInfoUpdateRequest {
 
     @NotBlank
     private String name;
@@ -38,7 +38,7 @@ public class SiteInfoUpdateRequestDTO {
     private String openChat;
 
     @Builder
-    public SiteInfoUpdateRequestDTO(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
+    public SiteInfoUpdateRequest(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
         this.name = name;
         this.tel = tel;
         this.businessHour = businessHour;

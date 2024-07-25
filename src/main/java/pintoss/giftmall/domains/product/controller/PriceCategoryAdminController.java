@@ -3,8 +3,7 @@ package pintoss.giftmall.domains.product.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.product.dto.PriceCategoryRequestDTO;
-import pintoss.giftmall.domains.product.dto.PriceCategoryResponseDTO;
+import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
 import pintoss.giftmall.domains.product.service.PriceCategoryService;
 
 @RestController
@@ -15,7 +14,7 @@ public class PriceCategoryAdminController {
     private final PriceCategoryService priceCategoryService;
 
     @PostMapping("/{id}/category")
-    public ApiResponse<Long> createPriceCategory(@RequestBody PriceCategoryRequestDTO requestDTO) {
+    public ApiResponse<Long> createPriceCategory(@RequestBody PriceCategoryRequest requestDTO) {
         Long createdPriceCategoryId = priceCategoryService.create(requestDTO);
         return ApiResponse.ok(createdPriceCategoryId);
     }

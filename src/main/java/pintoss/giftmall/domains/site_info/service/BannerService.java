@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.site_info.domain.Banner;
-import pintoss.giftmall.domains.site_info.dto.BannerRequestDTO;
-import pintoss.giftmall.domains.site_info.dto.BannerResponseDTO;
+import pintoss.giftmall.domains.site_info.dto.BannerRequest;
+import pintoss.giftmall.domains.site_info.dto.BannerResponse;
 import pintoss.giftmall.domains.site_info.infra.BannerRepository;
 
 import java.util.List;
@@ -18,35 +18,35 @@ public class BannerService {
     private final BannerRepository bannerRepository;
 
     @Transactional(readOnly = true)
-    public List<BannerResponseDTO> findAll() {
+    public List<BannerResponse> findAll() {
         return bannerRepository.findAll().stream()
-                .map(BannerResponseDTO::fromEntity)
+                .map(BannerResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public BannerResponseDTO findById(Long id) {
+    public BannerResponse findById(Long id) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("banner_id: " + id));
 
-        return BannerResponseDTO.fromEntity(banner);
+        return BannerResponse.fromEntity(banner);
     }
 
     @Transactional
-    public BannerResponseDTO create(BannerRequestDTO requestDTO) {
+    public BannerResponse create(BannerRequest requestDTO) {
         Banner banner = requestDTO.toEntity();
         bannerRepository.save(banner);
 
-        return BannerResponseDTO.fromEntity(banner);
+        return BannerResponse.fromEntity(banner);
     }
 
     @Transactional
-    public BannerResponseDTO update(Long id, BannerRequestDTO requestDTO) {
+    public BannerResponse update(Long id, BannerRequest requestDTO) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("banner_id: " + id));
         banner.update(requestDTO.getBannerTitle(), requestDTO.getBannerLink());
 
-        return BannerResponseDTO.fromEntity(banner);
+        return BannerResponse.fromEntity(banner);
     }
 
     @Transactional

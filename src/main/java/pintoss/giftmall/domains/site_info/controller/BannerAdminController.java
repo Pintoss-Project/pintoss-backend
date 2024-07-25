@@ -1,14 +1,11 @@
 package pintoss.giftmall.domains.site_info.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.site_info.dto.BannerRequestDTO;
-import pintoss.giftmall.domains.site_info.dto.BannerResponseDTO;
+import pintoss.giftmall.domains.site_info.dto.BannerRequest;
+import pintoss.giftmall.domains.site_info.dto.BannerResponse;
 import pintoss.giftmall.domains.site_info.service.BannerService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/site-banner")
@@ -18,14 +15,14 @@ public class BannerAdminController {
     private final BannerService bannerService;
 
     @PostMapping
-    public ApiResponse<BannerResponseDTO> createBanner(@RequestBody BannerRequestDTO requestDTO) {
-        BannerResponseDTO createdBanner = bannerService.create(requestDTO);
+    public ApiResponse<BannerResponse> createBanner(@RequestBody BannerRequest requestDTO) {
+        BannerResponse createdBanner = bannerService.create(requestDTO);
         return ApiResponse.ok(createdBanner);
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<BannerResponseDTO> updateBanner(@PathVariable Long id, @RequestBody BannerRequestDTO requestDTO) {
-        BannerResponseDTO updateBanner = bannerService.update(id, requestDTO);
+    public ApiResponse<BannerResponse> updateBanner(@PathVariable Long id, @RequestBody BannerRequest requestDTO) {
+        BannerResponse updateBanner = bannerService.update(id, requestDTO);
         return ApiResponse.ok(updateBanner);
     }
 

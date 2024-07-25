@@ -1,11 +1,10 @@
 package pintoss.giftmall.domains.site_info.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoResponseDTO;
-import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequestDTO;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 import pintoss.giftmall.domains.site_info.service.SiteInfoService;
 
 @RestController
@@ -16,8 +15,8 @@ public class SiteInfoAdminController {
     private final SiteInfoService siteInfoService;
 
     @PatchMapping("/{id}")
-    public ApiResponse<SiteInfoResponseDTO> updateSiteInfo(@PathVariable Long id, @RequestBody SiteInfoUpdateRequestDTO requestDTO) {
-        SiteInfoResponseDTO updateSiteInfo = siteInfoService.update(id, requestDTO);
+    public ApiResponse<SiteInfoResponse> updateSiteInfo(@PathVariable Long id, @RequestBody SiteInfoUpdateRequest requestDTO) {
+        SiteInfoResponse updateSiteInfo = siteInfoService.update(id, requestDTO);
         return ApiResponse.ok(updateSiteInfo);
     }
 

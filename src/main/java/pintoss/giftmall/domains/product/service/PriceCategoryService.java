@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
-import pintoss.giftmall.domains.product.dto.PriceCategoryRequestDTO;
-import pintoss.giftmall.domains.product.dto.PriceCategoryResponseDTO;
+import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
+import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 
 import java.util.List;
@@ -18,23 +18,23 @@ public class PriceCategoryService {
     private final PriceCategoryRepository priceCategoryRepository;
 
     @Transactional(readOnly = true)
-    public List<PriceCategoryResponseDTO> findAllByProductId(Long productId) {
+    public List<PriceCategoryResponse> findAllByProductId(Long productId) {
         List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(productId);
         return priceCategories.stream()
-                .map(PriceCategoryResponseDTO::fromEntity)
+                .map(PriceCategoryResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public PriceCategoryResponseDTO findByIdAndProductId(Long categoryId, Long productId) {
+    public PriceCategoryResponse findByIdAndProductId(Long categoryId, Long productId) {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("PriceCategory not found or does not belong to the given Product"));
-        return PriceCategoryResponseDTO.fromEntity(priceCategory);
+        return PriceCategoryResponse.fromEntity(priceCategory);
     }
 
 
     @Transactional
-    public Long create(PriceCategoryRequestDTO requestDTO) {
+    public Long create(PriceCategoryRequest requestDTO) {
         PriceCategory priceCategory = requestDTO.toEntity();
         priceCategoryRepository.save(priceCategory);
 

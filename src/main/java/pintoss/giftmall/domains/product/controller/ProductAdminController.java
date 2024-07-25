@@ -3,8 +3,7 @@ package pintoss.giftmall.domains.product.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.product.dto.ProductRequestDTO;
-import pintoss.giftmall.domains.product.dto.ProductResponseDTO;
+import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.service.ProductService;
 
 import java.math.BigDecimal;
@@ -17,13 +16,13 @@ public class ProductAdminController {
     private final ProductService productService;
 
     @PostMapping
-    public ApiResponse<Long> createProduct(@RequestBody ProductRequestDTO requestDTO) {
+    public ApiResponse<Long> createProduct(@RequestBody ProductRequest requestDTO) {
         Long createdProductId = productService.create(requestDTO);
         return ApiResponse.ok(createdProductId);
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<Long> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO requestDTO) {
+    public ApiResponse<Long> updateProduct(@PathVariable Long id, @RequestBody ProductRequest requestDTO) {
         Long updatedProductId = productService.update(id, requestDTO);
         return ApiResponse.ok(updatedProductId);
     }

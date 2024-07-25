@@ -3,7 +3,7 @@ package pintoss.giftmall.domains.product.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.product.dto.ProductResponseDTO;
+import pintoss.giftmall.domains.product.dto.ProductResponse;
 import pintoss.giftmall.domains.product.service.ProductService;
 
 import java.util.List;
@@ -16,24 +16,24 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ApiResponse<List<ProductResponseDTO>> getAllProducts(@RequestParam(value = "category", required = false) String category) {
+    public ApiResponse<List<ProductResponse>> getAllProducts(@RequestParam(value = "category", required = false) String category) {
         if (category != null) {
-            List<ProductResponseDTO> products = productService.findByCategory(category);
+            List<ProductResponse> products = productService.findByCategory(category);
             return ApiResponse.ok(products);
         }
-        List<ProductResponseDTO> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         return ApiResponse.ok(products);
     }
 
     @GetMapping("/popular")
-    public ApiResponse<List<ProductResponseDTO>> getPopularProducts() {
-        List<ProductResponseDTO> popularProducts = productService.findPopularProducts();
+    public ApiResponse<List<ProductResponse>> getPopularProducts() {
+        List<ProductResponse> popularProducts = productService.findPopularProducts();
         return ApiResponse.ok(popularProducts);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductResponseDTO> getProductById(@PathVariable Long id) {
-        ProductResponseDTO product = productService.findById(id);
+    public ApiResponse<ProductResponse> getProductById(@PathVariable Long id) {
+        ProductResponse product = productService.findById(id);
         return ApiResponse.ok(product);
     }
 
