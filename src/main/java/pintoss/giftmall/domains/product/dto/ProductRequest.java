@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class ProductRequest {
 
     private String name;
-    private boolean isPopular;
+    private boolean isPopular = false;
     private BigDecimal cardDiscount;
     private BigDecimal phoneDiscount;
     private String homePage;

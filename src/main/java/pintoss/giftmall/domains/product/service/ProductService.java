@@ -46,7 +46,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("product_id: " + id));
 
-        updateNonNullFields(requestDTO, product);
+        product.update(requestDTO);
 
         return product.getId();
     }
@@ -73,20 +73,4 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    private void updateNonNullFields(Object source, Object target) {
-        Field[] fields = source.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                field.setAccessible(true);
-                Object value = field.get(source);
-                if (value != null) {
-                    Field targetField = target.getClass().getDeclaredField(field.getName());
-                    targetField.setAccessible(true);
-                    targetField.set(target, value);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

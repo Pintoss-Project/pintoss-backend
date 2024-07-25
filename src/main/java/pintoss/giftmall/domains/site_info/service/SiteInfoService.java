@@ -39,26 +39,9 @@ public class SiteInfoService {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id" + id));
 
-        updateNonNullFields(requestDTO, siteInfo);
+        siteInfo.update(requestDTO);
 
         return SiteInfoResponse.fromEntity(siteInfo);
-    }
-
-    private void updateNonNullFields(Object source, Object target) {
-        Field[] fields = source.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                field.setAccessible(true);
-                Object value = field.get(source);
-                if (value != null) {
-                    Field targetField = target.getClass().getDeclaredField(field.getName());
-                    targetField.setAccessible(true);
-                    targetField.set(target, value);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

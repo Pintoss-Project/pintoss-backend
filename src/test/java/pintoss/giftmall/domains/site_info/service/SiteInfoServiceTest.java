@@ -43,13 +43,13 @@ class SiteInfoServiceTest {
 
         Long siteId = 1L;
         SiteInfoUpdateRequest updateRequest = SiteInfoUpdateRequest.builder()
-                .kakao("kakao123")
+                .address("부산시 진구 개금동 220-4 1층")
                 .build();
 
         SiteInfoResponse updatedSiteInfo = siteInfoService.update(siteId, updateRequest);
 
         assertThat(updatedSiteInfo).isNotNull();
-        assertThat(updatedSiteInfo.getKakao()).isEqualTo("kakao123");
+        assertThat(updatedSiteInfo.getAddress()).isEqualTo("부산시 진구 개금동 220-4 1층");
 
     }
 

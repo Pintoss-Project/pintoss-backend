@@ -8,10 +8,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -75,17 +74,17 @@ public class SiteInfo {
         this.openChat = openChat;
     }
 
-    public void update(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
-        this.name = name;
-        this.tel = tel;
-        this.businessHour = businessHour;
-        this.address = address;
-        this.owner = owner;
-        this.businesses = businesses;
-        this.reportNumber = reportNumber;
-        this.email = email;
-        this.kakao = kakao;
-        this.openChat = openChat;
+    public void update(SiteInfoUpdateRequest requestDTO) {
+        if (requestDTO.getName() != null) this.name = requestDTO.getName();
+        if (requestDTO.getTel() != null) this.tel = requestDTO.getTel();
+        if (requestDTO.getBusinessHour() != null) this.businessHour = requestDTO.getBusinessHour();
+        if (requestDTO.getAddress() != null) this.address = requestDTO.getAddress();
+        if (requestDTO.getOwner() != null) this.owner = requestDTO.getOwner();
+        if (requestDTO.getBusinesses() != null) this.businesses = requestDTO.getBusinesses();
+        if (requestDTO.getReportNumber() != null) this.reportNumber = requestDTO.getReportNumber();
+        if (requestDTO.getEmail() != null) this.email = requestDTO.getEmail();
+        if (requestDTO.getKakao() != null) this.kakao = requestDTO.getKakao();
+        if (requestDTO.getOpenChat() != null) this.openChat = requestDTO.getOpenChat();
     }
 
 }
