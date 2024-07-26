@@ -35,11 +35,15 @@ public class PaymentRequest {
                 .build();
     }
 
-    public OrderRequest toOrderRequest() {
+    public OrderRequest toOrderRequest(String orderNo, String orderStatus, boolean isSent) {
         return OrderRequest.builder()
+                .orderNo(orderNo)
                 .orderPrice(this.totalPrice)
+                .orderStatus(orderStatus)
                 .payMethod(this.payMethod)
+                .isSent(isSent)
                 .build();
     }
+
 
 }

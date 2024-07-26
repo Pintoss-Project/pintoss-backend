@@ -23,6 +23,7 @@ public class OrderRequest {
     @NotBlank
     private String payMethod;
 
+    @NotNull
     private boolean isSent = false;
 
     @Builder

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.user.domain.User;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
     @Id
@@ -49,14 +52,13 @@ public class Order {
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user, Payment payment) {
+    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
         this.payMethod = payMethod;
         this.isSent = isSent;
         this.user = user;
-        this.payment = payment;
     }
 
     public void assignPayment(Payment payment) {

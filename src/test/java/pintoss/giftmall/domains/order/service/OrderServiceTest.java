@@ -4,8 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
+import pintoss.giftmall.domains.payment.domain.Payment;
+import pintoss.giftmall.domains.payment.dto.PaymentRequest;
+import pintoss.giftmall.domains.payment.service.PaymentService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
@@ -20,28 +25,37 @@ class OrderServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PaymentService paymentService;
+
+    private User user;
     private Long userId;
 
     @BeforeEach
     void setUp() {
-        User user = new User("user@example.com", "password", "유저1", "010-1234-5678");
+        user = new User("user@example.com", "password", "유저1", "010-1234-5678");
         userRepository.save(user);
         userId = user.getId();
     }
 
     @Test
-    void createOrder() {
-        OrderRequest request = OrderRequest.builder()
-                .orderNo("1234567-1234567")
-                .orderPrice(10000)
-                .orderStatus("주문완료")
+    @Transactional
+    @Rollback(false)
+    void testCreateOrder() {
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .payStatus("완료")
                 .payMethod("card")
-                .isSent(false)
+                .totalPrice(10000)
+                .discountPrice(1000)
                 .build();
 
-        Order order = orderService.createOrder(userId, request);
-        Order createdOrder = orderService.findById(order.getId());
+        Long paymentId = paymentService.processPaymentFromCart(paymentRequest, userId);
+        Payment payment = paymentService.getPayment(paymentId).toEntity(user);
 
+        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
+        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+
+        Order createdOrder = orderService.findById(orderId);
         assertThat(createdOrder).isNotNull();
         assertThat(createdOrder.getUser().getName()).isEqualTo("유저1");
     }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.order.domain.Order;
+import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.order.service.OrderService;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
@@ -32,9 +33,12 @@ public class PaymentService {
         Payment payment = paymentRequest.toEntity(user);
         paymentRepository.save(payment);
 
-        Long orderId = orderService.createOrder(userId, paymentRequest.toOrderRequest());
+        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
+        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+
         Order order = orderService.findById(orderId);
         order.assignPayment(payment);
+        orderService.saveOrder(order);
 
         return payment.getId();
     }
@@ -51,9 +55,12 @@ public class PaymentService {
         Payment payment = paymentRequest.toEntity(user);
         paymentRepository.save(payment);
 
-        Long orderId = orderService.createOrder(userId, paymentRequest.toOrderRequest());
+        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
+        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+
         Order order = orderService.findById(orderId);
         order.assignPayment(payment);
+        orderService.saveOrder(order);
 
         return payment.getId();
     }
