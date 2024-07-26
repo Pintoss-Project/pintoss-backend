@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.payment.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,5 +34,14 @@ public class Payment {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @Builder
+    public Payment(String payStatus, String payMethod, int totalPrice, int discountPrice, Order order) {
+        this.payStatus = payStatus;
+        this.payMethod = payMethod;
+        this.totalPrice = totalPrice;
+        this.discountPrice = discountPrice;
+        this.order = order;
+    }
 
 }
