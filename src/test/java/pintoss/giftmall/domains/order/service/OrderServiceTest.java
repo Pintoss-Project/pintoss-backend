@@ -25,9 +25,6 @@ class OrderServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PaymentService paymentService;
-
     private User user;
     private Long userId;
 
@@ -49,11 +46,8 @@ class OrderServiceTest {
                 .discountPrice(1000)
                 .build();
 
-        Long paymentId = paymentService.processPaymentFromCart(paymentRequest, userId);
-        Payment payment = paymentService.getPayment(paymentId).toEntity(user);
-
         OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+        Long orderId = orderService.createOrder(userId, orderRequest);
 
         Order createdOrder = orderService.findById(orderId);
         assertThat(createdOrder).isNotNull();

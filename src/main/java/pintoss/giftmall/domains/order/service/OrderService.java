@@ -44,11 +44,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(Long userId, OrderRequest requestDTO, Payment payment) {
+    public Long createOrder(Long userId, OrderRequest requestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
+        Payment payment = requestDTO.toPaymentEntity(user);
         paymentRepository.save(payment);
+
         Order order = requestDTO.toEntity(user);
         order.assignPayment(payment);
 

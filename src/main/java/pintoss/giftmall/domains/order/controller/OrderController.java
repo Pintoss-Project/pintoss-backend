@@ -34,7 +34,7 @@ public class OrderController {
         Long paymentId = paymentService.processPaymentFromCart(paymentRequest, userId);
         Payment payment = paymentService.getPayment(paymentId).toEntity(userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.")));
 
-        Long orderId = orderService.createOrder(userId, requestDTO, payment);
+        Long orderId = orderService.createOrder(userId, requestDTO);
         return ApiResponse.ok(orderId);
     }
 

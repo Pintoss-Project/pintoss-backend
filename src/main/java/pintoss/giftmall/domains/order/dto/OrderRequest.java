@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pintoss.giftmall.domains.order.domain.Order;
+import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.user.domain.User;
 
 @Getter
@@ -16,6 +17,9 @@ public class OrderRequest {
 
     @NotNull
     private int orderPrice;
+
+    @NotNull
+    private int discountPrice;
 
     @NotBlank
     private String orderStatus;
@@ -33,6 +37,7 @@ public class OrderRequest {
         this.orderStatus = orderStatus;
         this.payMethod = payMethod;
         this.isSent = isSent;
+
     }
 
     public Order toEntity(User user) {
@@ -42,6 +47,16 @@ public class OrderRequest {
                 .orderStatus(orderStatus)
                 .payMethod(payMethod)
                 .isSent(isSent)
+                .user(user)
+                .build();
+    }
+
+    public Payment toPaymentEntity(User user) {
+        return Payment.builder()
+                .payStatus(this.orderStatus)
+                .payMethod(this.payMethod)
+                .totalPrice(this.orderPrice)
+                .discountPrice(this.discountPrice)
                 .user(user)
                 .build();
     }

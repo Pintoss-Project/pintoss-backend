@@ -34,7 +34,7 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+        Long orderId = orderService.createOrder(userId, orderRequest);
 
         Order order = orderService.findById(orderId);
         order.assignPayment(payment);
@@ -56,7 +56,7 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest, payment);
+        Long orderId = orderService.createOrder(userId, orderRequest);
 
         Order order = orderService.findById(orderId);
         order.assignPayment(payment);

@@ -52,13 +52,14 @@ public class Order {
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user) {
+    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user, Payment payment) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
         this.payMethod = payMethod;
         this.isSent = isSent;
         this.user = user;
+        this.payment = payment;
     }
 
     public void assignPayment(Payment payment) {
