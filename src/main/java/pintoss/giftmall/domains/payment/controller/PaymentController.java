@@ -14,9 +14,15 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping
-    public ApiResponse<Long> processPayment(@RequestBody PaymentRequest requestDTO) {
-        Long paymentId = paymentService.processPayment(requestDTO);
+    @PostMapping("/cart")
+    public ApiResponse<Long> processPaymentFromCart(@RequestBody PaymentRequest request, @RequestParam Long userId) {
+        Long paymentId = paymentService.processPaymentFromCart(request, userId);
+        return ApiResponse.ok(paymentId);
+    }
+
+    @PostMapping("/product/{product_id}")
+    public ApiResponse<Long> processPaymentFromProduct(@PathVariable("product_id") Long productId, @RequestBody PaymentRequest request, @RequestParam Long userId) {
+        Long paymentId = paymentService.processPaymentFromProduct(request, userId, productId);
         return ApiResponse.ok(paymentId);
     }
 

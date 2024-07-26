@@ -42,13 +42,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(Long userId, OrderRequest requestDTO) {
+    public Order createOrder(Long userId, OrderRequest requestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         Order order = requestDTO.toEntity(user);
 
         orderRepository.save(order);
-        return order.getId();
+        return order;
     }
 
 }
