@@ -85,7 +85,6 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
         payment.refund();
-        paymentRepository.save(payment);
     }
 
 }
