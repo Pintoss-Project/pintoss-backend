@@ -29,10 +29,9 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAllByUserId(Long userId) {
-        return orderRepository.findByUserId(userId).stream()
+        return orderRepository.findAllByUserId(userId).stream()
                 .map(OrderResponse::fromEntity)
                 .collect(Collectors.toList());
-
     }
 
     @Transactional(readOnly = true)
@@ -42,13 +41,13 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long userId, OrderRequest requestDTO) {
+    public Long createOrder(Long userId, OrderRequest requestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         Order order = requestDTO.toEntity(user);
 
         orderRepository.save(order);
-        return order;
+        return order.getId();
     }
 
 }

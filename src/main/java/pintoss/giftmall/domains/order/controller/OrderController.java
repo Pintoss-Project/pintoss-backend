@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.order.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
+import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.order.dto.OrderResponse;
 import pintoss.giftmall.domains.order.service.OrderService;
@@ -23,9 +24,9 @@ public class OrderController {
     }
 
     @PostMapping("/{userId}")
-    public ApiResponse<Long> createOrder(@PathVariable Long userId, @RequestBody OrderRequest requestDTO) {
-        Long orderId = orderService.createOrder(userId, requestDTO);
-        return ApiResponse.ok(orderId);
+    public ApiResponse<Order> createOrder(@PathVariable Long userId, @RequestBody OrderRequest requestDTO) {
+        Order order = orderService.createOrder(userId, requestDTO);
+        return ApiResponse.ok(order);
     }
 
 }

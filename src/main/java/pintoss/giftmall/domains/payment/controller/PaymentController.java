@@ -26,7 +26,7 @@ public class PaymentController {
         return ApiResponse.ok(paymentId);
     }
 
-    @GetMapping("/{paymentId")
+    @GetMapping("/{paymentId}")
     public ApiResponse<PaymentResponse> getPayment(@PathVariable Long paymentId) {
         PaymentResponse payment = paymentService.getPayment(paymentId);
         return ApiResponse.ok(payment);

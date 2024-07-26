@@ -25,13 +25,12 @@ public class PaymentRequest {
         this.discountPrice = discountPrice;
     }
 
-    public Payment toEntity(Order order, User user) {
+    public Payment toEntity(User user) {
         return Payment.builder()
                 .payStatus(this.payStatus)
                 .payMethod(this.payMethod)
                 .totalPrice(this.totalPrice)
                 .discountPrice(this.discountPrice)
-                .order(order)
                 .user(user)
                 .build();
     }

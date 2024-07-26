@@ -30,8 +30,8 @@ public class OrderRequest {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
-        this.isSent = isSent;
         this.payMethod = payMethod;
+        this.isSent = isSent;
     }
 
     public Order toEntity(User user) {

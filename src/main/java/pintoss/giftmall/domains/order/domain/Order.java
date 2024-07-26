@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -30,26 +31,36 @@ public class Order {
     @Column(length = 10)
     private String orderStatus;
 
-    private boolean isSent;
-
     @Column(length = 10)
     private String payMethod;
 
+    @Column(nullable = false)
+    private boolean isSent = false;
+
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user) {
+    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user, Payment payment) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
-        this.isSent = isSent;
         this.payMethod = payMethod;
+        this.isSent = isSent;
         this.user = user;
+        this.payment = payment;
+    }
+
+    public void assignPayment(Payment payment) {
+        this.payment = payment;
     }
 
 }

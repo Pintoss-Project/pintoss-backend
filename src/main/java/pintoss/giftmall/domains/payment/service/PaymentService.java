@@ -24,15 +24,17 @@ public class PaymentService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderService orderService;
+
     @Transactional
     public Long processPaymentFromCart(PaymentRequest paymentRequest, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Payment payment = paymentRequest.toEntity(null, user);
+        Payment payment = paymentRequest.toEntity(user);
         paymentRepository.save(payment);
 
-        Order order = orderService.createOrder(userId, paymentRequest.toOrderRequest());
-        updateOrderForPayment(payment.getId(), order);
+        Long orderId = orderService.createOrder(userId, paymentRequest.toOrderRequest());
+        Order order = orderService.findById(orderId);
+        order.assignPayment(payment);
 
         return payment.getId();
     }
@@ -46,11 +48,12 @@ public class PaymentService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Payment payment = paymentRequest.toEntity(null, user);
+        Payment payment = paymentRequest.toEntity(user);
         paymentRepository.save(payment);
 
-        Order order = orderService.createOrder(userId, paymentRequest.toOrderRequest());
-        updateOrderForPayment(payment.getId(), order);
+        Long orderId = orderService.createOrder(userId, paymentRequest.toOrderRequest());
+        Order order = orderService.findById(orderId);
+        order.assignPayment(payment);
 
         return payment.getId();
     }
@@ -75,14 +78,6 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
         payment.refund();
-        paymentRepository.save(payment);
-    }
-
-    @Transactional
-    public void updateOrderForPayment(Long paymentId, Order order) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
-        payment.assignOrder(order);
         paymentRepository.save(payment);
     }
 
