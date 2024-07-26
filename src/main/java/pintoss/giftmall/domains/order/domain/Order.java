@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.order.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,15 +22,6 @@ public class Order {
     @Column(name ="order_id")
     private Long id;
 
-    @Column(length = 20)
-    private String userName;
-
-    @Column(length = 254)
-    private String userEmail;
-
-    @Column(length = 15)
-    private String userPhone;
-
     @Column(length = 50)
     private String orderNo;
 
@@ -49,5 +41,15 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user) {
+        this.orderNo = orderNo;
+        this.orderPrice = orderPrice;
+        this.orderStatus = orderStatus;
+        this.isSent = isSent;
+        this.payMethod = payMethod;
+        this.user = user;
+    }
 
 }
