@@ -44,4 +44,8 @@ public class Payment {
         this.order = order;
     }
 
+    public void refund() {
+        this.payStatus = "refunded";
+    }
+
 }

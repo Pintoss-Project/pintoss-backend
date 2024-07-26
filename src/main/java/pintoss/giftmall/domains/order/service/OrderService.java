@@ -35,6 +35,12 @@ public class OrderService {
 
     }
 
+    @Transactional(readOnly = true)
+    public Order findById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+    }
+
     @Transactional
     public Long createOrder(Long userId, OrderRequest requestDTO) {
         User user = userRepository.findById(userId)
