@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.payment.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
+import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.service.PaymentService;
@@ -14,16 +15,10 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/cart")
-    public ApiResponse<Long> processPaymentFromCart(@RequestBody PaymentRequest request, @RequestParam Long userId) {
-        Long paymentId = paymentService.processPaymentFromCart(request, userId);
-        return ApiResponse.ok(paymentId);
-    }
-
-    @PostMapping("/product/{product_id}")
-    public ApiResponse<Long> processPaymentFromProduct(@PathVariable("product_id") Long productId, @RequestBody PaymentRequest request, @RequestParam Long userId) {
-        Long paymentId = paymentService.processPaymentFromProduct(request, userId, productId);
-        return ApiResponse.ok(paymentId);
+    @PostMapping
+    public ApiResponse<PaymentResponse> processPayment(@RequestBody PaymentRequest request, @RequestParam Long userId, @RequestParam Long orderId) {
+        PaymentResponse paymentResponse = paymentService.processPayment(userId, orderId, request);
+        return ApiResponse.ok(paymentResponse);
     }
 
     @GetMapping("/{paymentId}")

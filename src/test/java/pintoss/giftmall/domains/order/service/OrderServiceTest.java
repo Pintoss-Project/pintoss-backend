@@ -10,6 +10,7 @@ import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
+import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.service.PaymentService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
@@ -23,10 +24,14 @@ class OrderServiceTest {
     private OrderService orderService;
 
     @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
     private UserRepository userRepository;
 
     private User user;
     private Long userId;
+    private Long orderId;
 
     @BeforeEach
     void setUp() {
@@ -39,19 +44,59 @@ class OrderServiceTest {
     @Transactional
     @Rollback(false)
     void testCreateOrder() {
-        PaymentRequest paymentRequest = PaymentRequest.builder()
-                .payStatus("완료")
+        OrderRequest orderRequest = OrderRequest.builder()
+                .orderNo("1234567-1234567")
+                .orderPrice(10000)
+                .orderStatus("주문완료")
                 .payMethod("card")
-                .totalPrice(10000)
-                .discountPrice(1000)
                 .build();
-
-        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest);
+        orderId = orderService.createOrder(userId, orderRequest);
 
         Order createdOrder = orderService.findById(orderId);
         assertThat(createdOrder).isNotNull();
         assertThat(createdOrder.getUser().getName()).isEqualTo("유저1");
+
+        this.orderId = orderId;
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void testProcessPaymentSuccess() {
+        testCreateOrder();
+
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .payStatus("결제요청")
+                .payMethod("card")
+                .payPrice(10000)
+                .discountPrice(1000)
+                .build();
+
+        PaymentResponse paymentResponse = paymentService.processPayment(userId, orderId, paymentRequest);
+        assertThat(paymentResponse).isNotNull();
+        assertThat(paymentResponse.getPayStatus()).isEqualTo("success");
+
+        PaymentResponse paymentInfo = paymentService.getPayment(paymentResponse.getId());
+        assertThat(paymentInfo).isNotNull();
+        assertThat(paymentInfo.getPayPrice()).isEqualTo(10000);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void testProcessPaymentFailure() {
+        testCreateOrder();
+
+        PaymentRequest paymentRequest = PaymentRequest.builder()
+                .payStatus("결제요청")
+                .payMethod("card")
+                .payPrice(10000)
+                .discountPrice(1000)
+                .build();
+
+        PaymentResponse paymentResponse = paymentService.processPayment(userId, orderId, paymentRequest);
+        assertThat(paymentResponse).isNotNull();
+        assertThat(paymentResponse.getPayStatus()).isEqualTo("success");
     }
 
 }

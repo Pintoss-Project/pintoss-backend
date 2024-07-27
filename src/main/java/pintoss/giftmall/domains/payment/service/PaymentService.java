@@ -28,16 +28,29 @@ public class PaymentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
+    public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
 
+        String externalPayStatus = callExternalPaymentApi(paymentRequest);
+
         Payment payment = paymentRequest.toEntity(user, order);
+        payment.completePayment();
         paymentRepository.save(payment);
 
-        return payment.getId();
+        if ("success".equals(externalPayStatus)) {
+            payment.completePayment();
+            return PaymentResponse.fromEntity(payment);
+        } else {
+            payment.failPayment();
+            throw new IllegalArgumentException("결제가 실패했습니다.");
+        }
+    }
+
+    private String callExternalPaymentApi(PaymentRequest paymentRequest) {
+        return "fail";
     }
 
     public PaymentResponse getPayment(Long paymentId) {

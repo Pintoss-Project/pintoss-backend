@@ -50,6 +50,14 @@ public class Payment {
         this.order = order;
     }
 
+    public void completePayment() {
+        this.payStatus = "success";
+    }
+
+    public void failPayment() {
+        this.payStatus = "fail";
+    }
+
     public void refund() {
         this.payStatus = "refunded";
     }
