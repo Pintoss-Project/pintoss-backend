@@ -13,17 +13,15 @@ public class PaymentResponse {
     private Long id;
     private String payStatus;
     private String payMethod;
-    private int totalPrice;
-    private int discountPrice;
+    private int payPrice;
     private LocalDateTime approvedAt;
 
     @Builder
-    public PaymentResponse(Long id, String payStatus, String payMethod, int totalPrice, int discountPrice, LocalDateTime approvedAt) {
+    public PaymentResponse(Long id, String payStatus, String payMethod, int payPrice, int discountPrice, LocalDateTime approvedAt) {
         this.id = id;
         this.payStatus = payStatus;
         this.payMethod = payMethod;
-        this.totalPrice = totalPrice;
-        this.discountPrice = discountPrice;
+        this.payPrice = payPrice;
         this.approvedAt = approvedAt;
     }
 
@@ -32,8 +30,7 @@ public class PaymentResponse {
                 .id(payment.getId())
                 .payStatus(payment.getPayStatus())
                 .payMethod(payment.getPayMethod())
-                .totalPrice(payment.getTotalPrice())
-                .discountPrice(payment.getDiscountPrice())
+                .payPrice(payment.getPayPrice())
                 .approvedAt(payment.getApprovedAt())
                 .build();
     }

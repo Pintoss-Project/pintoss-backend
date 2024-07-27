@@ -14,14 +14,14 @@ public class PaymentRequest {
 
     private String payStatus;
     private String payMethod;
-    private int totalPrice;
+    private int payPrice;
     private int discountPrice;
 
     @Builder
-    public PaymentRequest(String payStatus, String payMethod, int totalPrice, int discountPrice) {
+    public PaymentRequest(String payStatus, String payMethod, int payPrice, int discountPrice) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
-        this.totalPrice = totalPrice;
+        this.payPrice = payPrice;
         this.discountPrice = discountPrice;
     }
 
@@ -29,8 +29,7 @@ public class PaymentRequest {
         return Payment.builder()
                 .payStatus(this.payStatus)
                 .payMethod(this.payMethod)
-                .totalPrice(this.totalPrice)
-                .discountPrice(this.discountPrice)
+                .payPrice(this.payPrice)
                 .order(order)
                 .user(user)
                 .build();

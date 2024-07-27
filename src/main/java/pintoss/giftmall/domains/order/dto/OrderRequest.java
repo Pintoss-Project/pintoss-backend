@@ -55,8 +55,7 @@ public class OrderRequest {
         return Payment.builder()
                 .payStatus(this.orderStatus)
                 .payMethod(this.payMethod)
-                .totalPrice(this.orderPrice)
-                .discountPrice(this.discountPrice)
+                .payPrice(this.orderPrice)
                 .order(order)
                 .user(user)
                 .build();
