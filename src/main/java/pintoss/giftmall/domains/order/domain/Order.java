@@ -34,6 +34,8 @@ public class Order {
     @Column(length = 10)
     private String orderStatus;
 
+    private int discountPrice;
+
     @Column(length = 10)
     private String payMethod;
 
@@ -48,10 +50,11 @@ public class Order {
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod, User user) {
+    public Order(String orderNo, int orderPrice, String orderStatus, int discountPrice, boolean isSent, String payMethod, User user) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
+        this.discountPrice = discountPrice;
         this.payMethod = payMethod;
         this.isSent = isSent;
         this.user = user;

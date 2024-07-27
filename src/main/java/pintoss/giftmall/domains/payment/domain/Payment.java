@@ -28,8 +28,7 @@ public class Payment {
     @Column(length = 10)
     private String payMethod;
 
-    private int totalPrice;
-    private int discountPrice;
+    private int payPrice;
 
     @CreatedDate
     private LocalDateTime approvedAt;
@@ -43,11 +42,10 @@ public class Payment {
     private User user;
 
     @Builder
-    public Payment(String payStatus, String payMethod, int totalPrice, int discountPrice, User user, Order order) {
+    public Payment(String payStatus, String payMethod, int payPrice, User user, Order order) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
-        this.totalPrice = totalPrice;
-        this.discountPrice = discountPrice;
+        this.payPrice = payPrice;
         this.user = user;
         this.order = order;
     }
