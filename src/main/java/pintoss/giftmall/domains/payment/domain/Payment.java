@@ -34,17 +34,22 @@ public class Payment {
     @CreatedDate
     private LocalDateTime approvedAt;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Payment(String payStatus, String payMethod, int totalPrice, int discountPrice, User user) {
+    public Payment(String payStatus, String payMethod, int totalPrice, int discountPrice, User user, Order order) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
         this.totalPrice = totalPrice;
         this.discountPrice = discountPrice;
         this.user = user;
+        this.order = order;
     }
 
     public void refund() {
