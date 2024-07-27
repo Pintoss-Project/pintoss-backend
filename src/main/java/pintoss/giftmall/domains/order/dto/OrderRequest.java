@@ -51,12 +51,13 @@ public class OrderRequest {
                 .build();
     }
 
-    public Payment toPaymentEntity(User user) {
+    public Payment toPaymentEntity(User user, Order order) {
         return Payment.builder()
                 .payStatus(this.orderStatus)
                 .payMethod(this.payMethod)
                 .totalPrice(this.orderPrice)
                 .discountPrice(this.discountPrice)
+                .order(order)
                 .user(user)
                 .build();
     }

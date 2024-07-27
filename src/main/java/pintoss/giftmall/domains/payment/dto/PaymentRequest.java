@@ -25,25 +25,15 @@ public class PaymentRequest {
         this.discountPrice = discountPrice;
     }
 
-    public Payment toEntity(User user) {
+    public Payment toEntity(User user, Order order) {
         return Payment.builder()
                 .payStatus(this.payStatus)
                 .payMethod(this.payMethod)
                 .totalPrice(this.totalPrice)
                 .discountPrice(this.discountPrice)
+                .order(order)
                 .user(user)
                 .build();
     }
-
-    public OrderRequest toOrderRequest(String orderNo, String orderStatus, boolean isSent) {
-        return OrderRequest.builder()
-                .orderNo(orderNo)
-                .orderPrice(this.totalPrice)
-                .orderStatus(orderStatus)
-                .payMethod(this.payMethod)
-                .isSent(isSent)
-                .build();
-    }
-
 
 }

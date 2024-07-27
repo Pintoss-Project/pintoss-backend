@@ -38,14 +38,4 @@ public class PaymentResponse {
                 .build();
     }
 
-    public Payment toEntity(User user) {
-        return Payment.builder()
-                .payStatus(this.payStatus)
-                .payMethod(this.payMethod)
-                .totalPrice(this.totalPrice)
-                .discountPrice(this.discountPrice)
-                .user(user)
-                .build();
-    }
-
 }
