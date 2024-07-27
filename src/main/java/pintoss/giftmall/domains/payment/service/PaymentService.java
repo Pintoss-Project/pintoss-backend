@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -26,7 +27,6 @@ public class PaymentService {
     private final UserRepository userRepository;
     private final OrderService orderService;
 
-    @Transactional
     public Long processPaymentFromCart(PaymentRequest paymentRequest, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -43,7 +43,6 @@ public class PaymentService {
         return payment.getId();
     }
 
-    @Transactional
     public Long processPaymentFromProduct(PaymentRequest paymentRequest, Long userId, Long productId) {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()) {
@@ -65,22 +64,18 @@ public class PaymentService {
         return payment.getId();
     }
 
-
-    @Transactional
     public PaymentResponse getPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
         return PaymentResponse.fromEntity(payment);
     }
 
-    @Transactional
     public void cancelPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
         paymentRepository.delete(payment);
     }
 
-    @Transactional
     public void refundPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));

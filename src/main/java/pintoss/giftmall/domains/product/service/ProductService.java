@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -34,14 +35,12 @@ public class ProductService {
         return ProductResponse.fromEntity(product);
     }
 
-    @Transactional
     public Long create(ProductRequest requestDTO) {
         Product product = requestDTO.toEntity();
         productRepository.save(product);
         return product.getId();
     }
 
-    @Transactional
     public Long update(Long id, ProductRequest requestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("product_id: " + id));
@@ -51,12 +50,10 @@ public class ProductService {
         return product.getId();
     }
 
-    @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
     }
 
-    @Transactional
     public Long updateDiscount(Long id, BigDecimal discount, String type) {
         return productRepository.updateDiscount(id, discount, type);
     }

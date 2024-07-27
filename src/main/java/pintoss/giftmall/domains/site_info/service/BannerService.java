@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BannerService {
 
     private final BannerRepository bannerRepository;
@@ -32,7 +33,6 @@ public class BannerService {
         return BannerResponse.fromEntity(banner);
     }
 
-    @Transactional
     public BannerResponse create(BannerRequest requestDTO) {
         Banner banner = requestDTO.toEntity();
         bannerRepository.save(banner);
@@ -40,7 +40,6 @@ public class BannerService {
         return BannerResponse.fromEntity(banner);
     }
 
-    @Transactional
     public BannerResponse update(Long id, BannerRequest requestDTO) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("banner_id: " + id));
@@ -49,7 +48,6 @@ public class BannerService {
         return BannerResponse.fromEntity(banner);
     }
 
-    @Transactional
     public void delete(Long id) {
         bannerRepository.deleteById(id);
     }

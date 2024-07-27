@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -31,14 +32,12 @@ public class BoardService {
         return BoardResponse.fromEntity(board);
     }
 
-    @Transactional
     public Long create(BoardRequest requestDTO) {
         Board board = requestDTO.toEntity();
         boardRepository.save(board);
         return board.getId();
     }
 
-    @Transactional
     public Long update(Long id, BoardRequest requestDTO) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("board_id : " + id));
@@ -48,7 +47,6 @@ public class BoardService {
         return board.getId();
     }
 
-    @Transactional
     public void delete(Long id) {
         boardRepository.deleteById(id);
     }

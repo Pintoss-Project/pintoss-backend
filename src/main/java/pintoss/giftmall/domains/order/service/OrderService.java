@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -43,7 +44,6 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
     }
 
-    @Transactional
     public Long createOrder(Long userId, OrderRequest requestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -58,8 +58,6 @@ public class OrderService {
         return order.getId();
     }
 
-
-    @Transactional
     public void saveOrder(Order order) {
         orderRepository.save(order);
     }

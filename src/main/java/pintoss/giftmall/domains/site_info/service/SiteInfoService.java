@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SiteInfoService {
 
     private final SiteInfoRepository siteInfoRepository;
@@ -34,7 +35,6 @@ public class SiteInfoService {
         return SiteInfoResponse.fromEntity(siteInfo);
     }
 
-    @Transactional
     public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("site_id" + id));

@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public Long addToCart(Long userId, CartRequest requestDTO) {
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product_id!"));
@@ -45,14 +45,13 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+
     public void updateCartItem(Long cartItemId, int quantity) {
         Cart cart = cartRepository.findById(cartItemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cart_item_id!"));
         cart.updateQuantity(quantity);
     }
 
-    @Transactional
     public void deleteCartItem(Long cartItemId) {
         Cart cart = cartRepository.findById(cartItemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid cart_item_id!"));

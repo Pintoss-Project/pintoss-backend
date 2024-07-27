@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PriceCategoryService {
 
     private final PriceCategoryRepository priceCategoryRepository;
@@ -35,8 +36,6 @@ public class PriceCategoryService {
         return PriceCategoryResponse.fromEntity(priceCategory);
     }
 
-
-    @Transactional
     public Long create(PriceCategoryRequest requestDTO) {
         Product product = productRepository.findById(requestDTO.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("product_id : " + requestDTO.getProductId()));
@@ -47,14 +46,12 @@ public class PriceCategoryService {
         return priceCategory.getId();
     }
 
-    @Transactional
     public void delete(Long productId, Long categoryId) {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품권 정보 또는 가격 카테고리 정보를 찾을 수 없습니다."));
         priceCategoryRepository.delete(priceCategory);
     }
 
-    @Transactional
     public Long updateStock(Long productId, Long categoryId, int stock) {
         PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품권 정보 또는 가격 카테고리 정보를 찾을 수 없습니다."));
