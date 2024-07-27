@@ -27,14 +27,20 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponse> findAll() {
         return orderRepository.findAll().stream()
-                .map(OrderResponse::fromEntity)
+                .map(order -> {
+                    Payment payment = paymentRepository.findByOrderId(order.getId());
+                    return OrderResponse.fromEntity(order, payment);
+                })
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAllByUserId(Long userId) {
         return orderRepository.findAllByUserId(userId).stream()
-                .map(OrderResponse::fromEntity)
+                .map(order -> {
+                    Payment payment = paymentRepository.findByOrderId(order.getId());
+                    return OrderResponse.fromEntity(order, payment);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -48,18 +54,10 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
-        Payment payment = requestDTO.toPaymentEntity(user);
-        paymentRepository.save(payment);
-
         Order order = requestDTO.toEntity(user);
-        order.assignPayment(payment);
-
         orderRepository.save(order);
+
         return order.getId();
-    }
-
-    public void saveOrder(Order order) {
-        orderRepository.save(order);
     }
 
 }

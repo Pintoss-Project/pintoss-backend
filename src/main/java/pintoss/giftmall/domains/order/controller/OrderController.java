@@ -20,8 +20,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final PaymentService paymentService;
-    private final UserRepository userRepository;
 
     @GetMapping("/{userId}")
     public ApiResponse<List<OrderResponse>> getOrdersByUserId(@PathVariable Long userId) {
@@ -30,10 +28,7 @@ public class OrderController {
     }
 
     @PostMapping("/{userId}")
-    public ApiResponse<Long> createOrder(@PathVariable Long userId, @RequestBody OrderRequest requestDTO, @RequestBody PaymentRequest paymentRequest) {
-        Long paymentId = paymentService.processPaymentFromCart(paymentRequest, userId);
-        Payment payment = paymentService.getPayment(paymentId).toEntity(userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다.")));
-
+    public ApiResponse<Long> createOrder(@PathVariable Long userId, @RequestBody OrderRequest requestDTO) {
         Long orderId = orderService.createOrder(userId, requestDTO);
         return ApiResponse.ok(orderId);
     }

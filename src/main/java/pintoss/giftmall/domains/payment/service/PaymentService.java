@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
+import pintoss.giftmall.domains.order.infra.OrderRepository;
 import pintoss.giftmall.domains.order.service.OrderService;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
@@ -23,43 +24,18 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final OrderService orderService;
 
-    public Long processPaymentFromCart(PaymentRequest paymentRequest, Long userId) {
+    @Transactional
+    public Long processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Payment payment = paymentRequest.toEntity(user);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+
+        Payment payment = paymentRequest.toEntity(user, order);
         paymentRepository.save(payment);
-
-        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest);
-
-        Order order = orderService.findById(orderId);
-        order.assignPayment(payment);
-        orderService.saveOrder(order);
-
-        return payment.getId();
-    }
-
-    public Long processPaymentFromProduct(PaymentRequest paymentRequest, Long userId, Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
-        if (product.isEmpty()) {
-            throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Payment payment = paymentRequest.toEntity(user);
-        paymentRepository.save(payment);
-
-        OrderRequest orderRequest = paymentRequest.toOrderRequest("1234567-1234567", "주문완료", false);
-        Long orderId = orderService.createOrder(userId, orderRequest);
-
-        Order order = orderService.findById(orderId);
-        order.assignPayment(payment);
-        orderService.saveOrder(order);
 
         return payment.getId();
     }
