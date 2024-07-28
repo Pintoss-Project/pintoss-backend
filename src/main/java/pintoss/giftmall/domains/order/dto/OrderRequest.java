@@ -30,14 +30,17 @@ public class OrderRequest {
     @NotNull
     private boolean isSent = false;
 
+    @NotNull
+    private boolean isCart = false;
+
     @Builder
-    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, String payMethod) {
+    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isCart, String payMethod) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
         this.payMethod = payMethod;
         this.isSent = isSent;
-
+        this.isCart = isCart;
     }
 
     public Order toEntity(User user) {
@@ -47,6 +50,7 @@ public class OrderRequest {
                 .orderStatus(orderStatus)
                 .payMethod(payMethod)
                 .isSent(isSent)
+                .isCart(isCart)
                 .user(user)
                 .build();
     }

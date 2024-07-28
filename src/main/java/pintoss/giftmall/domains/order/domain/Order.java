@@ -42,6 +42,9 @@ public class Order {
     @Column(nullable = false)
     private boolean isSent = false;
 
+    @Column(nullable = false)
+    private boolean isCart = false;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -50,13 +53,14 @@ public class Order {
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, int discountPrice, boolean isSent, String payMethod, User user) {
+    public Order(String orderNo, int orderPrice, String orderStatus, int discountPrice, boolean isSent, boolean isCart, String payMethod, User user) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
         this.discountPrice = discountPrice;
         this.payMethod = payMethod;
         this.isSent = isSent;
+        this.isCart = isCart;
         this.user = user;
     }
 
