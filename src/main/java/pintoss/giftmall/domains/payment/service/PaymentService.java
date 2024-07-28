@@ -3,19 +3,25 @@ package pintoss.giftmall.domains.payment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.order.domain.Order;
+import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
+import pintoss.giftmall.domains.order.infra.OrderProductRepository;
 import pintoss.giftmall.domains.order.infra.OrderRepository;
 import pintoss.giftmall.domains.order.service.OrderService;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
+import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +32,9 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
+    private final OrderProductRepository orderProductRepository;
+    private final PriceCategoryRepository priceCategoryRepository;
 
     @Transactional
     public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
@@ -42,11 +51,13 @@ public class PaymentService {
         if ("success".equals(externalPayStatus)) {
             payment.completePayment();
             order.updatePayStatus(payment.getPayStatus());
+            handleOrderSuccess(order);
             return PaymentResponse.fromEntity(payment);
         } else {
             payment.failPayment();
             order.updatePayStatus(payment.getPayStatus());
             paymentRepository.delete(payment);
+            deleteCartItems(user);
             throw new IllegalArgumentException("결제가 실패했습니다.");
         }
     }
@@ -71,6 +82,28 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
         payment.refund();
+    }
+
+    private void handleOrderSuccess(Order order) {
+        subtractStock(order);
+        if (order.isCart()) {
+            deleteCartItems(order.getUser());
+        }
+    }
+
+    private void deleteCartItems(User user) {
+        cartRepository.deleteAllByUser(user);
+    }
+
+    private void subtractStock(Order order) {
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
+        orderProducts.forEach(orderProduct -> {
+            PriceCategory priceCategory = orderProduct.getPriceCategory();
+            if (priceCategory.getStock() < orderProduct.getQuantity()) {
+                throw new IllegalStateException("재고가 부족합니다.");
+            }
+            priceCategory.updateStock(priceCategory.getStock() - orderProduct.getQuantity());
+        });
     }
 
 }
