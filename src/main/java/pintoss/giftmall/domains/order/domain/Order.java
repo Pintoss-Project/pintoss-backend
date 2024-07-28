@@ -39,6 +39,9 @@ public class Order {
     @Column(length = 10)
     private String payMethod;
 
+    @Column(length = 10)
+    private String payStatus;
+
     @Column(nullable = false)
     private boolean isSent = false;
 
@@ -62,6 +65,10 @@ public class Order {
         this.isSent = isSent;
         this.isCart = isCart;
         this.user = user;
+    }
+
+    public void updatePayStatus(String payStatus) {
+        this.payStatus = payStatus;
     }
 
 }

@@ -33,7 +33,7 @@ public class OrderResponse {
         this.payStatus = payStatus;
     }
 
-    public static OrderResponse fromEntity(Order order, Payment payment) {
+    public static OrderResponse fromEntity(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
                 .userName(order.getUser().getName())
@@ -44,7 +44,7 @@ public class OrderResponse {
                 .orderStatus(order.getOrderStatus())
                 .isSent(order.isSent())
                 .payMethod(order.getPayMethod())
-                .payStatus(payment != null ? payment.getPayStatus() : null)
+                .payStatus(order.getPayStatus())
                 .build();
     }
 

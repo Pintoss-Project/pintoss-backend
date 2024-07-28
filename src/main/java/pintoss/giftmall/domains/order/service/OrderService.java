@@ -29,7 +29,7 @@ public class OrderService {
         return orderRepository.findAll().stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());
-                    return OrderResponse.fromEntity(order, payment);
+                    return OrderResponse.fromEntity(order);
                 })
                 .collect(Collectors.toList());
     }
@@ -39,7 +39,7 @@ public class OrderService {
         return orderRepository.findAllByUserId(userId).stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());
-                    return OrderResponse.fromEntity(order, payment);
+                    return OrderResponse.fromEntity(order);
                 })
                 .collect(Collectors.toList());
     }

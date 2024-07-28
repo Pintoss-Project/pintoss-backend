@@ -37,14 +37,16 @@ public class PaymentService {
         String externalPayStatus = callExternalPaymentApi(paymentRequest);
 
         Payment payment = paymentRequest.toEntity(user, order);
-        payment.completePayment();
         paymentRepository.save(payment);
 
         if ("success".equals(externalPayStatus)) {
             payment.completePayment();
+            order.updatePayStatus(payment.getPayStatus());
             return PaymentResponse.fromEntity(payment);
         } else {
             payment.failPayment();
+            order.updatePayStatus(payment.getPayStatus());
+            paymentRepository.delete(payment);
             throw new IllegalArgumentException("결제가 실패했습니다.");
         }
     }
