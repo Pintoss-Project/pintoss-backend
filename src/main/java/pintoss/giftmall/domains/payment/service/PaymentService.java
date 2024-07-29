@@ -13,7 +13,6 @@ import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
-import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
@@ -40,9 +39,9 @@ public class PaymentService {
         String externalPayStatus = callExternalPaymentApi(paymentRequest);
 
         Payment payment = paymentRequest.toEntity(user, order);
-        paymentRepository.save(payment);
 
         if ("success".equals(externalPayStatus)) {
+            paymentRepository.save(payment);
             payment.completePayment();
             order.updatePayStatus(payment.getPayStatus());
             handleOrderSuccess(order);
@@ -50,7 +49,6 @@ public class PaymentService {
         } else {
             payment.failPayment();
             order.updatePayStatus(payment.getPayStatus());
-            paymentRepository.delete(payment);
             deleteCartItems(user);
             throw new IllegalArgumentException("결제가 실패했습니다.");
         }
