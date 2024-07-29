@@ -19,6 +19,7 @@ public class OrderProduct {
 
     private int quantity;
     private int price;
+    private Long categoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -28,17 +29,13 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private PriceCategory priceCategory;
-
     @Builder
-    public OrderProduct(int quantity, int price, Order order, Product product, PriceCategory priceCategory) {
+    public OrderProduct(Long categoryId, int quantity, int price, Order order, Product product) {
+        this.categoryId = categoryId;
         this.quantity = quantity;
         this.price = price;
         this.order = order;
         this.product = product;
-        this.priceCategory = priceCategory;
     }
 
     public void updateOrder(Order order) {
