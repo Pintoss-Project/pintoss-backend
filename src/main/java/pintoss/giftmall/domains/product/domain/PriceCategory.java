@@ -19,7 +19,7 @@ public class PriceCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Column(name = "price_category_id")
     private Long id;
 
     @Column(length = 50)

@@ -70,7 +70,7 @@ public class OrderService {
         orderRequest.getOrderProducts().forEach(orderProductRequest -> {
             Product product = productRepository.findById(orderProductRequest.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
-            PriceCategory priceCategory = priceCategoryRepository.findById(orderProductRequest.getCategoryId())
+            PriceCategory priceCategory = priceCategoryRepository.findById(orderProductRequest.getPriceCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("가격 카테고리를 찾을 수 없습니다."));
 
             OrderProduct orderProduct = OrderProduct.builder()
@@ -78,7 +78,7 @@ public class OrderService {
                     .product(product)
                     .price(orderProductRequest.getPrice())
                     .quantity(orderProductRequest.getQuantity())
-                    .categoryId(priceCategory.getId())
+                    .priceCategoryId(priceCategory.getId())
                     .build();
 
             orderProductRepository.save(orderProduct);

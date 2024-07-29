@@ -13,7 +13,6 @@ import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
-import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
@@ -93,7 +92,7 @@ public class PaymentService {
     private void subtractStock(Order order) {
         List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
         orderProducts.forEach(orderProduct -> {
-            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getCategoryId())
+            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId())
                     .orElseThrow(() -> new IllegalStateException("가격 카테고리를 찾을 수 없습니다."));
 
             if (priceCategory.getStock() < orderProduct.getQuantity()) {

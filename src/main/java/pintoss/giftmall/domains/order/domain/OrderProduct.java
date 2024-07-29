@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 
 @Entity
@@ -19,7 +18,7 @@ public class OrderProduct {
 
     private int quantity;
     private int price;
-    private Long categoryId;
+    private Long priceCategoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -30,8 +29,8 @@ public class OrderProduct {
     private Product product;
 
     @Builder
-    public OrderProduct(Long categoryId, int quantity, int price, Order order, Product product) {
-        this.categoryId = categoryId;
+    public OrderProduct(Long priceCategoryId, int quantity, int price, Order order, Product product) {
+        this.priceCategoryId = priceCategoryId;
         this.quantity = quantity;
         this.price = price;
         this.order = order;
