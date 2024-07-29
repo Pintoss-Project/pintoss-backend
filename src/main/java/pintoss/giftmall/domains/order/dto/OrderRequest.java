@@ -33,19 +33,19 @@ public class OrderRequest {
     private boolean isSent = false;
 
     @NotNull
-    private boolean isCart = false;
+    private boolean isOrderInCart = false;
 
     @NotNull
     private List<OrderProductRequest> orderProducts;
 
     @Builder
-    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isCart, String payMethod, List<OrderProductRequest> orderProducts) {
+    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isOrderInCart, String payMethod, List<OrderProductRequest> orderProducts) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
         this.payMethod = payMethod;
         this.isSent = isSent;
-        this.isCart = isCart;
+        this.isOrderInCart = isOrderInCart;
         this.orderProducts = orderProducts;
     }
 
@@ -56,7 +56,7 @@ public class OrderRequest {
                 .orderStatus(orderStatus)
                 .payMethod(payMethod)
                 .isSent(isSent)
-                .isCart(isCart)
+                .isOrderInCart(isOrderInCart)
                 .user(user)
                 .build();
     }

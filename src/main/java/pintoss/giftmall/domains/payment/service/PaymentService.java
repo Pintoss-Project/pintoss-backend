@@ -86,7 +86,7 @@ public class PaymentService {
 
     private void handleOrderSuccess(Order order) {
         subtractStock(order);
-        if (order.isCart()) {
+        if (order.isOrderInCart()) {
             deleteCartItems(order.getUser());
         }
     }

@@ -31,7 +31,7 @@ public class OrderProduct {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "price_category_id")
+    @JoinColumn(name = "category_id")
     private PriceCategory priceCategory;
 
     @Builder
