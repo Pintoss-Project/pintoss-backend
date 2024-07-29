@@ -3,7 +3,6 @@ package pintoss.giftmall.domains.order.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.order.dto.OrderRequest;

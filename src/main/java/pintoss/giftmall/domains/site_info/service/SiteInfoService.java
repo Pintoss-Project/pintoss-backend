@@ -9,7 +9,6 @@ import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoImageRepository;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 

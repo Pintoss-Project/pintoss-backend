@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pintoss.giftmall.domains.order.domain.Order;
-import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.user.domain.User;
 

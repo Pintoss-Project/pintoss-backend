@@ -11,8 +11,6 @@ import org.springframework.util.StringUtils;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

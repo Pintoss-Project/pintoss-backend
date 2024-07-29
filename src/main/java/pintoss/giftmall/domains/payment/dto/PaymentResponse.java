@@ -3,7 +3,6 @@ package pintoss.giftmall.domains.payment.dto;
 import lombok.Builder;
 import lombok.Getter;
 import pintoss.giftmall.domains.payment.domain.Payment;
-import pintoss.giftmall.domains.user.domain.User;
 
 import java.time.LocalDateTime;
 

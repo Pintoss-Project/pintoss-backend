@@ -3,7 +3,6 @@ package pintoss.giftmall.domains.order.dto;
 import lombok.Builder;
 import lombok.Getter;
 import pintoss.giftmall.domains.order.domain.Order;
-import pintoss.giftmall.domains.payment.domain.Payment;
 
 @Getter
 public class OrderResponse {

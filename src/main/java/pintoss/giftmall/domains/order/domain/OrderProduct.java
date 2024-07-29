@@ -20,8 +20,6 @@ public class OrderProduct {
     private int quantity;
     private int price;
 
-    private Long priceCategoryId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;

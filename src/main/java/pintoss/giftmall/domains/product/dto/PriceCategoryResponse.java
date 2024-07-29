@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.product.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
