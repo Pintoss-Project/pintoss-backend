@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.payment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.order.domain.Order;
@@ -31,7 +32,7 @@ public class PaymentService {
     private final OrderProductRepository orderProductRepository;
     private final PriceCategoryRepository priceCategoryRepository;
 
-    @Transactional
+    @Transactional(noRollbackFor = IllegalArgumentException.class)
     public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
@@ -50,10 +51,17 @@ public class PaymentService {
             return PaymentResponse.fromEntity(payment);
         } else {
             payment.failPayment();
-            order.updatePayStatus(payment.getPayStatus());
-            deleteCartItems(user);
+            updateOrderStatusAndDeleteCartItems(order, payment.getPayStatus(), user);
             throw new IllegalArgumentException("결제가 실패했습니다.");
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateOrderStatusAndDeleteCartItems(Order order, String payStatus, User user) {
+        order.updatePayStatus(payStatus);
+        orderRepository.save(order);
+        orderRepository.flush();
+        cartRepository.deleteAllByUser(user);
     }
 
     private String callExternalPaymentApi(PaymentRequest paymentRequest) {
