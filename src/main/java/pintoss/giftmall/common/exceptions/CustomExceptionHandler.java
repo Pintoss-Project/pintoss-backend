@@ -15,7 +15,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
-                ex.getErrorMessage(),
+                ex.getMessage(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponse, ex.getHttpStatus());

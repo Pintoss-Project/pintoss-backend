@@ -13,14 +13,12 @@ import java.time.LocalDateTime;
 public class CustomException extends RuntimeException {
 
     private HttpStatus httpStatus;
-    private String errorMessage;
     private LocalDateTime timestamp;
 
     @Builder
     public CustomException(String message, HttpStatus httpStatus, ErrorCode errorCode, LocalDateTime timestamp) {
-        super(message);
+        super(errorCode.getMessage() + message);
         this.httpStatus = httpStatus;
-        this.errorMessage = errorCode.getMessage();
         this.timestamp = timestamp;
     }
 
@@ -28,4 +26,12 @@ public class CustomException extends RuntimeException {
         super(message);
     }
 
+    @Override
+    public String toString() {
+        return "CustomException{" +
+                "httpStatus=" + httpStatus +
+                ", timestamp=" + timestamp +
+                ", message=" + getMessage() +
+                '}';
+    }
 }
