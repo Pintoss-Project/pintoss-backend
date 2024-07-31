@@ -103,10 +103,7 @@ public class PaymentService {
             PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId())
                     .orElseThrow(() -> new IllegalStateException("가격 카테고리를 찾을 수 없습니다."));
 
-            if (priceCategory.getStock() < orderProduct.getQuantity()) {
-                throw new IllegalStateException("재고가 부족합니다.");
-            }
-            priceCategory.updateStock(priceCategory.getStock() - orderProduct.getQuantity());
+            priceCategory.updateStock(orderProduct.getQuantity());
         });
     }
 
