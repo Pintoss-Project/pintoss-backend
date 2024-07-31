@@ -15,6 +15,7 @@ import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
+import pintoss.giftmall.domains.product.service.PriceCategoryService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
@@ -31,6 +32,7 @@ public class PaymentService {
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
     private final PriceCategoryRepository priceCategoryRepository;
+    private final PriceCategoryService priceCategoryService;
 
     @Transactional(noRollbackFor = IllegalArgumentException.class)
     public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
@@ -100,10 +102,7 @@ public class PaymentService {
     private void subtractStock(Order order) {
         List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
         orderProducts.forEach(orderProduct -> {
-            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId())
-                    .orElseThrow(() -> new IllegalStateException("가격 카테고리를 찾을 수 없습니다."));
-
-            priceCategory.updateStock(orderProduct.getQuantity());
+            priceCategoryService.updateStock(orderProduct.getProduct().getId(), orderProduct.getPriceCategoryId(), orderProduct.getQuantity());
         });
     }
 
