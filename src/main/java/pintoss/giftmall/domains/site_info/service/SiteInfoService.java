@@ -1,8 +1,11 @@
 package pintoss.giftmall.domains.site_info.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.exceptions.CustomException;
+import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
@@ -18,11 +21,14 @@ import java.util.stream.Collectors;
 public class SiteInfoService {
 
     private final SiteInfoRepository siteInfoRepository;
-    private final SiteInfoImageRepository siteInfoImageRepository;
 
     @Transactional(readOnly = true)
     public List<SiteInfoResponse> findAll() {
-        return siteInfoRepository.findAll().stream()
+        List<SiteInfo> siteInfos = siteInfoRepository.findAll();
+        if (siteInfos.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보를 찾을 수 없습니다.");
+        }
+        return siteInfos.stream()
                 .map(SiteInfoResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -30,17 +36,19 @@ public class SiteInfoService {
     @Transactional(readOnly = true)
     public SiteInfoResponse findById(Long id) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("site_id: " + id));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보 id를 다시 확인해주세요."));
         return SiteInfoResponse.fromEntity(siteInfo);
     }
 
     public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("site_id" + id));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보 id를 다시 확인해주세요."));
 
-        siteInfo.update(requestDTO);
-
-        return SiteInfoResponse.fromEntity(siteInfo);
+        try {
+            siteInfo.update(requestDTO);
+            return SiteInfoResponse.fromEntity(siteInfo);
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "사이트 정보", ErrorCode.UPDATE_FAILURE);
+        }
     }
-
 }

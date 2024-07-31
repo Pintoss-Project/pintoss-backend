@@ -1,8 +1,11 @@
 package pintoss.giftmall.domains.cart.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.exceptions.CustomException;
+import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.cart.domain.Cart;
 import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
@@ -26,20 +29,25 @@ public class CartService {
 
     public Long addToCart(Long userId, CartRequest requestDTO) {
         Product product = productRepository.findById(requestDTO.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product_id!"));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user_id!"));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자 id를 다시 확인해주세요."));
 
-        Cart cart = requestDTO.toEntity(product, user);
-        cartRepository.save(cart);
-
-        return cart.getId();
+        try {
+            Cart cart = requestDTO.toEntity(product, user);
+            cartRepository.save(cart);
+            return cart.getId();
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.CREATION_FAILURE);
+        }
     }
 
     @Transactional(readOnly = true)
     public List<CartResponse> getCartItems(Long userId) {
-        List<Cart> cartItems = cartRepository.findAllByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자 id를 다시 확인해주세요."));
 
+        List<Cart> cartItems = cartRepository.findAllByUserId(userId);
         return cartItems.stream()
                 .map(CartResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -48,14 +56,23 @@ public class CartService {
 
     public void updateCartItem(Long cartItemId, int quantity) {
         Cart cart = cartRepository.findById(cartItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid cart_item_id!"));
-        cart.updateQuantity(quantity);
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "장바구니 항목 id를 다시 확인해주세요."));
+
+        try {
+            cart.updateQuantity(quantity);
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.UPDATE_FAILURE);
+        }
     }
 
     public void deleteCartItem(Long cartItemId) {
         Cart cart = cartRepository.findById(cartItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid cart_item_id!"));
-        cartRepository.delete(cart);
-    }
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "장바구니 항목 id를 다시 확인해주세요."));
 
+        try {
+            cartRepository.delete(cart);
+        } catch (Exception e) {
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.DELETION_FAILURE);
+        }
+    }
 }

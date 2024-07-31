@@ -1,9 +1,12 @@
 package pintoss.giftmall.domains.payment.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.exceptions.CustomException;
+import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
@@ -32,14 +35,13 @@ public class PaymentService {
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
     private final PriceCategoryRepository priceCategoryRepository;
-    private final PriceCategoryService priceCategoryService;
 
     @Transactional(noRollbackFor = IllegalArgumentException.class)
     public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "유저 id를 다시 확인해주세요."));
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "주문 id를 다시 확인해주세요."));
 
         String externalPayStatus = callExternalPaymentApi(paymentRequest);
 
@@ -54,7 +56,7 @@ public class PaymentService {
         } else {
             payment.failPayment();
             updateOrderStatusAndDeleteCartItems(order, payment.getPayStatus(), user);
-            throw new IllegalArgumentException("결제가 실패했습니다.");
+            throw new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_REQUEST, "결제가 실패했습니다.");
         }
     }
 
@@ -72,19 +74,19 @@ public class PaymentService {
 
     public PaymentResponse getPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
         return PaymentResponse.fromEntity(payment);
     }
 
     public void cancelPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
         paymentRepository.delete(payment);
     }
 
     public void refundPayment(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
         payment.refund();
     }
 
@@ -102,9 +104,9 @@ public class PaymentService {
     private void subtractStock(Order order) {
         List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
         orderProducts.forEach(orderProduct -> {
-            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId()).orElseThrow(() -> new IllegalArgumentException("가격 카테고리를 찾을 수 없습니다."));
+            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId())
+                    .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id를 다시 확인해주세요."));
             priceCategory.decreaseStock(orderProduct.getQuantity());
         });
     }
-
 }

@@ -1,8 +1,11 @@
 package pintoss.giftmall.domains.order.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.exceptions.CustomException;
+import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
@@ -35,7 +38,11 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAll() {
-        return orderRepository.findAll().stream()
+        List<Order> orders = orderRepository.findAll();
+        if (orders.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "주문내역을 다시 확인해주세요.");
+        }
+        return orders.stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());
                     return OrderResponse.fromEntity(order);
@@ -45,7 +52,14 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAllByUserId(Long userId) {
-        return orderRepository.findAllByUserId(userId).stream()
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자 id를 다시 확인해주세요."));
+
+        List<Order> orders = orderRepository.findAllByUserId(userId);
+        if (orders.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자의 주문을 찾을 수 없습니다.");
+        }
+        return orders.stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());
                     return OrderResponse.fromEntity(order);
@@ -56,35 +70,38 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "주문 id를 다시 확인해주세요."));
     }
 
     @Transactional
     public Long createOrder(Long userId, OrderRequest orderRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "유저 id를 다시 확인해주세요."));
 
         Order order = orderRequest.toEntity(user);
         orderRepository.save(order);
 
         orderRequest.getOrderProducts().forEach(orderProductRequest -> {
             Product product = productRepository.findById(orderProductRequest.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
             PriceCategory priceCategory = priceCategoryRepository.findById(orderProductRequest.getPriceCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("가격 카테고리를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id를 다시 확인해주세요."));
 
-            OrderProduct orderProduct = OrderProduct.builder()
-                    .order(order)
-                    .product(product)
-                    .price(orderProductRequest.getPrice())
-                    .quantity(orderProductRequest.getQuantity())
-                    .priceCategoryId(priceCategory.getId())
-                    .build();
+            try {
+                OrderProduct orderProduct = OrderProduct.builder()
+                        .order(order)
+                        .product(product)
+                        .price(orderProductRequest.getPrice())
+                        .quantity(orderProductRequest.getQuantity())
+                        .priceCategoryId(priceCategory.getId())
+                        .build();
 
-            orderProductRepository.save(orderProduct);
+                orderProductRepository.save(orderProduct);
+            } catch (Exception e) {
+                throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "주문서", ErrorCode.CREATION_FAILURE);
+            }
         });
 
         return order.getId();
     }
-
 }
