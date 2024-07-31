@@ -102,7 +102,8 @@ public class PaymentService {
     private void subtractStock(Order order) {
         List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
         orderProducts.forEach(orderProduct -> {
-            priceCategoryService.updateStock(orderProduct.getProduct().getId(), orderProduct.getPriceCategoryId(), orderProduct.getQuantity());
+            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId()).orElseThrow(() -> new IllegalArgumentException("가격 카테고리를 찾을 수 없습니다."));
+            priceCategory.decreaseStock(orderProduct.getQuantity());
         });
     }
 

@@ -44,7 +44,11 @@ public class PriceCategory {
         this.product = product;
     }
 
-    public void updateStock(int quantity) {
+    public void updateStock(int stock) {
+        this.stock = stock;
+    }
+
+    public void decreaseStock(int quantity) {
         if(this.stock < quantity) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
