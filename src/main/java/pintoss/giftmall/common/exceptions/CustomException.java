@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 public class CustomException extends RuntimeException {
 
     private HttpStatus httpStatus;
-    private ErrorCode errorCode;
+    private String errorMessage;
     private LocalDateTime timestamp;
 
     @Builder
     public CustomException(String message, HttpStatus httpStatus, ErrorCode errorCode, LocalDateTime timestamp) {
         super(message);
         this.httpStatus = httpStatus;
-        this.errorCode = errorCode;
+        this.errorMessage = errorCode.getMessage();
         this.timestamp = timestamp;
     }
 

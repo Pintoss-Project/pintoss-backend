@@ -11,34 +11,27 @@ public class ApiErrorResponse {
 
     private final int code;
     private final HttpStatus status;
-    private final String message;
-    private final String errorCode;
+    private final String errorMessage;
     private final LocalDateTime timestamp;
 
     @Builder
-    private ApiErrorResponse(HttpStatus status, String message, String errorCode, LocalDateTime timestamp) {
+    private ApiErrorResponse(HttpStatus status, String errorMessage, LocalDateTime timestamp) {
         this.code = status.value();
         this.status = status;
-        this.message = message;
-        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
         this.timestamp = timestamp;
     }
 
-    public static ApiErrorResponse of(HttpStatus status, String message, String errorCode, LocalDateTime timestamp) {
+    public static ApiErrorResponse of(HttpStatus status, String errorMessage, LocalDateTime timestamp) {
         return ApiErrorResponse.builder()
                 .status(status)
-                .message(message)
-                .errorCode(errorCode)
+                .errorMessage(errorMessage)
                 .timestamp(timestamp)
                 .build();
     }
 
-    public static ApiErrorResponse of(HttpStatus status, String message, String errorCode) {
-        return of(status, message, errorCode, LocalDateTime.now());
-    }
-
-    public static ApiErrorResponse of(HttpStatus status, String message) {
-        return of(status, message, null);
+    public static ApiErrorResponse of(HttpStatus status, String errorMessage) {
+        return of(status, errorMessage, LocalDateTime.now());
     }
 
     public static ApiErrorResponse of(HttpStatus status) {

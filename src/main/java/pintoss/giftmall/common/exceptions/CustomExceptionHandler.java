@@ -12,11 +12,10 @@ import java.time.LocalDateTime;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public final ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex, WebRequest request) {
+    public final ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
-                ex.getMessage(),
-                ex.getErrorCode().name(),
+                ex.getErrorMessage(),
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
