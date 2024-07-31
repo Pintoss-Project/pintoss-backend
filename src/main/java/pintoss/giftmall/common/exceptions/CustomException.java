@@ -15,11 +15,16 @@ public class CustomException extends RuntimeException {
     private HttpStatus httpStatus;
     private LocalDateTime timestamp;
 
-    @Builder
-    public CustomException(String message, HttpStatus httpStatus, ErrorCode errorCode, LocalDateTime timestamp) {
+    public CustomException(HttpStatus httpStatus, ErrorCode errorCode, String message) {
         super(errorCode.getMessage() + message);
         this.httpStatus = httpStatus;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public CustomException(HttpStatus httpStatus, String message, ErrorCode errorCode) {
+        super(message + errorCode.getMessage());
+        this.httpStatus = httpStatus;
+        this.timestamp = LocalDateTime.now();
     }
 
     public CustomException(String message) {
