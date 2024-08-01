@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pintoss.giftmall.common.exceptions.client.*;
+import pintoss.giftmall.common.exceptions.server.ServerErrorException;
 import pintoss.giftmall.common.responseobj.ApiErrorResponse;
 
 import java.time.LocalDateTime;
@@ -94,6 +95,16 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(FieldMissingException.class)
     public final ResponseEntity<ApiErrorResponse> handleFieldMissingException(FieldMissingException ex) {
+        ApiErrorResponse errorResponse = ApiErrorResponse.of(
+                ex.getHttpStatus(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
+    }
+
+    @ExceptionHandler(ServerErrorException.class)
+    public final ResponseEntity<ApiErrorResponse> handleInternalServerErrorException(ServerErrorException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
                 ex.getMessage(),
