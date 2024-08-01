@@ -16,13 +16,13 @@ public class CustomException extends RuntimeException {
     private LocalDateTime timestamp;
 
     public CustomException(HttpStatus httpStatus, ErrorCode errorCode, String message) {
-        super(errorCode.getMessage() + message);
+        super(errorCode.getMessage() + " : " + message);
         this.httpStatus = httpStatus;
         this.timestamp = LocalDateTime.now();
     }
 
     public CustomException(HttpStatus httpStatus, String message, ErrorCode errorCode) {
-        super(message + errorCode.getMessage());
+        super(message + " : " + errorCode.getMessage());
         this.httpStatus = httpStatus;
         this.timestamp = LocalDateTime.now();
     }
@@ -31,12 +31,4 @@ public class CustomException extends RuntimeException {
         super(message);
     }
 
-    @Override
-    public String toString() {
-        return "CustomException{" +
-                "httpStatus=" + httpStatus +
-                ", timestamp=" + timestamp +
-                ", message=" + getMessage() +
-                '}';
-    }
 }
