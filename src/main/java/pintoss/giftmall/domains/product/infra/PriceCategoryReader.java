@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.product.domain.PriceCategory;
 
 @Component
 @RequiredArgsConstructor
-public class PriceCategoryRepositoryReader {
+public class PriceCategoryReader {
 
     private final PriceCategoryRepository priceCategoryRepository;
 

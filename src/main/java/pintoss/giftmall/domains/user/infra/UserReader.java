@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.user.domain.User;
 
 @Component
 @RequiredArgsConstructor
-public class UserRepositoryReader {
+public class UserReader {
 
     private final UserRepository userRepository;
 

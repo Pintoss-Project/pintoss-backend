@@ -11,7 +11,7 @@ import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.infra.BoardRepository;
-import pintoss.giftmall.domains.board.infra.BoardRepositoryReader;
+import pintoss.giftmall.domains.board.infra.BoardReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final BoardRepositoryReader boardRepositoryReader;
+    private final BoardReader boardReader;
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAllByType(String type) {
@@ -36,7 +36,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardResponse findById(Long id) {
-        Board board = boardRepositoryReader.findById(id);
+        Board board = boardReader.findById(id);
         return BoardResponse.fromEntity(board);
     }
 
@@ -47,14 +47,14 @@ public class BoardService {
     }
 
     public Long update(Long id, BoardRequest requestDTO) {
-        Board board = boardRepositoryReader.findById(id);
+        Board board = boardReader.findById(id);
 
         board.update(requestDTO);
         return board.getId();
     }
 
     public void delete(Long id) {
-        Board board = boardRepositoryReader.findById(id);
+        Board board = boardReader.findById(id);
 
         boardRepository.delete(board);
     }

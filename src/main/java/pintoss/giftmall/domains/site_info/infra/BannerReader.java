@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.site_info.domain.Banner;
 
 @Component
 @RequiredArgsConstructor
-public class BannerRepositoryReader {
+public class BannerReader {
 
     private final BannerRepository bannerRepository;
 

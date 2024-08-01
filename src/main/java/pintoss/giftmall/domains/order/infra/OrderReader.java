@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.order.domain.Order;
 
 @Component
 @RequiredArgsConstructor
-public class OrderRepositoryReader {
+public class OrderReader {
 
     private final OrderRepository orderRepository;
 

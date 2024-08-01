@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 
 @Component
 @RequiredArgsConstructor
-public class SiteInfoRepositoryReader {
+public class SiteInfoReader {
 
     private final SiteInfoRepository siteInfoRepository;
 

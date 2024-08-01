@@ -9,9 +9,8 @@ import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
-import pintoss.giftmall.domains.site_info.infra.SiteInfoImageRepository;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
-import pintoss.giftmall.domains.site_info.infra.SiteInfoRepositoryReader;
+import pintoss.giftmall.domains.site_info.infra.SiteInfoReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class SiteInfoService {
 
     private final SiteInfoRepository siteInfoRepository;
-    private final SiteInfoRepositoryReader siteInfoRepositoryReader;
+    private final SiteInfoReader siteInfoReader;
 
     @Transactional(readOnly = true)
     public List<SiteInfoResponse> findAll() {
@@ -37,13 +36,13 @@ public class SiteInfoService {
 
     @Transactional(readOnly = true)
     public SiteInfoResponse findById(Long id) {
-        SiteInfo siteInfo = siteInfoRepositoryReader.findById(id);
+        SiteInfo siteInfo = siteInfoReader.findById(id);
 
         return SiteInfoResponse.fromEntity(siteInfo);
     }
 
     public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
-        SiteInfo siteInfo = siteInfoRepositoryReader.findById(id);
+        SiteInfo siteInfo = siteInfoReader.findById(id);
         siteInfo.update(requestDTO);
 
         return SiteInfoResponse.fromEntity(siteInfo);

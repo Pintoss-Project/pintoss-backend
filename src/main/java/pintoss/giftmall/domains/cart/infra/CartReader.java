@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.cart.domain.Cart;
 
 @Component
 @RequiredArgsConstructor
-public class CartRepositoryReader {
+public class CartReader {
 
     private final CartRepository cartRepository;
 

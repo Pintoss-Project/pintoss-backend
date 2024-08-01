@@ -10,7 +10,7 @@ import pintoss.giftmall.domains.board.domain.Board;
 
 @Component
 @RequiredArgsConstructor
-public class BoardRepositoryReader {
+public class BoardReader {
 
     private final BoardRepository boardRepository;
 

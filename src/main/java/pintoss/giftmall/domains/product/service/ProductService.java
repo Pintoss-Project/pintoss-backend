@@ -10,7 +10,7 @@ import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
-import pintoss.giftmall.domains.product.infra.ProductRepositoryReader;
+import pintoss.giftmall.domains.product.infra.ProductReader;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductRepositoryReader productRepositoryReader;
+    private final ProductReader productReader;
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
@@ -39,7 +39,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findById(Long id) {
-        Product product = productRepositoryReader.findById(id);
+        Product product = productReader.findById(id);
 
         return ProductResponse.fromEntity(product);
     }
@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     public Long update(Long id, ProductRequest requestDTO) {
-        Product product = productRepositoryReader.findById(id);
+        Product product = productReader.findById(id);
         product.update(requestDTO);
 
         return product.getId();

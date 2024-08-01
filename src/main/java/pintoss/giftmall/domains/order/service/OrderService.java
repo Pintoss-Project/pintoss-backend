@@ -12,18 +12,15 @@ import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.order.dto.OrderResponse;
 import pintoss.giftmall.domains.order.infra.OrderProductRepository;
 import pintoss.giftmall.domains.order.infra.OrderRepository;
-import pintoss.giftmall.domains.order.infra.OrderRepositoryReader;
+import pintoss.giftmall.domains.order.infra.OrderReader;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
-import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
-import pintoss.giftmall.domains.product.infra.PriceCategoryRepositoryReader;
-import pintoss.giftmall.domains.product.infra.ProductRepository;
-import pintoss.giftmall.domains.product.infra.ProductRepositoryReader;
+import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
+import pintoss.giftmall.domains.product.infra.ProductReader;
 import pintoss.giftmall.domains.user.domain.User;
-import pintoss.giftmall.domains.user.infra.UserRepository;
-import pintoss.giftmall.domains.user.infra.UserRepositoryReader;
+import pintoss.giftmall.domains.user.infra.UserReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,10 +33,10 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final OrderProductRepository orderProductRepository;
-    private final OrderRepositoryReader orderRepositoryReader;
-    private final ProductRepositoryReader productRepositoryReader;
-    private final PriceCategoryRepositoryReader priceCategoryRepositoryReader;
-    private final UserRepositoryReader userRepositoryReader;
+    private final OrderReader orderReader;
+    private final ProductReader productRepositoryReader;
+    private final PriceCategoryReader priceCategoryReader;
+    private final UserReader userReader;
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAll() {
@@ -57,7 +54,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> findAllByUserId(Long userId) {
-        userRepositoryReader.findById(userId);
+        userReader.findById(userId);
 
         List<Order> orders = orderRepository.findAllByUserId(userId);
         if (orders.isEmpty()) {
@@ -73,19 +70,19 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Order findById(Long orderId) {
-        return orderRepositoryReader.findById(orderId);
+        return orderReader.findById(orderId);
     }
 
     @Transactional
     public Long createOrder(Long userId, OrderRequest orderRequest) {
-        User user = userRepositoryReader.findById(userId);
+        User user = userReader.findById(userId);
 
         Order order = orderRequest.toEntity(user);
         orderRepository.save(order);
 
         orderRequest.getOrderProducts().forEach(orderProductRequest -> {
             Product product = productRepositoryReader.findById(orderProductRequest.getProductId());
-            PriceCategory priceCategory = priceCategoryRepositoryReader.findById(orderProductRequest.getPriceCategoryId());
+            PriceCategory priceCategory = priceCategoryReader.findById(orderProductRequest.getPriceCategoryId());
 
             OrderProduct orderProduct = OrderProduct.builder()
                     .order(order)

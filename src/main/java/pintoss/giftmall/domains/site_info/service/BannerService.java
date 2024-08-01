@@ -10,7 +10,7 @@ import pintoss.giftmall.domains.site_info.domain.Banner;
 import pintoss.giftmall.domains.site_info.dto.BannerRequest;
 import pintoss.giftmall.domains.site_info.dto.BannerResponse;
 import pintoss.giftmall.domains.site_info.infra.BannerRepository;
-import pintoss.giftmall.domains.site_info.infra.BannerRepositoryReader;
+import pintoss.giftmall.domains.site_info.infra.BannerReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class BannerService {
 
     private final BannerRepository bannerRepository;
-    private final BannerRepositoryReader bannerRepositoryReader;
+    private final BannerReader bannerReader;
 
     @Transactional(readOnly = true)
     public List<BannerResponse> findAll() {
@@ -38,7 +38,7 @@ public class BannerService {
 
     @Transactional(readOnly = true)
     public BannerResponse findById(Long id) {
-        Banner banner = bannerRepositoryReader.findById(id);
+        Banner banner = bannerReader.findById(id);
 
         return BannerResponse.fromEntity(banner);
     }
@@ -51,7 +51,7 @@ public class BannerService {
     }
 
     public BannerResponse update(Long id, BannerRequest requestDTO) {
-        Banner banner = bannerRepositoryReader.findById(id);
+        Banner banner = bannerReader.findById(id);
         banner.update(requestDTO.getBannerTitle(), requestDTO.getBannerLink());
 
         return BannerResponse.fromEntity(banner);

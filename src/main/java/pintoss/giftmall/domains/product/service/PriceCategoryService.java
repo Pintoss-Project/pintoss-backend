@@ -11,9 +11,8 @@ import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
 import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
-import pintoss.giftmall.domains.product.infra.PriceCategoryRepositoryReader;
-import pintoss.giftmall.domains.product.infra.ProductRepository;
-import pintoss.giftmall.domains.product.infra.ProductRepositoryReader;
+import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
+import pintoss.giftmall.domains.product.infra.ProductReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +23,12 @@ import java.util.stream.Collectors;
 public class PriceCategoryService {
 
     private final PriceCategoryRepository priceCategoryRepository;
-    private final ProductRepositoryReader productRepositoryReader;
-    private final PriceCategoryRepositoryReader priceCategoryRepositoryReader;
+    private final ProductReader productReader;
+    private final PriceCategoryReader priceCategoryReader;
 
     @Transactional(readOnly = true)
     public List<PriceCategoryResponse> findAllByProductId(Long productId) {
-        productRepositoryReader.findById(productId);
+        productReader.findById(productId);
 
         List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(productId);
         if (priceCategories.isEmpty()) {
@@ -42,13 +41,13 @@ public class PriceCategoryService {
 
     @Transactional(readOnly = true)
     public PriceCategoryResponse findByIdAndProductId(Long categoryId, Long productId) {
-        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
+        PriceCategory priceCategory = priceCategoryReader.findByIdAndProductId(categoryId, productId);
 
         return PriceCategoryResponse.fromEntity(priceCategory);
     }
 
     public Long create(PriceCategoryRequest requestDTO) {
-        Product product = productRepositoryReader.findById(requestDTO.getProductId());
+        Product product = productReader.findById(requestDTO.getProductId());
         PriceCategory priceCategory = requestDTO.toEntity(product);
         priceCategoryRepository.save(priceCategory);
 
@@ -56,12 +55,12 @@ public class PriceCategoryService {
     }
 
     public void delete(Long productId, Long categoryId) {
-        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
+        PriceCategory priceCategory = priceCategoryReader.findByIdAndProductId(categoryId, productId);
         priceCategoryRepository.delete(priceCategory);
     }
 
     public Long updateStock(Long productId, Long categoryId, int stock) {
-        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
+        PriceCategory priceCategory = priceCategoryReader.findByIdAndProductId(categoryId, productId);
         priceCategory.updateStock(stock);
 
         return priceCategory.getId();
