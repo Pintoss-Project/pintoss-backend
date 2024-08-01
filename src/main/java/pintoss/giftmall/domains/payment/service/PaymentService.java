@@ -11,15 +11,19 @@ import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.order.infra.OrderProductRepository;
+import pintoss.giftmall.domains.order.infra.OrderReader;
 import pintoss.giftmall.domains.order.infra.OrderRepository;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
+import pintoss.giftmall.domains.payment.infra.PaymentReader;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
+import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.service.PriceCategoryService;
 import pintoss.giftmall.domains.user.domain.User;
+import pintoss.giftmall.domains.user.infra.UserReader;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.List;
@@ -31,17 +35,17 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final OrderProductRepository orderProductRepository;
-    private final PriceCategoryRepository priceCategoryRepository;
+    private final UserReader userReader;
+    private final OrderReader orderReader;
+    private final PaymentReader paymentReader;
+    private final PriceCategoryReader priceCategoryReader;
 
     @Transactional(noRollbackFor = IllegalArgumentException.class)
     public PaymentResponse processPayment(Long userId, Long orderId, PaymentRequest paymentRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "유저 id를 다시 확인해주세요."));
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "주문 id를 다시 확인해주세요."));
+        User user = userReader.findById(userId);
+        Order order = orderReader.findById(orderId);
 
         String externalPayStatus = callExternalPaymentApi(paymentRequest);
 
@@ -73,20 +77,18 @@ public class PaymentService {
     }
 
     public PaymentResponse getPayment(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
+        Payment payment = paymentReader.findById(paymentId);
+
         return PaymentResponse.fromEntity(payment);
     }
 
     public void cancelPayment(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
+        Payment payment = paymentReader.findById(paymentId);
         paymentRepository.delete(payment);
     }
 
     public void refundPayment(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "결제 id를 다시 확인해주세요."));
+        Payment payment = paymentReader.findById(paymentId);
         payment.refund();
     }
 
@@ -104,8 +106,7 @@ public class PaymentService {
     private void subtractStock(Order order) {
         List<OrderProduct> orderProducts = orderProductRepository.findByOrderId(order.getId());
         orderProducts.forEach(orderProduct -> {
-            PriceCategory priceCategory = priceCategoryRepository.findById(orderProduct.getPriceCategoryId())
-                    .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id를 다시 확인해주세요."));
+            PriceCategory priceCategory = priceCategoryReader.findById(orderProduct.getPriceCategoryId());
             priceCategory.decreaseStock(orderProduct.getQuantity());
         });
     }

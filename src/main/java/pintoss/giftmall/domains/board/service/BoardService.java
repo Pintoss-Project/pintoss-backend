@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import pintoss.giftmall.common.exceptions.CustomException;
 import pintoss.giftmall.common.exceptions.ErrorCode;
+import pintoss.giftmall.common.exceptions.client.FieldMissingException;
 import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
@@ -27,8 +28,9 @@ public class BoardService {
     @Transactional(readOnly = true)
     public List<BoardResponse> findAllByType(String type) {
         if (!StringUtils.hasText(type)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_REQUEST, "타입을 다시 확인해주세요. type : " + type);
+            throw new FieldMissingException("type");
         }
+
         return boardRepository.findByType(type).stream()
                 .map(BoardResponse::fromEntity)
                 .collect(Collectors.toList());
