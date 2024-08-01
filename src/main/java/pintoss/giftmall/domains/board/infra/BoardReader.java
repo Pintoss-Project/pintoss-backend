@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.board.infra;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;

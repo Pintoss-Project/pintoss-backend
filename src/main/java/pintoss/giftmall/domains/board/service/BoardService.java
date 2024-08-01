@@ -1,12 +1,9 @@
 package pintoss.giftmall.domains.board.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import pintoss.giftmall.common.exceptions.CustomException;
-import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.common.exceptions.client.FieldMissingException;
 import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.dto.BoardRequest;

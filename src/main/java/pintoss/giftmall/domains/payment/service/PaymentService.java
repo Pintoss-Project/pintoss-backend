@@ -20,11 +20,8 @@ import pintoss.giftmall.domains.payment.infra.PaymentReader;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
-import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
-import pintoss.giftmall.domains.product.service.PriceCategoryService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
-import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.List;
 

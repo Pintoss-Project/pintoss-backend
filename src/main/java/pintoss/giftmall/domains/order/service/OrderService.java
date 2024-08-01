@@ -1,11 +1,8 @@
 package pintoss.giftmall.domains.order.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pintoss.giftmall.common.exceptions.CustomException;
-import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.domain.OrderProduct;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
@@ -41,9 +38,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponse> findAll() {
         List<Order> orders = orderRepository.findAll();
-        if (orders.isEmpty()) {
-            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "주문내역을 찾을 수 없습니다.");
-        }
+
         return orders.stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());
@@ -57,9 +52,7 @@ public class OrderService {
         userReader.findById(userId);
 
         List<Order> orders = orderRepository.findAllByUserId(userId);
-        if (orders.isEmpty()) {
-            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자의 주문내역을 찾을 수 없습니다.");
-        }
+
         return orders.stream()
                 .map(order -> {
                     Payment payment = paymentRepository.findByOrderId(order.getId());

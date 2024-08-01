@@ -1,11 +1,9 @@
 package pintoss.giftmall.domains.site_info.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pintoss.giftmall.common.exceptions.CustomException;
-import pintoss.giftmall.common.exceptions.ErrorCode;
+import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
@@ -26,9 +24,11 @@ public class SiteInfoService {
     @Transactional(readOnly = true)
     public List<SiteInfoResponse> findAll() {
         List<SiteInfo> siteInfos = siteInfoRepository.findAll();
+
         if (siteInfos.isEmpty()) {
-            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보를 찾을 수 없습니다.");
+            throw new NotFoundException("사이트 정보를 찾을 수 없습니다.");
         }
+
         return siteInfos.stream()
                 .map(SiteInfoResponse::fromEntity)
                 .collect(Collectors.toList());

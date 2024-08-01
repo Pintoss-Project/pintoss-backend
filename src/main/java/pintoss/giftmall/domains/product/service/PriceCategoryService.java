@@ -1,11 +1,9 @@
 package pintoss.giftmall.domains.product.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pintoss.giftmall.common.exceptions.CustomException;
-import pintoss.giftmall.common.exceptions.ErrorCode;
+import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
@@ -31,9 +29,11 @@ public class PriceCategoryService {
         productReader.findById(productId);
 
         List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(productId);
+
         if (priceCategories.isEmpty()) {
-            throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품의 가격 카테고리를 찾을 수 없습니다.");
+            throw new NotFoundException("상품의 가격 카테고리를 찾을 수 없습니다.");
         }
+
         return priceCategories.stream()
                 .map(PriceCategoryResponse::fromEntity)
                 .collect(Collectors.toList());

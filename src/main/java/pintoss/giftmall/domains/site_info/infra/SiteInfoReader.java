@@ -1,10 +1,7 @@
 package pintoss.giftmall.domains.site_info.infra;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import pintoss.giftmall.common.exceptions.CustomException;
-import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 
