@@ -40,36 +40,24 @@ public class BoardService {
     }
 
     public Long create(BoardRequest requestDTO) {
-        try {
-            Board board = requestDTO.toEntity();
-            boardRepository.save(board);
-            return board.getId();
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "게시판", ErrorCode.CREATION_FAILURE);
-        }
+        Board board = requestDTO.toEntity();
+        boardRepository.save(board);
+        return board.getId();
     }
 
     public Long update(Long id, BoardRequest requestDTO) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "게시판 id를 다시 확인해주세요."));
 
-        try {
-            board.update(requestDTO);
-            return board.getId();
-        } catch(Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "게시판", ErrorCode.UPDATE_FAILURE);
-        }
+        board.update(requestDTO);
+        return board.getId();
     }
 
     public void delete(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "게시판 id를 다시 확인해주세요."));
 
-        try {
-            boardRepository.delete(board);
-        } catch(Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "게시판", ErrorCode.DELETION_FAILURE);
-        }
+        boardRepository.delete(board);
     }
 
 }

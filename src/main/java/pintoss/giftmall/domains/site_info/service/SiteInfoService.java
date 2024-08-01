@@ -44,11 +44,7 @@ public class SiteInfoService {
         SiteInfo siteInfo = siteInfoRepository.findById(id)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보 id를 다시 확인해주세요."));
 
-        try {
-            siteInfo.update(requestDTO);
-            return SiteInfoResponse.fromEntity(siteInfo);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "사이트 정보", ErrorCode.UPDATE_FAILURE);
-        }
+        siteInfo.update(requestDTO);
+        return SiteInfoResponse.fromEntity(siteInfo);
     }
 }

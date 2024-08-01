@@ -41,41 +41,26 @@ public class ProductService {
     }
 
     public Long create(ProductRequest requestDTO) {
-        try {
-            Product product = requestDTO.toEntity();
-            productRepository.save(product);
-            return product.getId();
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "상품", ErrorCode.CREATION_FAILURE);
-        }
+        Product product = requestDTO.toEntity();
+        productRepository.save(product);
+        return product.getId();
+
     }
 
     public Long update(Long id, ProductRequest requestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
 
-        try {
-            product.update(requestDTO);
-            return product.getId();
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "상품", ErrorCode.UPDATE_FAILURE);
-        }
+        product.update(requestDTO);
+        return product.getId();
     }
 
     public void delete(Long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "상품", ErrorCode.DELETION_FAILURE);
-        }
+        productRepository.deleteById(id);
     }
 
     public Long updateDiscount(Long id, BigDecimal discount, String type) {
-        try {
-            return productRepository.updateDiscount(id, discount, type);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "상품 할인", ErrorCode.UPDATE_FAILURE);
-        }
+        return productRepository.updateDiscount(id, discount, type);
     }
 
     @Transactional(readOnly = true)

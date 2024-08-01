@@ -33,13 +33,9 @@ public class CartService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사용자 id를 다시 확인해주세요."));
 
-        try {
-            Cart cart = requestDTO.toEntity(product, user);
-            cartRepository.save(cart);
-            return cart.getId();
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.CREATION_FAILURE);
-        }
+        Cart cart = requestDTO.toEntity(product, user);
+        cartRepository.save(cart);
+        return cart.getId();
     }
 
     @Transactional(readOnly = true)
@@ -58,21 +54,13 @@ public class CartService {
         Cart cart = cartRepository.findById(cartItemId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "장바구니 항목 id를 다시 확인해주세요."));
 
-        try {
-            cart.updateQuantity(quantity);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.UPDATE_FAILURE);
-        }
+        cart.updateQuantity(quantity);
     }
 
     public void deleteCartItem(Long cartItemId) {
         Cart cart = cartRepository.findById(cartItemId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "장바구니 항목 id를 다시 확인해주세요."));
 
-        try {
-            cartRepository.delete(cart);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "장바구니 항목", ErrorCode.DELETION_FAILURE);
-        }
+        cartRepository.delete(cart);
     }
 }

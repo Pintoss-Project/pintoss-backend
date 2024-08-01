@@ -87,19 +87,15 @@ public class OrderService {
             PriceCategory priceCategory = priceCategoryRepository.findById(orderProductRequest.getPriceCategoryId())
                     .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id를 다시 확인해주세요."));
 
-            try {
-                OrderProduct orderProduct = OrderProduct.builder()
-                        .order(order)
-                        .product(product)
-                        .price(orderProductRequest.getPrice())
-                        .quantity(orderProductRequest.getQuantity())
-                        .priceCategoryId(priceCategory.getId())
-                        .build();
+            OrderProduct orderProduct = OrderProduct.builder()
+                    .order(order)
+                    .product(product)
+                    .price(orderProductRequest.getPrice())
+                    .quantity(orderProductRequest.getQuantity())
+                    .priceCategoryId(priceCategory.getId())
+                    .build();
 
-                orderProductRepository.save(orderProduct);
-            } catch (Exception e) {
-                throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "주문서", ErrorCode.CREATION_FAILURE);
-            }
+            orderProductRepository.save(orderProduct);
         });
 
         return order.getId();

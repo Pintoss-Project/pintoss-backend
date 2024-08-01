@@ -40,32 +40,20 @@ public class BannerService {
     }
 
     public BannerResponse create(BannerRequest requestDTO) {
-        try {
-            Banner banner = requestDTO.toEntity();
-            bannerRepository.save(banner);
-            return BannerResponse.fromEntity(banner);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "배너", ErrorCode.CREATION_FAILURE);
-        }
+        Banner banner = requestDTO.toEntity();
+        bannerRepository.save(banner);
+        return BannerResponse.fromEntity(banner);
     }
 
     public BannerResponse update(Long id, BannerRequest requestDTO) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "배너 id를 다시 확인해주세요."));
 
-        try {
-            banner.update(requestDTO.getBannerTitle(), requestDTO.getBannerLink());
-            return BannerResponse.fromEntity(banner);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "배너", ErrorCode.UPDATE_FAILURE);
-        }
+        banner.update(requestDTO.getBannerTitle(), requestDTO.getBannerLink());
+        return BannerResponse.fromEntity(banner);
     }
 
     public void delete(Long id) {
-        try {
-            bannerRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, "배너", ErrorCode.DELETION_FAILURE);
-        }
+        bannerRepository.deleteById(id);
     }
 }
