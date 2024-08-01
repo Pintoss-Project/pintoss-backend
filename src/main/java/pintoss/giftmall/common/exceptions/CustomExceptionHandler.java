@@ -13,6 +13,7 @@ import pintoss.giftmall.common.responseobj.ApiErrorResponse;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -72,6 +73,14 @@ public class CustomExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
+
+            if (Objects.equals(error.getCode(), "NotNull") || Objects.equals(error.getCode(), "NotBlank")) {
+                throw new FieldMissingException(error.getField());
+            }
+
+            if (Objects.equals(error.getCode(), "Pattern")) {
+                throw new InvalidFieldException(error.getField(), error.getDefaultMessage());
+            }
         }
 
         ApiErrorResponse errorResponse = ApiErrorResponse.withErrors(
