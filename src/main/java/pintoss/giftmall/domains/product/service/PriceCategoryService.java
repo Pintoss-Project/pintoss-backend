@@ -11,7 +11,9 @@ import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
 import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
+import pintoss.giftmall.domains.product.infra.PriceCategoryRepositoryReader;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
+import pintoss.giftmall.domains.product.infra.ProductRepositoryReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,12 +24,12 @@ import java.util.stream.Collectors;
 public class PriceCategoryService {
 
     private final PriceCategoryRepository priceCategoryRepository;
-    private final ProductRepository productRepository;
+    private final ProductRepositoryReader productRepositoryReader;
+    private final PriceCategoryRepositoryReader priceCategoryRepositoryReader;
 
     @Transactional(readOnly = true)
     public List<PriceCategoryResponse> findAllByProductId(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
+        productRepositoryReader.findById(productId);
 
         List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(productId);
         if (priceCategories.isEmpty()) {
@@ -40,32 +42,28 @@ public class PriceCategoryService {
 
     @Transactional(readOnly = true)
     public PriceCategoryResponse findByIdAndProductId(Long categoryId, Long productId) {
-        PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id 또는 상품 id를 다시 확인해주세요."));
+        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
+
         return PriceCategoryResponse.fromEntity(priceCategory);
     }
 
     public Long create(PriceCategoryRequest requestDTO) {
-        Product product = productRepository.findById(requestDTO.getProductId())
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
-
+        Product product = productRepositoryReader.findById(requestDTO.getProductId());
         PriceCategory priceCategory = requestDTO.toEntity(product);
         priceCategoryRepository.save(priceCategory);
+
         return priceCategory.getId();
     }
 
     public void delete(Long productId, Long categoryId) {
-        PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id 또는 상품 id를 다시 확인해주세요."));
-
+        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
         priceCategoryRepository.delete(priceCategory);
     }
 
     public Long updateStock(Long productId, Long categoryId, int stock) {
-        PriceCategory priceCategory = priceCategoryRepository.findByIdAndProductId(categoryId, productId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "가격 카테고리 id 또는 상품 id를 다시 확인해주세요."));
-
+        PriceCategory priceCategory = priceCategoryRepositoryReader.findByIdAndProductId(categoryId, productId);
         priceCategory.updateStock(stock);
+
         return priceCategory.getId();
     }
 

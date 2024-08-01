@@ -10,6 +10,7 @@ import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
+import pintoss.giftmall.domains.product.infra.ProductRepositoryReader;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,13 +22,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductRepositoryReader productRepositoryReader;
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
         List<Product> products = productRepository.findAll();
+
         if (products.isEmpty()) {
             throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품을 찾을 수 없습니다.");
         }
+
         return products.stream()
                 .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -35,23 +39,22 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
+        Product product = productRepositoryReader.findById(id);
+
         return ProductResponse.fromEntity(product);
     }
 
     public Long create(ProductRequest requestDTO) {
         Product product = requestDTO.toEntity();
         productRepository.save(product);
-        return product.getId();
 
+        return product.getId();
     }
 
     public Long update(Long id, ProductRequest requestDTO) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "상품 id를 다시 확인해주세요."));
-
+        Product product = productRepositoryReader.findById(id);
         product.update(requestDTO);
+
         return product.getId();
     }
 
@@ -66,9 +69,11 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> findByCategory(String category) {
         List<Product> products = productRepository.findByCategory(category);
+
         if (products.isEmpty()) {
             throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "카테고리에 해당하는 상품을 찾을 수 없습니다.");
         }
+
         return products.stream()
                 .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -77,9 +82,11 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> findPopularProducts() {
         List<Product> products = productRepository.findByIsPopularTrue();
+
         if (products.isEmpty()) {
             throw new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "인기 상품을 찾을 수 없습니다.");
         }
+
         return products.stream()
                 .map(ProductResponse::fromEntity)
                 .collect(Collectors.toList());

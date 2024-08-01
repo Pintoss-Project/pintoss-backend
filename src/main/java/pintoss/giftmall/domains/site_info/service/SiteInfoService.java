@@ -11,6 +11,7 @@ import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoUpdateRequest;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoImageRepository;
 import pintoss.giftmall.domains.site_info.infra.SiteInfoRepository;
+import pintoss.giftmall.domains.site_info.infra.SiteInfoRepositoryReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class SiteInfoService {
 
     private final SiteInfoRepository siteInfoRepository;
+    private final SiteInfoRepositoryReader siteInfoRepositoryReader;
 
     @Transactional(readOnly = true)
     public List<SiteInfoResponse> findAll() {
@@ -35,16 +37,15 @@ public class SiteInfoService {
 
     @Transactional(readOnly = true)
     public SiteInfoResponse findById(Long id) {
-        SiteInfo siteInfo = siteInfoRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보 id를 다시 확인해주세요."));
+        SiteInfo siteInfo = siteInfoRepositoryReader.findById(id);
+
         return SiteInfoResponse.fromEntity(siteInfo);
     }
 
     public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
-        SiteInfo siteInfo = siteInfoRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "사이트 정보 id를 다시 확인해주세요."));
-
+        SiteInfo siteInfo = siteInfoRepositoryReader.findById(id);
         siteInfo.update(requestDTO);
+
         return SiteInfoResponse.fromEntity(siteInfo);
     }
 }

@@ -11,6 +11,7 @@ import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.infra.BoardRepository;
+import pintoss.giftmall.domains.board.infra.BoardRepositoryReader;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardRepositoryReader boardRepositoryReader;
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAllByType(String type) {
@@ -34,8 +36,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardResponse findById(Long id) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "게시판 id를 다시 확인해주세요."));
+        Board board = boardRepositoryReader.findById(id);
         return BoardResponse.fromEntity(board);
     }
 
@@ -46,16 +47,14 @@ public class BoardService {
     }
 
     public Long update(Long id, BoardRequest requestDTO) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "게시판 id를 다시 확인해주세요."));
+        Board board = boardRepositoryReader.findById(id);
 
         board.update(requestDTO);
         return board.getId();
     }
 
     public void delete(Long id) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND, "게시판 id를 다시 확인해주세요."));
+        Board board = boardRepositoryReader.findById(id);
 
         boardRepository.delete(board);
     }
