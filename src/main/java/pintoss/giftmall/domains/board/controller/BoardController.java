@@ -1,6 +1,8 @@
 package pintoss.giftmall.domains.board.controller;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
@@ -11,12 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/board")
 @RequiredArgsConstructor
+@Validated
 public class BoardController {
 
     private final BoardService boardService;
 
     @GetMapping
-    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam String type) {
+    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam @NotBlank String type) {
         List<BoardResponse> boards = boardService.findAllByType(type);
         return ApiResponse.ok(boards);
     }

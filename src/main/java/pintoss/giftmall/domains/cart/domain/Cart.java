@@ -26,7 +26,7 @@ public class Cart {
     private int price;
 
     @Column(length = 20)
-    private String checkoutMethod;
+    private String payMethod;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -40,12 +40,12 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(Product product, User user, int quantity, int price, String checkoutMethod) {
+    public Cart(Product product, User user, int quantity, int price, String payMethod) {
         this.product = product;
         this.user = user;
         this.quantity = quantity;
         this.price = price;
-        this.checkoutMethod = checkoutMethod;
+        this.payMethod = payMethod;
     }
 
     public void updateQuantity(int quantity) {

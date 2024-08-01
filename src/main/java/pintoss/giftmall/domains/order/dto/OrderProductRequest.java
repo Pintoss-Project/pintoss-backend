@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.order.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderProductRequest {
 
+    @NotNull(message = "상품 ID는 필수 항목입니다.")
     private Long productId;
+
+    @NotNull(message = "가격 카테고리 ID는 필수 항목입니다.")
     private Long priceCategoryId;
+
+    @Min(value = 1, message = "수량은 1 이상이어야 합니다.")
     private int quantity;
+
+    @Min(value = 1000, message = "가격은 1000원 이상이어야 합니다.")
     private int price;
 
     @Builder
@@ -20,4 +28,5 @@ public class OrderProductRequest {
         this.quantity = quantity;
         this.price = price;
     }
+
 }

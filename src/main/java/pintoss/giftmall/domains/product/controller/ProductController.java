@@ -1,6 +1,8 @@
 package pintoss.giftmall.domains.product.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
@@ -11,12 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
+@Validated
 public class ProductController {
 
     private final ProductService productService;
 
     @GetMapping
-    public ApiResponse<List<ProductResponse>> getAllProducts(@RequestParam(value = "category", required = false) String category) {
+    public ApiResponse<List<ProductResponse>> getAllProducts(@RequestParam(value = "category", required = false) @NotNull String category) {
         if (category != null) {
             List<ProductResponse> products = productService.findByCategory(category);
             return ApiResponse.ok(products);
@@ -32,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductResponse> getProductById(@PathVariable Long id) {
+    public ApiResponse<ProductResponse> getProductById(@PathVariable @NotNull Long id) {
         ProductResponse product = productService.findById(id);
         return ApiResponse.ok(product);
     }

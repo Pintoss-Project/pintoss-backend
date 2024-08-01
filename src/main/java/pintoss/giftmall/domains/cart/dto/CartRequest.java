@@ -12,28 +12,28 @@ import pintoss.giftmall.domains.user.domain.User;
 @NoArgsConstructor
 public class CartRequest {
 
-    @NotNull
+    @NotNull(message = "상품 ID는 필수 항목입니다.")
     private Long productId;
 
-    @NotBlank
+    @NotBlank(message = "상품 이름은 필수 항목입니다.")
     private String name;
 
-    @NotNull
+    @Min(value = 1000, message = "가격은 1000원 이상이어야 합니다.")
     private int price;
 
-    @NotNull
+    @Min(value = 1, message = "수량은 최소 1 이상이어야 합니다.")
     private int quantity;
 
-    @NotBlank
-    private String checkoutMethod;
+    @NotBlank(message = "결제 방법은 필수 항목입니다.")
+    private String payMethod;
 
     @Builder
-    public CartRequest(Long productId, String name, int price, int quantity, String checkoutMethod) {
+    public CartRequest(Long productId, String name, int price, int quantity, String payMethod) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.checkoutMethod = checkoutMethod;
+        this.payMethod = payMethod;
     }
 
     public Cart toEntity(Product product, User user) {
@@ -42,7 +42,7 @@ public class CartRequest {
                 .user(user)
                 .quantity(quantity)
                 .price(price)
-                .checkoutMethod(checkoutMethod)
+                .payMethod(payMethod)
                 .build();
     }
 

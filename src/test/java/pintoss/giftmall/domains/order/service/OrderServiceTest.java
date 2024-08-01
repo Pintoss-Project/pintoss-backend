@@ -8,7 +8,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
-import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.service.PaymentService;
@@ -69,7 +68,6 @@ class OrderServiceTest {
                 .payStatus("결제요청")
                 .payMethod("card")
                 .payPrice(10000)
-                .discountPrice(1000)
                 .build();
 
         PaymentResponse paymentResponse = paymentService.processPayment(userId, orderId, paymentRequest);
@@ -91,7 +89,6 @@ class OrderServiceTest {
                 .payStatus("결제요청")
                 .payMethod("card")
                 .payPrice(10000)
-                .discountPrice(1000)
                 .build();
 
         PaymentResponse paymentResponse = paymentService.processPayment(userId, orderId, paymentRequest);

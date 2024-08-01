@@ -10,34 +10,35 @@ import pintoss.giftmall.domains.site_info.domain.SiteInfo;
 @NoArgsConstructor
 public class SiteInfoUpdateRequest {
 
-    @NotBlank
+    @NotBlank(message = "이름은 필수 항목입니다.")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "전화번호는 필수 항목입니다.")
     private String tel;
 
-    @NotBlank
+    @NotBlank(message = "영업 시간은 필수 항목입니다.")
     private String businessHour;
 
-    @NotBlank
+    @NotBlank(message = "주소는 필수 항목입니다.")
     private String address;
 
-    @NotBlank
+    @NotBlank(message = "소유자는 필수 항목입니다.")
     private String owner;
 
-    @NotBlank
+    @NotBlank(message = "업종은 필수 항목입니다.")
     private String businesses;
 
-    @NotBlank
+    @NotBlank(message = "신고 번호는 필수 항목입니다.")
     private String reportNumber;
 
-    @Email
+    @Email(message = "유효한 이메일 주소를 입력하세요.")
+    @NotBlank(message = "이메일은 필수 항목입니다.")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "카카오톡 정보는 필수 항목입니다.")
     private String kakao;
 
-    @NotBlank
+    @NotBlank(message = "오픈 채팅 링크는 필수 항목입니다.")
     private String openChat;
 
     @Builder

@@ -1,7 +1,6 @@
 package pintoss.giftmall.domains.product.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,31 +14,33 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductRequest {
 
-    @NotBlank
+    @NotBlank(message = "상품 이름은 필수 항목입니다.")
     private String name;
 
-    @NotNull
+    @NotNull(message = "인기 여부는 필수 항목입니다.")
     private boolean isPopular = false;
 
-    @NotNull
+    @NotNull(message = "카드 할인 금액은 필수 항목입니다.")
+    @Min(value = 0, message = "카드 할인 금액은 0 이상이어야 합니다.")
     private BigDecimal cardDiscount = BigDecimal.ZERO;
 
-    @NotNull
+    @NotNull(message = "전화 할인 금액은 필수 항목입니다.")
+    @Min(value = 0, message = "전화 할인 금액은 0 이상이어야 합니다.")
     private BigDecimal phoneDiscount = BigDecimal.ZERO;
 
-    @NotBlank
+    @NotBlank(message = "홈페이지 주소는 필수 항목입니다.")
     private String homePage;
 
-    @NotBlank
+    @NotBlank(message = "고객 센터 정보는 필수 항목입니다.")
     private String csCenter;
 
-    @NotBlank
+    @NotBlank(message = "설명은 필수 항목입니다.")
     private String description;
 
-    @NotBlank
+    @NotBlank(message = "발행자는 필수 항목입니다.")
     private String publisher;
 
-    @NotBlank
+    @NotBlank(message = "카테고리는 필수 항목입니다.")
     private String category;
 
     @Builder

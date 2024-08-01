@@ -1,5 +1,6 @@
 package pintoss.giftmall.common.exceptions;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -82,6 +83,22 @@ public class CustomExceptionHandler {
                 throw new InvalidFieldException(error.getField(), error.getDefaultMessage());
             }
         }
+
+        ApiErrorResponse errorResponse = ApiErrorResponse.withErrors(
+                HttpStatus.BAD_REQUEST,
+                "유효하지 않은 요청입니다.",
+                errors
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public final ResponseEntity<ApiErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(violation ->
+                errors.put(violation.getPropertyPath().toString(), violation.getMessage())
+        );
 
         ApiErrorResponse errorResponse = ApiErrorResponse.withErrors(
                 HttpStatus.BAD_REQUEST,

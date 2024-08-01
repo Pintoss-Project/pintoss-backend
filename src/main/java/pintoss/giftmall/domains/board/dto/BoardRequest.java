@@ -10,16 +10,16 @@ import pintoss.giftmall.domains.board.domain.Board;
 @NoArgsConstructor
 public class BoardRequest {
 
-    @NotBlank
+    @NotBlank(message = "게시판 유형은 필수 항목입니다.")
     private String type;
 
-    @NotBlank
+    @NotBlank(message = "제목은 필수 항목입니다.")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "내용은 필수 항목입니다.")
     private String content;
 
-    @NotBlank
+    @NotBlank(message = "작성자는 필수 항목입니다.")
     private String writer;
 
     @Builder

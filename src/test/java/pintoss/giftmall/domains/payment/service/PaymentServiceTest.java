@@ -9,7 +9,6 @@ import pintoss.giftmall.domains.order.dto.OrderProductRequest;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.order.infra.OrderRepository;
 import pintoss.giftmall.domains.order.service.OrderService;
-import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;

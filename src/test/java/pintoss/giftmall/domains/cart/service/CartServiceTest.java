@@ -59,7 +59,7 @@ class CartServiceTest {
                 .productId(productId)
                 .quantity(1)
                 .price(3000)
-                .checkoutMethod("card")
+                .payMethod("card")
                 .build();
 
         cartItemId = cartService.addToCart(userId, request);
@@ -79,7 +79,7 @@ class CartServiceTest {
                 .productId(productId)
                 .quantity(2)
                 .price(2000)
-                .checkoutMethod("card")
+                .payMethod("card")
                 .build();
 
         Long newCartItemId = cartService.addToCart(userId, request);

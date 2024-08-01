@@ -13,28 +13,26 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequest {
 
-    @NotBlank
+    @NotBlank(message = "주문 번호는 필수 항목입니다.")
     private String orderNo;
 
-    @NotNull
+    @Min(value = 1000, message = "주문 가격은 1000원 이상이어야 합니다.")
     private int orderPrice;
 
-    @NotNull
-    private int discountPrice;
-
-    @NotBlank
+    @NotBlank(message = "주문 상태는 필수 항목입니다.")
     private String orderStatus;
 
-    @NotBlank
+    @NotBlank(message = "결제 수단은 필수 항목입니다.")
     private String payMethod;
 
-    @NotNull
+    @NotNull(message = "발송 여부는 필수 항목입니다.")
     private boolean isSent = false;
 
-    @NotNull
+    @NotNull(message = "장바구니 주문 여부는 필수 항목입니다.")
     private boolean isOrderInCart = false;
 
-    @NotNull
+    @NotNull(message = "주문 상품 목록은 필수 항목입니다.")
+    @Size(min = 1, message = "주문 상품은 하나 이상이어야 합니다.")
     private List<OrderProductRequest> orderProducts;
 
     @Builder

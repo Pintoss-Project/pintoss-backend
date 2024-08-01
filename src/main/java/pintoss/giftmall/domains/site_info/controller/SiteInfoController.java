@@ -1,6 +1,8 @@
 package pintoss.giftmall.domains.site_info.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;
@@ -11,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/site-info")
 @RequiredArgsConstructor
+@Validated
 public class SiteInfoController {
 
     private final SiteInfoService siteInfoService;
@@ -22,7 +25,7 @@ public class SiteInfoController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<SiteInfoResponse> getSiteInfoById(@PathVariable Long id) {
+    public ApiResponse<SiteInfoResponse> getSiteInfoById(@PathVariable @NotNull Long id) {
         SiteInfoResponse siteInfo = siteInfoService.findById(id);
         return ApiResponse.ok(siteInfo);
     }
