@@ -19,7 +19,7 @@ public class SiteInfoAdminController {
     private final SiteInfoService siteInfoService;
 
     @PatchMapping("/{id}")
-    public ApiResponse<SiteInfoResponse> updateSiteInfo(@PathVariable @NotNull Long id, @RequestBody @Valid SiteInfoUpdateRequest requestDTO) {
+    public ApiResponse<SiteInfoResponse> updateSiteInfo(@PathVariable Long id, @RequestBody @Valid SiteInfoUpdateRequest requestDTO) {
         SiteInfoResponse updateSiteInfo = siteInfoService.update(id, requestDTO);
         return ApiResponse.ok(updateSiteInfo);
     }

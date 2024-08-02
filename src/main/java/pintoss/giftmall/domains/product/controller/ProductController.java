@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductResponse> getProductById(@PathVariable @NotNull Long id) {
+    public ApiResponse<ProductResponse> getProductById(@PathVariable Long id) {
         ProductResponse product = productService.findById(id);
         return ApiResponse.ok(product);
     }

@@ -17,13 +17,13 @@ public class BoardAdminController {
     private final BoardService boardService;
 
     @PostMapping
-    public ApiResponse<Long> createBoard(@Valid @RequestBody BoardRequest requestDTO) {
+    public ApiResponse<Long> createBoard(@RequestBody @Valid BoardRequest requestDTO) {
         Long boardId = boardService.create(requestDTO);
         return ApiResponse.ok(boardId);
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<Long> updateBoard(@Valid @PathVariable Long id, BoardRequest requestDTO) {
+    public ApiResponse<Long> updateBoard(@PathVariable Long id, @RequestBody @Valid BoardRequest requestDTO) {
         Long boardId = boardService.update(id, requestDTO);
         return ApiResponse.ok(boardId);
     }

@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/site-banner")
 @RequiredArgsConstructor
-@Validated
 public class BannerController {
 
     private final BannerService bannerService;
@@ -28,7 +27,7 @@ public class BannerController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BannerResponse> getBannerById(@PathVariable @NotNull Long id) {
+    public ApiResponse<BannerResponse> getBannerById(@PathVariable Long id) {
         BannerResponse banner = bannerService.findById(id);
         return ApiResponse.ok(banner);
     }

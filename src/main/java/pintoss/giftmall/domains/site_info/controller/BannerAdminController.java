@@ -25,13 +25,13 @@ public class BannerAdminController {
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<BannerResponse> updateBanner(@PathVariable @NotNull Long id, @RequestBody @Valid BannerRequest requestDTO) {
+    public ApiResponse<BannerResponse> updateBanner(@PathVariable Long id, @RequestBody @Valid BannerRequest requestDTO) {
         BannerResponse updateBanner = bannerService.update(id, requestDTO);
         return ApiResponse.ok(updateBanner);
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBanner(@PathVariable @NotNull Long id) {
+    public ApiResponse<String> deleteBanner(@PathVariable Long id) {
         bannerService.delete(id);
         return ApiResponse.ok("배너 삭제 완료");
     }

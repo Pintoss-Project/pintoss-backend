@@ -21,7 +21,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/{product_id}")
-    public ApiResponse<Long> addToCart(@PathVariable("product_id") Long productId, @Valid @RequestBody CartRequest requestDTO, @NotNull @RequestParam Long userId) {
+    public ApiResponse<Long> addToCart(@PathVariable("product_id") Long productId, @RequestBody @Valid CartRequest requestDTO, @RequestParam @NotNull Long userId) {
         CartRequest updatedRequest = CartRequest.builder()
                 .productId(productId)
                 .quantity(requestDTO.getQuantity())
@@ -34,19 +34,19 @@ public class CartController {
     }
 
     @GetMapping
-    public ApiResponse<List<CartResponse>> getCartItems(@NotNull @RequestParam Long userId) {
+    public ApiResponse<List<CartResponse>> getCartItems(@RequestParam @NotNull Long userId) {
         List<CartResponse> cartItems = cartService.getCartItems(userId);
         return ApiResponse.ok(cartItems);
     }
 
     @PatchMapping("/{cart_item_id}")
-    public ApiResponse<String> updateCartItem(@PathVariable("cart_item_id") @NotNull Long cartItemId, @RequestBody int quantity) {
+    public ApiResponse<String> updateCartItem(@PathVariable("cart_item_id") Long cartItemId, @RequestBody @Valid int quantity) {
         cartService.updateCartItem(cartItemId, quantity);
         return ApiResponse.ok("장바구니 상품의 수량이 수정되었습니다.");
     }
 
     @DeleteMapping("/{cart_item_id}")
-    public ApiResponse<String> deleteCartItem(@PathVariable("cart_item_id") @NotNull Long cartItemId) {
+    public ApiResponse<String> deleteCartItem(@PathVariable("cart_item_id") Long cartItemId) {
         cartService.deleteCartItem(cartItemId);
         return ApiResponse.ok("장바구니 상품이 삭제되었습니다.");
     }

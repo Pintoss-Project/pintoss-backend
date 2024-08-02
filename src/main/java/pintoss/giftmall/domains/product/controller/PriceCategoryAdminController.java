@@ -24,13 +24,13 @@ public class PriceCategoryAdminController {
     }
 
     @DeleteMapping("/{id}/category/{category_id}")
-    public ApiResponse<String> deletePriceCategory(@PathVariable @NotNull Long id, @PathVariable @NotNull Long category_id) {
+    public ApiResponse<String> deletePriceCategory(@PathVariable Long id, @PathVariable Long category_id) {
         priceCategoryService.delete(id, category_id);
         return ApiResponse.ok("가격 카테고리가 삭제되었습니다.");
     }
 
     @PatchMapping("/{id}/category/{category_id}/stock")
-    public ApiResponse<Long> updateStock(@PathVariable @NotNull Long id, @PathVariable @NotNull Long category_id, @RequestParam @NotNull int stock) {
+    public ApiResponse<Long> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestParam @NotNull int stock) {
         Long updatedPriceCategoryId = priceCategoryService.updateStock(id, category_id, stock);
         return ApiResponse.ok(updatedPriceCategoryId);
     }

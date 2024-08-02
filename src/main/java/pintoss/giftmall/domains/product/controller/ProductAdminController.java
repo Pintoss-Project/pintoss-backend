@@ -26,19 +26,19 @@ public class ProductAdminController {
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<Long> updateProduct(@PathVariable @NotNull Long id, @RequestBody @Valid ProductRequest requestDTO) {
+    public ApiResponse<Long> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest requestDTO) {
         Long updatedProductId = productService.update(id, requestDTO);
         return ApiResponse.ok(updatedProductId);
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteProduct(@PathVariable @NotNull Long id) {
+    public ApiResponse<String> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
         return ApiResponse.ok("상품권 삭제가 완료되었습니다.");
     }
 
     @PatchMapping("/{id}/fee")
-    public ApiResponse<Long> updateProductFee(@PathVariable @NotNull Long id, @RequestParam @NotNull BigDecimal discount, @RequestParam @NotNull String type) {
+    public ApiResponse<Long> updateProductFee(@PathVariable Long id, @RequestParam @NotNull BigDecimal discount, @RequestParam @NotNull String type) {
         Long updatedProductId = productService.updateDiscount(id, discount, type);
         return ApiResponse.ok(updatedProductId);
     }
