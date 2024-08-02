@@ -11,15 +11,15 @@ public class CartResponse {
     private String name;
     private int price;
     private int quantity;
-    private String checkoutMethod;
+    private String payMethod;
 
     @Builder
-    public CartResponse(Long id, String name, int price, int quantity, String checkoutMethod) {
+    public CartResponse(Long id, String name, int price, int quantity, String payMethod) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.checkoutMethod = checkoutMethod;
+        this.payMethod = payMethod;
     }
 
     public static CartResponse fromEntity(Cart cart) {
@@ -28,7 +28,7 @@ public class CartResponse {
                 .name(cart.getProduct().getName())
                 .price(cart.getPrice())
                 .quantity(cart.getQuantity())
-                .checkoutMethod(cart.getCheckoutMethod())
+                .payMethod(cart.getPayMethod())
                 .build();
     }
 
