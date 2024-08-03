@@ -11,8 +11,6 @@ import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.utils.MailService;
-import pintoss.giftmall.common.utils.PasswordGenerator;
-import pintoss.giftmall.domains.token.service.TokenService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.LoginRequest;
 import pintoss.giftmall.domains.user.dto.LoginResponse;
