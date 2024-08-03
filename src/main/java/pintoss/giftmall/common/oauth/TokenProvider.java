@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.common.exceptions.TokenException;
 import pintoss.giftmall.domains.token.domain.Token;
@@ -82,8 +83,13 @@ public class TokenProvider {
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get(KEY_ROLE).toString()));
+        String authoritiesClaim = (String) claims.get("auth");
+        if (authoritiesClaim == null || authoritiesClaim.isEmpty()) {
+            return List.of(new SimpleGrantedAuthority(UserRole.USER.toString()));
+        }
+        return List.of(authoritiesClaim.split(",")).stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     public String reissueAccessToken(String accessToken) {

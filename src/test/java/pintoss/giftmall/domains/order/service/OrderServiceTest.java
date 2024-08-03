@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
@@ -34,7 +35,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("user@example.com", "password", "유저1", "010-1234-5678");
+        user = new User("user@example.com", "password", "유저1", "010-1234-5678", UserRole.USER);
         userRepository.save(user);
         userId = user.getId();
     }

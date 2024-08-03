@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
 import pintoss.giftmall.domains.cart.infra.CartRepository;
@@ -51,7 +52,7 @@ class CartServiceTest {
         PriceCategory priceCategory = new PriceCategory("3천원권", 3000, 100, product);
         priceCategoryRepository.save(priceCategory);
 
-        User user = new User("user@example.com", "유저1", "password", "010-1234-5678");
+        User user = new User("user@example.com", "유저1", "password", "010-1234-5678", UserRole.USER);
         userRepository.save(user);
         userId = user.getId();
 

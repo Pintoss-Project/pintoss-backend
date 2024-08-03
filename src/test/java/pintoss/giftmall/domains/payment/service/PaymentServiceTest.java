@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderProductRequest;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
@@ -54,7 +55,7 @@ class PaymentServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User("testuser@example.com", "123456789", "testuser", "010-1234-5678"));
+        user = userRepository.save(new User("testuser@example.com", "123456789", "testuser", "010-1234-5678", UserRole.USER));
         product = productRepository.save(Product.builder()
                 .name("문화상품권")
                 .isPopular(true)
