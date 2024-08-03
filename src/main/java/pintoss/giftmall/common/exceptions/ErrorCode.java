@@ -17,7 +17,10 @@ public enum ErrorCode {
     DELETION_FAILURE("삭제에 실패했습니다."),
     UNAUTHORIZED("인증이 필요합니다."),
     FORBIDDEN("권한이 없습니다."),
-    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다."),
+    ILLEGAL_REGISTRATION_ID("잘못된 등록 ID입니다."),
+    INVALID_TOKEN("유효하지 않은 토큰입니다."),
+    INVALID_JWT_SIGNATURE("유효하지 않은 JWT 서명입니다.");
 
     private final String message;
 

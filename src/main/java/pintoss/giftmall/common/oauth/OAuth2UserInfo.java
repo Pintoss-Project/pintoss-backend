@@ -1,7 +1,8 @@
 package pintoss.giftmall.common.oauth;
 
-import jakarta.security.auth.message.AuthException;
 import lombok.Builder;
+import pintoss.giftmall.common.exceptions.AuthException;
+import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.user.domain.User;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public record OAuth2UserInfo(
         return switch (registrationId) {
             case "kakao" -> ofKakao(attributes);
             case "naver" -> ofNaver(attributes);
-            default -> throw new AuthException(ILLEGAL_REGISTRATION_ID);
+            default -> throw new AuthException(ErrorCode.ILLEGAL_REGISTRATION_ID, "");
         };
     }
 
