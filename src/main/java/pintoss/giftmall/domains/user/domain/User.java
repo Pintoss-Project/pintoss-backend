@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pintoss.giftmall.common.enums.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -36,15 +37,19 @@ public class User {
     @Column(length = 15)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String email, String password, String name, String phone) {
+    public User(String email, String password, String name, String phone, UserRole role) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
+        this.role = role;
     }
 
 }
