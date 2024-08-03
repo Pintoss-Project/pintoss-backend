@@ -16,13 +16,17 @@ public class Token {
     private Long id;
 
     @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
     private String accessToken;
 
     @Column(nullable = false)
     private String refreshToken;
 
     @Builder
-    public Token(String accessToken, String refreshToken) {
+    public Token(String username, String accessToken, String refreshToken) {
+        this.username = username;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

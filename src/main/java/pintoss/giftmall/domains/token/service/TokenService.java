@@ -21,7 +21,7 @@ public class TokenService {
                     existingToken.updateTokens(accessToken, refreshToken);
                     return existingToken;
                 })
-                .orElse(new Token(accessToken, refreshToken));
+                .orElse(new Token(username, accessToken, refreshToken));
         tokenRepository.save(token);
     }
 
