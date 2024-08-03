@@ -49,9 +49,11 @@ public class TokenProvider {
         return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
     }
 
-    public void generateRefreshToken(Authentication authentication, String accessToken) {
+    public String generateRefreshToken(Authentication authentication, String accessToken) {
         String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
         tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken);
+
+        return refreshToken;
     }
 
     private String generateToken(Authentication authentication, long expireTime) {

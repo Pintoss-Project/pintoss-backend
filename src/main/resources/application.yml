@@ -16,3 +16,14 @@ spring:
     include: oauth
   config:
     import: optional:file:.env[.properties]
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: c0810@naver.com
+    password: ${OWNER_EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
