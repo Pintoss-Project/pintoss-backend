@@ -1,9 +1,12 @@
 package pintoss.giftmall.domains.cart.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.cart.domain.Cart;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.user.domain.User;
@@ -25,10 +28,11 @@ public class CartRequest {
     private int quantity;
 
     @NotBlank(message = "결제 방법은 필수 항목입니다.")
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PayMethod payMethod;
 
     @Builder
-    public CartRequest(Long productId, String name, int price, int quantity, String payMethod) {
+    public CartRequest(Long productId, String name, int price, int quantity, PayMethod payMethod) {
         this.productId = productId;
         this.name = name;
         this.price = price;

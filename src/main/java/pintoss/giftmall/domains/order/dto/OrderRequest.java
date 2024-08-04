@@ -1,9 +1,12 @@
 package pintoss.giftmall.domains.order.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.user.domain.User;
 
@@ -20,10 +23,12 @@ public class OrderRequest {
     private int orderPrice;
 
     @NotBlank(message = "주문 상태는 필수 항목입니다.")
+    @Enumerated(EnumType.STRING)
     private String orderStatus;
 
     @NotBlank(message = "결제 수단은 필수 항목입니다.")
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PayMethod payMethod;
 
     @NotNull(message = "발송 여부는 필수 항목입니다.")
     private boolean isSent = false;
@@ -36,7 +41,7 @@ public class OrderRequest {
     private List<OrderProductRequest> orderProducts;
 
     @Builder
-    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isOrderInCart, String payMethod, List<OrderProductRequest> orderProducts) {
+    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isOrderInCart, PayMethod payMethod, List<OrderProductRequest> orderProducts) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;

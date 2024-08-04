@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.StringUtils;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ public class Board {
     private Long id;
 
     @Column(length = 20)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private BoardType type;
 
     @Column(length = 100)
     private String title;
@@ -42,7 +44,7 @@ public class Board {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Board(String type, String title, String content, String writer) {
+    public Board(BoardType type, String title, String content, String writer) {
         this.type = type;
         this.title = title;
         this.content = content;
@@ -51,7 +53,7 @@ public class Board {
 
     public void update(BoardRequest requestDTO) {
         if(StringUtils.hasText(requestDTO.getTitle())) this.title = requestDTO.getTitle();
-        if(StringUtils.hasText(requestDTO.getType())) this.type = requestDTO.getType();
+        if(StringUtils.hasText(requestDTO.getType().toString())) this.type = requestDTO.getType();
         if(StringUtils.hasText(requestDTO.getContent())) this.content = requestDTO.getContent();
         if(StringUtils.hasText(requestDTO.getWriter())) this.writer = requestDTO.getWriter();
     }

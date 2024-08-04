@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.product.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 
 import java.math.BigDecimal;
@@ -19,12 +20,12 @@ public class ProductResponse {
     private String csCenter;
     private String description;
     private String publisher;
-    private String category;
+    private ProductCategory category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, String category, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.isPopular = isPopular;

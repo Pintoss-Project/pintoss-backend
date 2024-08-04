@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.user.domain.User;
 
@@ -23,10 +25,12 @@ public class Payment {
     private Long id;
 
     @Column(length = 10)
-    private String payStatus;
+    @Enumerated(EnumType.STRING)
+    private PayStatus payStatus;
 
     @Column(length = 10)
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PayMethod payMethod;
 
     private int payPrice;
 
@@ -42,7 +46,7 @@ public class Payment {
     private User user;
 
     @Builder
-    public Payment(String payStatus, String payMethod, int payPrice, User user, Order order) {
+    public Payment(PayStatus payStatus, PayMethod payMethod, int payPrice, User user, Order order) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
         this.payPrice = payPrice;
@@ -51,15 +55,15 @@ public class Payment {
     }
 
     public void completePayment() {
-        this.payStatus = "success";
+        this.payStatus = PayStatus.COMPLETED;
     }
 
     public void failPayment() {
-        this.payStatus = "fail";
+        this.payStatus = PayStatus.FAILED;
     }
 
     public void refund() {
-        this.payStatus = "refunded";
+        this.payStatus = PayStatus.REFUNDED;
     }
 
 }

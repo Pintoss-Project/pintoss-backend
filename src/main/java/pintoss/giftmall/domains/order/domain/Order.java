@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pintoss.giftmall.common.enums.OrderStatus;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -28,15 +31,18 @@ public class Order {
     private int orderPrice;
 
     @Column(length = 10)
-    private String orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
     private int discountPrice;
 
     @Column(length = 10)
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PayMethod payMethod;
 
     @Column(length = 10)
-    private String payStatus;
+    @Enumerated(EnumType.STRING)
+    private PayStatus payStatus;
 
     @Column(nullable = false)
     private boolean isSent = false;
@@ -52,7 +58,7 @@ public class Order {
     private User user;
 
     @Builder
-    public Order(String orderNo, int orderPrice, String orderStatus, int discountPrice, boolean isSent, boolean isOrderInCart, String payMethod, User user) {
+    public Order(String orderNo, int orderPrice, OrderStatus orderStatus, int discountPrice, boolean isSent, boolean isOrderInCart, PayMethod payMethod, User user) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;
@@ -63,7 +69,7 @@ public class Order {
         this.user = user;
     }
 
-    public void updatePayStatus(String payStatus) {
+    public void updatePayStatus(PayStatus payStatus) {
         this.payStatus = payStatus;
     }
 

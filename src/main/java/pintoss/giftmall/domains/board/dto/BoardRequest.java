@@ -1,9 +1,12 @@
 package pintoss.giftmall.domains.board.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.domain.Board;
 
 @Getter
@@ -11,7 +14,8 @@ import pintoss.giftmall.domains.board.domain.Board;
 public class BoardRequest {
 
     @NotBlank(message = "게시판 유형은 필수 항목입니다.")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private BoardType type;
 
     @NotBlank(message = "제목은 필수 항목입니다.")
     private String title;
@@ -23,7 +27,7 @@ public class BoardRequest {
     private String writer;
 
     @Builder
-    public BoardRequest(String type, String title, String content, String writer) {
+    public BoardRequest(BoardType type, String title, String content, String writer) {
         this.type = type;
         this.title = title;
         this.content = content;

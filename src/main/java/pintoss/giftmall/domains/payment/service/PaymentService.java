@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.common.exceptions.CustomException;
 import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.domains.cart.infra.CartRepository;
@@ -62,7 +63,7 @@ public class PaymentService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateOrderStatusAndDeleteCartItems(Order order, String payStatus, User user) {
+    public void updateOrderStatusAndDeleteCartItems(Order order, PayStatus payStatus, User user) {
         order.updatePayStatus(payStatus);
         orderRepository.save(order);
         orderRepository.flush();

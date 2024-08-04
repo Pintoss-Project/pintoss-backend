@@ -2,6 +2,8 @@ package pintoss.giftmall.domains.payment.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.payment.domain.Payment;
 
 import java.time.LocalDateTime;
@@ -10,13 +12,13 @@ import java.time.LocalDateTime;
 public class PaymentResponse {
 
     private Long id;
-    private String payStatus;
-    private String payMethod;
+    private PayStatus payStatus;
+    private PayMethod payMethod;
     private int payPrice;
     private LocalDateTime approvedAt;
 
     @Builder
-    public PaymentResponse(Long id, String payStatus, String payMethod, int payPrice, int discountPrice, LocalDateTime approvedAt) {
+    public PaymentResponse(Long id, PayStatus payStatus, PayMethod payMethod, int payPrice, int discountPrice, LocalDateTime approvedAt) {
         this.id = id;
         this.payStatus = payStatus;
         this.payMethod = payMethod;

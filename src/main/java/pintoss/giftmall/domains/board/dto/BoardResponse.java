@@ -1,9 +1,9 @@
 package pintoss.giftmall.domains.board.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.domain.Board;
 
 @Getter
@@ -11,13 +11,13 @@ import pintoss.giftmall.domains.board.domain.Board;
 public class BoardResponse {
 
     private Long id;
-    private String type;
+    private BoardType type;
     private String title;
     private String content;
     private String writer;
 
     @Builder
-    public BoardResponse(Long id, String type, String title, String content, String writer) {
+    public BoardResponse(Long id, BoardType type, String title, String content, String writer) {
         this.id = id;
         this.type = type;
         this.title = title;

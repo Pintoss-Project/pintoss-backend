@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.cart.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.cart.domain.Cart;
 
 @Getter
@@ -11,10 +12,10 @@ public class CartResponse {
     private String name;
     private int price;
     private int quantity;
-    private String payMethod;
+    private PayMethod payMethod;
 
     @Builder
-    public CartResponse(Long id, String name, int price, int quantity, String payMethod) {
+    public CartResponse(Long id, String name, int price, int quantity, PayMethod payMethod) {
         this.id = id;
         this.name = name;
         this.price = price;

@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.StringUtils;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 
 import java.math.BigDecimal;
@@ -50,7 +51,8 @@ public class Product {
     private String publisher;
 
     @Column(length = 20)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ProductCategory category;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -59,7 +61,7 @@ public class Product {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Product(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, String category) {
+    public Product(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -80,7 +82,7 @@ public class Product {
         if (StringUtils.hasText(requestDTO.getCsCenter())) this.csCenter = requestDTO.getCsCenter();
         if (StringUtils.hasText(requestDTO.getDescription())) this.description = requestDTO.getDescription();
         if (StringUtils.hasText(requestDTO.getPublisher())) this.publisher = requestDTO.getPublisher();
-        if (StringUtils.hasText(requestDTO.getCategory())) this.category = requestDTO.getCategory();
+        if (StringUtils.hasText(requestDTO.getCategory().toString())) this.category = requestDTO.getCategory();
     }
 
     public void setDiscountPolicy(BigDecimal discount, String type) {

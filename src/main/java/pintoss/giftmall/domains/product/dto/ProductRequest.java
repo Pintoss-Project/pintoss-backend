@@ -1,10 +1,13 @@
 package pintoss.giftmall.domains.product.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 
 import java.math.BigDecimal;
@@ -41,11 +44,12 @@ public class ProductRequest {
     private String publisher;
 
     @NotBlank(message = "카테고리는 필수 항목입니다.")
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ProductCategory category;
 
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, String category) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;

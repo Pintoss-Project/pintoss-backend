@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.user.domain.User;
 
@@ -26,7 +27,8 @@ public class Cart {
     private int price;
 
     @Column(length = 20)
-    private String payMethod;
+    @Enumerated(EnumType.STRING)
+    private PayMethod payMethod;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -40,7 +42,7 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(Product product, User user, int quantity, int price, String payMethod) {
+    public Cart(Product product, User user, int quantity, int price, PayMethod payMethod) {
         this.product = product;
         this.user = user;
         this.quantity = quantity;
