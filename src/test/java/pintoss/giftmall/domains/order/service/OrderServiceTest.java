@@ -44,7 +44,7 @@ class OrderServiceTest {
     @Test
     @Transactional
     @Rollback(false)
-    @DisplayName("주문서 생성 테스트")
+    @DisplayName("주문서 생성 성공 테스트")
     void testCreateOrder() {
         OrderRequest orderRequest = OrderRequest.builder()
                 .orderNo("1234567-1234567")

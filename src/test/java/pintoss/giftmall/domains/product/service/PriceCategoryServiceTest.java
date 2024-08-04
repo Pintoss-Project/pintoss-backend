@@ -18,21 +18,21 @@ class PriceCategoryServiceTest {
     private PriceCategoryService priceCategoryService;
 
     @Test
-    @DisplayName("상품별 가격 카테고리 리스트 조회 테스트")
+    @DisplayName("상품별 가격 카테고리 리스트 조회 성공 테스트")
     void findAllByProductId() {
         List<PriceCategoryResponse> priceCategories = priceCategoryService.findAllByProductId(4L);
         assertThat(priceCategories).hasSize(3);
     }
 
     @Test
-    @DisplayName("상품별 가격 카테고리 조회 테스트")
+    @DisplayName("상품별 가격 카테고리 조회 성공 테스트")
     void findByIdAndProductId() {
         PriceCategoryResponse priceCategory = priceCategoryService.findByIdAndProductId(2L, 4L);
         assertThat(priceCategory).isNotNull();
     }
 
     @Test
-    @DisplayName("가격 카테고리 생성 테스트")
+    @DisplayName("가격 카테고리 생성 성공 테스트")
     void create() {
         PriceCategoryRequest request = PriceCategoryRequest.builder()
                 .name("50000원권")
@@ -49,14 +49,14 @@ class PriceCategoryServiceTest {
     }
 
     @Test
-    @DisplayName("가격 카테고리 삭제 테스트")
+    @DisplayName("가격 카테고리 삭제 성공 테스트")
     void delete() {
         priceCategoryService.delete(4L, 5L);
         assertThrows(IllegalArgumentException.class, () -> priceCategoryService.findByIdAndProductId(5L, 4L));
     }
 
     @Test
-    @DisplayName("상품 재고 업데이트 테스트")
+    @DisplayName("상품 재고 업데이트 성공 테스트")
     void updateStock() {
         priceCategoryService.updateStock(4L, 2L, 200);
         PriceCategoryResponse updatedCategory = priceCategoryService.findByIdAndProductId(2L, 4L);

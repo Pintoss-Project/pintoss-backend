@@ -18,14 +18,14 @@ class BannerServiceTest {
     private BannerService bannerService;
 
     @Test
-    @DisplayName("배너 리스트 조회 테스트")
+    @DisplayName("배너 리스트 조회 성공 테스트")
     void testFindAll() {
         List<BannerResponse> banners = bannerService.findAll();
         assertThat(banners).isNotEmpty();
     }
 
     @Test
-    @DisplayName("배너 조회 테스트")
+    @DisplayName("배너 조회 성공 테스트")
     void testFindById() {
         Long bannerId = 1L;
         BannerResponse foundBanner = bannerService.findById(bannerId);
@@ -36,7 +36,7 @@ class BannerServiceTest {
     }
 
     @Test
-    @DisplayName("배너 생성 테스트")
+    @DisplayName("배너 생성 성공 테스트")
     void testCreate() {
         BannerRequest createRequest = BannerRequest.builder()
                 .bannerTitle("Test Title")
@@ -51,7 +51,7 @@ class BannerServiceTest {
     }
 
     @Test
-    @DisplayName("배너 업데이트 테스트")
+    @DisplayName("배너 업데이트 성공 테스트")
     void testUpdate() {
         Long bannerId = 1L;
 
@@ -68,7 +68,7 @@ class BannerServiceTest {
     }
 
     @Test
-    @DisplayName("배너 삭제 테스트")
+    @DisplayName("배너 삭제 성공 테스트")
     void testDelete() {
         Long bannerId = 2L;
         bannerService.delete(bannerId);

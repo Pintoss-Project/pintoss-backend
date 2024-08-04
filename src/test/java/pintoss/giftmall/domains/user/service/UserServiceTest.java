@@ -60,7 +60,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 테스트")
+    @DisplayName("회원가입 성공 테스트")
     public void testRegister() {
         RegisterRequest request = RegisterRequest.builder()
                 .email("newUser@example.com")
@@ -75,7 +75,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("로그인 테스트")
+    @DisplayName("로그인 성공 테스트")
     public void testLogin() {
         LoginRequest request = LoginRequest.builder()
                 .email(TEST_EMAIL)
@@ -89,14 +89,14 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("이메일 중복 테스트")
+    @DisplayName("이메일 중복 찾기 성공 테스트")
     public void testCheckEmailDuplicate() {
         boolean isDuplicate = authService.checkEmailDuplicate(TEST_EMAIL);
         assertTrue(isDuplicate);
     }
 
     @Test
-    @DisplayName("아이디 찾기 테스트")
+    @DisplayName("아이디 찾기 성공 테스트")
     public void testFindUserIdByNameAndPhone() {
         String email = authService.findUserIdByNameAndPhone(TEST_NAME, TEST_PHONE);
 
@@ -104,7 +104,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("회원 정보 조회 테스트")
+    @DisplayName("회원 정보 조회 성공 테스트")
     public void testGetUserInfo() {
         String token = tokenProvider.generateAccessToken(new UsernamePasswordAuthenticationToken(TEST_EMAIL, TEST_PASSWORD));
 
@@ -115,7 +115,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("전체 회원 정보 조회 테스트")
+    @DisplayName("전체 회원 정보 조회 성공 테스트")
     public void testGetAllUsers() {
         List<UserResponse> users = userService.getAllUsers();
 
@@ -124,7 +124,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("날짜 및 검색어별 회원 필터링 조회 테스트")
+    @DisplayName("날짜 및 검색어별 회원 필터링 조회 성공 테스트")
     public void testFindUsersByDateAndKeyword() {
         LocalDateTime now = LocalDateTime.now();
         List<UserResponse> users = userService.findUsersByDateAndKeyword(now.minusDays(1), now.plusDays(1), TEST_PHONE);

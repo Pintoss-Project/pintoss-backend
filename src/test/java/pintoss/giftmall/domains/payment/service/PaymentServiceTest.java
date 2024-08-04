@@ -72,7 +72,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("주문 성공 테스트")
+    @DisplayName("결제 성공, 주문 내역 저장 성공 테스트")
     void testOrderSuccess() {
         OrderProductRequest orderProductRequest = OrderProductRequest.builder()
                 .productId(product.getId())
@@ -110,7 +110,7 @@ class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("주문 실패 테스트")
+    @DisplayName("결제 실패 후 주문 내역 저장 성공 테스트")
     void testOrderFailure() {
         OrderProductRequest orderProductRequest = OrderProductRequest.builder()
                 .productId(product.getId())
