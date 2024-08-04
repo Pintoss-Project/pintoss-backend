@@ -33,10 +33,10 @@ public class RegisterRequest {
         this.phone = phone;
     }
 
-    public User toEntity() {
+    public User toEntity(String encPassword) {
         return User.builder()
                 .email(this.email)
-                .password(this.password)
+                .password(encPassword)
                 .name(this.name)
                 .phone(this.phone)
                 .role(UserRole.USER)

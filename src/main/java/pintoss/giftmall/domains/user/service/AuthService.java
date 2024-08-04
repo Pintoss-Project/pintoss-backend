@@ -32,8 +32,7 @@ public class AuthService {
             throw new ConflictException("중복된 이메일이 존재합니다.");
         }
 
-        User user = request.toEntity();
-        user.updatePassword(passwordEncoder.encode(request.getPassword()));
+        User user = request.toEntity(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
     }
 
