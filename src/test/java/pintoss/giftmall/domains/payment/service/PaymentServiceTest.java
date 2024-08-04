@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.payment.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,6 +72,7 @@ class PaymentServiceTest {
     }
 
     @Test
+    @DisplayName("주문 성공 테스트")
     void testOrderSuccess() {
         OrderProductRequest orderProductRequest = OrderProductRequest.builder()
                 .productId(product.getId())
@@ -108,6 +110,7 @@ class PaymentServiceTest {
     }
 
     @Test
+    @DisplayName("주문 실패 테스트")
     void testOrderFailure() {
         OrderProductRequest orderProductRequest = OrderProductRequest.builder()
                 .productId(product.getId())

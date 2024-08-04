@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.order.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +44,7 @@ class OrderServiceTest {
     @Test
     @Transactional
     @Rollback(false)
+    @DisplayName("주문서 생성 테스트")
     void testCreateOrder() {
         OrderRequest orderRequest = OrderRequest.builder()
                 .orderNo("1234567-1234567")
@@ -62,6 +64,7 @@ class OrderServiceTest {
     @Test
     @Transactional
     @Rollback(false)
+    @DisplayName("결제 성공 테스트")
     void testProcessPaymentSuccess() {
         testCreateOrder();
 
@@ -83,6 +86,7 @@ class OrderServiceTest {
     @Test
     @Transactional
     @Rollback(false)
+    @DisplayName("결제 실패 테스트")
     void testProcessPaymentFailure() {
         testCreateOrder();
 

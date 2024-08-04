@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.cart.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,6 +76,7 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니 추가 테스트")
     void addToCart() {
         CartRequest request = CartRequest.builder()
                 .productId(productId)
@@ -88,6 +90,7 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니 아이템 리스트 조회 테스트")
     void getCartItems() {
         List<CartResponse> cartItems = cartService.getCartItems(userId);
         assertThat(cartItems).hasSize(1);
@@ -95,6 +98,7 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니 아이템 업데이트 테스트")
     void updateCartItem() {
         cartService.updateCartItem(cartItemId, 5);
         CartResponse cartItem = cartService.getCartItems(userId).get(0);
@@ -102,6 +106,7 @@ class CartServiceTest {
     }
 
     @Test
+    @DisplayName("장바구니 아이템 삭제 테스트")
     void deleteCartItem() {
         cartService.deleteCartItem(cartItemId);
         List<CartResponse> cartItems = cartService.getCartItems(userId);

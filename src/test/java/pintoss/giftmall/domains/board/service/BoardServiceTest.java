@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.board.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,7 @@ class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시판 상세 조회 테스트")
     void findById() {
         BoardResponse board = boardService.findById(existingBoardId);
         assertThat(board).isNotNull();
@@ -47,6 +49,7 @@ class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시글 생성 테스트")
     void create() {
         BoardRequest request = BoardRequest.builder()
                 .type("faqs")
@@ -63,6 +66,7 @@ class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시글 업데이트 테스트")
     void update() {
         BoardRequest updateRequest = BoardRequest.builder()
                 .content("공지사항 내용 추가")
@@ -75,6 +79,7 @@ class BoardServiceTest {
     }
 
     @Test
+    @DisplayName("게시글 삭제 테스트")
     void delete() {
         boardService.delete(existingBoardId);
         assertThrows(IllegalArgumentException.class, () -> boardService.findById(existingBoardId));

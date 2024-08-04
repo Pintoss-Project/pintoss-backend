@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.site_info.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ class SiteInfoServiceTest {
     private SiteInfoService siteInfoService;
 
     @Test
+    @DisplayName("사이트 정보 리스트 조회 테스트")
     void testFindAll() {
 
         List<SiteInfoResponse> siteInfos = siteInfoService.findAll();
@@ -26,6 +28,7 @@ class SiteInfoServiceTest {
     }
 
     @Test
+    @DisplayName("사이트 정보 조회 테스트")
     void testFindById() {
 
         Long siteId = 1L;
@@ -39,6 +42,7 @@ class SiteInfoServiceTest {
     }
 
     @Test
+    @DisplayName("사이트 정보 업데이트 테스트")
     void testUpdate() {
 
         Long siteId = 1L;

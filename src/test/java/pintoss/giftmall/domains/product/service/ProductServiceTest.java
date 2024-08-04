@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.product.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Test
+    @DisplayName("상품 리스트 조회 테스트")
     void findAll() {
         List<ProductResponse> products = productService.findAll();
         assertThat(products).isNotNull();
@@ -26,6 +28,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 상세 조회 테스트")
     void findById() {
         Long productId = 5L;
         ProductResponse product = productService.findById(productId);
@@ -34,6 +37,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 생성 테스트")
     void create() {
         ProductRequest request = ProductRequest.builder()
                 .name("넥슨카드")
@@ -54,6 +58,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 업데이트 테스트")
     void update() {
         Long productId  = 4L;
 
@@ -77,6 +82,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 삭제 테스트")
     void delete() {
         Long productId = 4L;
         productService.delete(productId);
@@ -84,6 +90,7 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("카드 할인율 업데이트 테스트")
     void updateDiscount() {
         Long productId = 4L;
         productService.updateDiscount(productId, new BigDecimal("2.00"), "card");
@@ -93,12 +100,14 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리별 상품 리스트 조회 테스트")
     void findByCategory() {
         List<ProductResponse> products = productService.findByCategory("cbm");
         assertThat(products).hasSize(2);
     }
 
     @Test
+    @DisplayName("인기 상품별 상품 리스트 조회 테스트")
     void findPopularProducts() {
         List<ProductResponse> products = productService.findPopularProducts();
         assertThat(products).hasSize(1);
