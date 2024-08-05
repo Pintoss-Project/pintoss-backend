@@ -20,4 +20,9 @@ public class BoardImage extends Image {
         super(url);
         this.board = board;
     }
+
+    public void associateWithBoard(Board board) {
+        this.board = board;
+    }
+
 }

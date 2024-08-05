@@ -6,10 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import pintoss.giftmall.common.exceptions.client.FieldMissingException;
 import pintoss.giftmall.domains.board.domain.Board;
+import pintoss.giftmall.domains.board.domain.BoardImage;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.infra.BoardRepository;
 import pintoss.giftmall.domains.board.infra.BoardReader;
+import pintoss.giftmall.domains.image.domain.Image;
+import pintoss.giftmall.domains.image.infra.ImageRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardReader boardReader;
+    private final ImageRepository imageRepository;
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAllByType(String type) {
@@ -42,6 +46,19 @@ public class BoardService {
     public Long create(BoardRequest requestDTO) {
         Board board = requestDTO.toEntity();
         boardRepository.save(board);
+
+        if (requestDTO.getImageIds() != null) {
+            List<Image> images = imageRepository.findAllById(requestDTO.getImageIds());
+            for (Image image : images) {
+                BoardImage boardImage = BoardImage.builder()
+                        .url(image.getUrl())
+                        .board(board)
+                        .build();
+                boardImage.associateWithBoard(board);
+                imageRepository.save(boardImage);
+            }
+        }
+
         return board.getId();
     }
 

@@ -2,7 +2,9 @@ package pintoss.giftmall.domains.order.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import pintoss.giftmall.common.enums.OrderStatus;
 import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.order.domain.Order;
 
 @Getter
@@ -14,13 +16,13 @@ public class OrderResponse {
     private String userPhone;
     private String orderNo;
     private int orderPrice;
-    private String orderStatus;
+    private OrderStatus orderStatus;
     private PayMethod payMethod;
     private boolean isSent;
-    private String payStatus;
+    private PayStatus payStatus;
 
     @Builder
-    public OrderResponse(Long id, String userName, String userEmail, String userPhone, String orderNo, int orderPrice, String orderStatus, boolean isSent, PayMethod payMethod, String payStatus) {
+    public OrderResponse(Long id, String userName, String userEmail, String userPhone, String orderNo, int orderPrice, OrderStatus orderStatus, boolean isSent, PayMethod payMethod, PayStatus payStatus) {
         this.id = id;
         this.userName = userName;
         this.userEmail = userEmail;

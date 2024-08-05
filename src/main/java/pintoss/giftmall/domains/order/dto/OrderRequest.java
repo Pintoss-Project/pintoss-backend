@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.OrderStatus;
 import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.user.domain.User;
@@ -24,7 +25,7 @@ public class OrderRequest {
 
     @NotBlank(message = "주문 상태는 필수 항목입니다.")
     @Enumerated(EnumType.STRING)
-    private String orderStatus;
+    private OrderStatus orderStatus;
 
     @NotBlank(message = "결제 수단은 필수 항목입니다.")
     @Enumerated(EnumType.STRING)
@@ -41,7 +42,7 @@ public class OrderRequest {
     private List<OrderProductRequest> orderProducts;
 
     @Builder
-    public OrderRequest(String orderNo, int orderPrice, String orderStatus, boolean isSent, boolean isOrderInCart, PayMethod payMethod, List<OrderProductRequest> orderProducts) {
+    public OrderRequest(String orderNo, int orderPrice, OrderStatus orderStatus, boolean isSent, boolean isOrderInCart, PayMethod payMethod, List<OrderProductRequest> orderProducts) {
         this.orderNo = orderNo;
         this.orderPrice = orderPrice;
         this.orderStatus = orderStatus;

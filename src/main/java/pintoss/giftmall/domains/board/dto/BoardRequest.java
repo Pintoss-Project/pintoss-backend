@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.domain.Board;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class BoardRequest {
@@ -26,12 +28,15 @@ public class BoardRequest {
     @NotBlank(message = "작성자는 필수 항목입니다.")
     private String writer;
 
+    private List<Long> imageIds;
+
     @Builder
-    public BoardRequest(BoardType type, String title, String content, String writer) {
+    public BoardRequest(BoardType type, String title, String content, String writer, List<Long> imageIds) {
         this.type = type;
         this.title = title;
         this.content = content;
         this.writer = writer;
+        this.imageIds = imageIds;
     }
 
     public Board toEntity() {

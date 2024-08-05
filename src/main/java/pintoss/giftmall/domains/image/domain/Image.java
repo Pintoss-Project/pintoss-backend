@@ -29,7 +29,7 @@ public class Image {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    protected Image(String url) {
+    public Image(String url) {
         this.url = url;
     }
 
