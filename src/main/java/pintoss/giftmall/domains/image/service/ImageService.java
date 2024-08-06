@@ -54,8 +54,9 @@ public class ImageService {
 
     public void deleteImage(Long id) {
         Image image = imageRepository.findById(id).orElseThrow(() -> new ImageUploadException("이미지를 찾을 수 없습니다."));
+        String url = image.getUrl();
         imageRepository.delete(image);
-        s3Service.deleteImageFromS3(image.getUrl());
+        s3Service.deleteImageFromS3(url);
     }
 
 }
