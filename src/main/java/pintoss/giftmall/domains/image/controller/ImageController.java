@@ -16,12 +16,6 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping("/upload")
-    public ApiResponse<ImageResponse> uploadImage(@RequestPart("file") MultipartFile file) {
-        ImageResponse imageResponse = imageService.uploadImage(file);
-        return ApiResponse.ok(imageResponse);
-    }
-
     @PostMapping("/uploads")
     public ApiResponse<List<ImageResponse>> uploadImages(@RequestPart("files") List<MultipartFile> files) {
         List<ImageResponse> imageResponses = imageService.uploadImages(files);
