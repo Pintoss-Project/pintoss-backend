@@ -13,7 +13,7 @@ spring:
     hibernate:
       ddl-auto: update
   profiles:
-    include: oauth
+    include: oauth, aws
   config:
     import: optional:file:.env[.properties]
   mail:
