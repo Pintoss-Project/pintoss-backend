@@ -2,8 +2,6 @@ package pintoss.giftmall.common.exceptions.s3;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import pintoss.giftmall.common.exceptions.ErrorCode;
 

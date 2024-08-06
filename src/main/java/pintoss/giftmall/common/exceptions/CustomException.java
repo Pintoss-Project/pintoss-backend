@@ -1,7 +1,5 @@
 package pintoss.giftmall.common.exceptions;
 
-
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;

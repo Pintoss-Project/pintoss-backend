@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import pintoss.giftmall.common.exceptions.CustomException;
 import pintoss.giftmall.common.exceptions.ErrorCode;
 
-
 @Getter
 public class ImageUploadException extends CustomException {
 
