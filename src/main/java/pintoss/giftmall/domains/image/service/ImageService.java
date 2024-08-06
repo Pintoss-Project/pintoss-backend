@@ -10,6 +10,7 @@ import pintoss.giftmall.domains.image.domain.Image;
 import pintoss.giftmall.domains.image.infra.ImageRepository;
 import pintoss.giftmall.domains.image.dto.ImageResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,25 @@ public class ImageService {
 
     @Transactional
     public List<ImageResponse> uploadImages(List<MultipartFile> files) throws ImageUploadException {
-        return files.stream().map(this::uploadImage).collect(Collectors.toList());
+        List<ImageResponse> imageResponses = new ArrayList<>();
+        List<String> uploadedUrls = new ArrayList<>();
+
+        try {
+            for (MultipartFile file : files) {
+                String url = s3Service.upload(file);
+                uploadedUrls.add(url);
+                Image image = new Image(url);
+                imageRepository.save(image);
+                imageResponses.add(new ImageResponse(image.getId(), image.getUrl()));
+            }
+        } catch (ImageUploadException e) {
+            for (String url : uploadedUrls) {
+                s3Service.deleteImageFromS3(url);
+            }
+            throw e;
+        }
+
+        return imageResponses;
     }
 
     public void deleteImage(Long id) {
