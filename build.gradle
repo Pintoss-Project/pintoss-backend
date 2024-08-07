@@ -1,7 +1,12 @@
 plugins {
 	id 'java'
+	id 'war'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+bootWar {
+	enabled = true
 }
 
 group = 'pintoss'
@@ -51,6 +56,8 @@ dependencies {
 
 	// AWS S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 
 }
 
