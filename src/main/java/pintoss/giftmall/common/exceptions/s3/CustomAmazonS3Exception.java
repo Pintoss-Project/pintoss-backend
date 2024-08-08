@@ -11,13 +11,14 @@ public class CustomAmazonS3Exception extends AmazonS3Exception {
 
     @Getter
     private final HttpStatus httpStatus;
-    private final ErrorCode errorCode;
+    @Getter
+    private final ErrorCode customErrorCode;
     private final LocalDateTime timestamp;
 
-    public CustomAmazonS3Exception(HttpStatus httpStatus, ErrorCode errorCode, String message) {
+    public CustomAmazonS3Exception(HttpStatus httpStatus, ErrorCode customErrorCode, String message) {
         super(message);
         this.httpStatus = httpStatus;
-        this.errorCode = errorCode;
+        this.customErrorCode = customErrorCode;
         this.timestamp = LocalDateTime.now();
     }
 

@@ -26,7 +26,10 @@ public class UserAdminController {
     }
 
     @GetMapping("/filter")
-    public ApiResponse<List<UserResponse>> getFilteredUsers(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate, @RequestParam String search) {
+    public ApiResponse<List<UserResponse>> getFilteredUsers(
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String search) {
         List<UserResponse> response = userService.findUsersByDateAndKeyword(startDate, endDate, search);
         return ApiResponse.ok(response);
     }

@@ -11,16 +11,12 @@ import java.time.LocalDateTime;
 public class CustomException extends RuntimeException {
 
     private HttpStatus httpStatus;
+    private ErrorCode errorCode;
     private LocalDateTime timestamp;
 
     public CustomException(HttpStatus httpStatus, ErrorCode errorCode, String message) {
-        super(errorCode.getMessage() + " : " + message);
-        this.httpStatus = httpStatus;
-        this.timestamp = LocalDateTime.now();
-    }
-
-    public CustomException(HttpStatus httpStatus, String message, ErrorCode errorCode) {
-        super(message + " : " + errorCode.getMessage());
+        super(message);
+        this.errorCode = errorCode;
         this.httpStatus = httpStatus;
         this.timestamp = LocalDateTime.now();
     }

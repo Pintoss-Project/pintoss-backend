@@ -25,6 +25,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleCustomException(CustomException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -35,6 +36,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleBadRequestException(BadRequestException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -45,6 +47,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleNotFoundException(NotFoundException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -55,6 +58,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -65,6 +69,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleForbiddenException(ForbiddenException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -115,6 +120,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleInvalidFieldException(InvalidFieldException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -125,6 +131,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleFieldMissingException(FieldMissingException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -135,6 +142,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleInternalServerErrorException(ServerErrorException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
@@ -145,6 +153,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleImageUploadException(ImageUploadException ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
+                ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now());
         return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
@@ -154,8 +163,8 @@ public class CustomExceptionHandler {
     public final ResponseEntity<ApiErrorResponse> handleCustomAmazonS3Exception(CustomAmazonS3Exception ex) {
         ApiErrorResponse errorResponse = ApiErrorResponse.of(
                 ex.getHttpStatus(),
-                ex.getMessage(),
-                LocalDateTime.now()
+                ex.getCustomErrorCode(),
+                ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
     }
