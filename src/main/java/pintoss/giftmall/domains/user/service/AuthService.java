@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.common.exceptions.client.ConflictException;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
@@ -43,6 +44,30 @@ public class AuthService {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
+        String accessToken = tokenProvider.generateAccessToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
+
+        return LoginResponse.builder()
+                .grantType("bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Transactional
+    public LoginResponse adminLogin(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if (user.getRole() != UserRole.ADMIN) {
+            throw new UnauthorizedException("관리자만 접근할 수 있습니다.");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
