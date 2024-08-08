@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,7 +10,9 @@ import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.user.dto.UserResponse;
 import pintoss.giftmall.domains.user.service.UserService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,7 @@ import java.util.List;
 public class UserAdminController {
 
     private final UserService userService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GetMapping("/all")
     public ApiResponse<List<UserResponse>> getAllUsers() {
@@ -27,10 +31,14 @@ public class UserAdminController {
 
     @GetMapping("/filter")
     public ApiResponse<List<UserResponse>> getFilteredUsers(
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
             @RequestParam(required = false) String search) {
-        List<UserResponse> response = userService.findUsersByDateAndKeyword(startDate, endDate, search);
+
+        LocalDate start = startDate != null ? LocalDate.parse(startDate, formatter) : null;
+        LocalDate end = endDate != null ? LocalDate.parse(endDate, formatter) : null;
+
+        List<UserResponse> response = userService.findUsersByDateAndKeyword(start, end, search);
         return ApiResponse.ok(response);
     }
 

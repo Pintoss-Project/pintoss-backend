@@ -14,6 +14,7 @@ import pintoss.giftmall.domains.user.dto.RegisterRequest;
 import pintoss.giftmall.domains.user.dto.UserResponse;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -126,7 +127,7 @@ class UserServiceTest {
     @Test
     @DisplayName("날짜 및 검색어별 회원 필터링 조회 성공 테스트")
     public void testFindUsersByDateAndKeyword() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         List<UserResponse> users = userService.findUsersByDateAndKeyword(now.minusDays(1), now.plusDays(1), TEST_PHONE);
 
         assertEquals(1, users.size());

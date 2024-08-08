@@ -9,7 +9,7 @@ import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.UserResponse;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +34,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserResponse> findUsersByDateAndKeyword(LocalDateTime startDate, LocalDateTime endDate, String keyword) {
+    public List<UserResponse> findUsersByDateAndKeyword(LocalDate startDate, LocalDate endDate, String keyword) {
         return userRepository.findUsersByDateAndKeyword(startDate, endDate, keyword).stream()
                 .map(UserResponse::fromEntity)
                 .collect(Collectors.toList());
