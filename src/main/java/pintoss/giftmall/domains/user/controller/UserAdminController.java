@@ -2,6 +2,7 @@ package pintoss.giftmall.domains.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,8 +36,8 @@ public class UserAdminController {
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) String search) {
 
-        LocalDate start = startDate != null ? LocalDate.parse(startDate, formatter) : null;
-        LocalDate end = endDate != null ? LocalDate.parse(endDate, formatter) : null;
+        LocalDate start = StringUtils.hasText(startDate) ? LocalDate.parse(startDate, formatter) : null;
+        LocalDate end = StringUtils.hasText(endDate) ? LocalDate.parse(endDate, formatter) : null;
 
         List<UserResponse> response = userService.findUsersByDateAndKeyword(start, end, search);
         return ApiResponse.ok(response);
