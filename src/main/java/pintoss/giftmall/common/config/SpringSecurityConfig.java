@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import pintoss.giftmall.common.oauth.*;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -35,8 +36,9 @@ public class SpringSecurityConfig {
                 .httpBasic(HttpBasicConfigurer::disable)
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedHeaders(Collections.singletonList("*"));
-                    config.setAllowedMethods(Collections.singletonList("*"));
+                    config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                    config.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                     config.setAllowedOriginPatterns(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     return config;

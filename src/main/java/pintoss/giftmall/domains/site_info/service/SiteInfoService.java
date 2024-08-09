@@ -42,9 +42,25 @@ public class SiteInfoService {
     }
 
     public SiteInfoResponse update(Long id, SiteInfoUpdateRequest requestDTO) {
-        SiteInfo siteInfo = siteInfoReader.findById(id);
+        SiteInfo siteInfo = siteInfoRepository.findById(id).orElseGet(() -> {
+            SiteInfo newSiteInfo = SiteInfo.builder()
+                    .name(requestDTO.getName())
+                    .tel(requestDTO.getTel())
+                    .businessHour(requestDTO.getBusinessHour())
+                    .address(requestDTO.getAddress())
+                    .owner(requestDTO.getOwner())
+                    .businesses(requestDTO.getBusinesses())
+                    .reportNumber(requestDTO.getReportNumber())
+                    .email(requestDTO.getEmail())
+                    .kakao(requestDTO.getKakao())
+                    .openChat(requestDTO.getOpenChat())
+                    .build();
+            return siteInfoRepository.save(newSiteInfo);
+        });
+
         siteInfo.update(requestDTO);
 
         return SiteInfoResponse.fromEntity(siteInfo);
     }
+
 }
