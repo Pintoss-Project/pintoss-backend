@@ -36,9 +36,8 @@ public class SpringSecurityConfig {
                 .httpBasic(HttpBasicConfigurer::disable)
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                    config.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setAllowedMethods(Collections.singletonList("*"));
                     config.setAllowedOriginPatterns(Collections.singletonList("*"));
                     config.setAllowCredentials(true);
                     return config;
