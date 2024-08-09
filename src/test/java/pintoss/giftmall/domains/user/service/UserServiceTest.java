@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.user.service;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,22 +117,16 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("전체 회원 정보 조회 성공 테스트")
-    public void testGetAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-
-        assertEquals(1, users.size());
-        assertEquals(TEST_EMAIL, users.get(0).getEmail());
-    }
-
-    @Test
     @DisplayName("날짜 및 검색어별 회원 필터링 조회 성공 테스트")
-    public void testFindUsersByDateAndKeyword() {
+    public void testFindUsersByDateAndKeywordPaged() {
         LocalDate now = LocalDate.now();
-        List<UserResponse> users = userService.findUsersByDateAndKeyword(now.minusDays(1), now.plusDays(1), TEST_PHONE);
 
-        assertEquals(1, users.size());
-        assertEquals(TEST_EMAIL, users.get(0).getEmail());
+        Page<UserResponse> users = userService.findUsersByDateAndKeywordPaged(now.minusDays(1), now.plusDays(1), TEST_PHONE, 0, 10);
+
+        assertNotNull(users);
+        assertEquals(1, users.getTotalPages());
+        assertEquals(1, users.getNumberOfElements());
+        assertEquals(TEST_EMAIL, users.getContent().get(0).getEmail());
     }
 
 }

@@ -1,8 +1,6 @@
 package pintoss.giftmall.domains.site_info.controller;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.site_info.dto.SiteInfoResponse;

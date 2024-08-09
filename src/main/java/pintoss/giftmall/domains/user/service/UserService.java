@@ -1,6 +1,8 @@
 package pintoss.giftmall.domains.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
@@ -28,16 +30,10 @@ public class UserService {
         return UserResponse.fromEntity(user);
     }
 
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(UserResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    public List<UserResponse> findUsersByDateAndKeyword(LocalDate startDate, LocalDate endDate, String keyword) {
-        return userRepository.findUsersByDateAndKeyword(startDate, endDate, keyword).stream()
-                .map(UserResponse::fromEntity)
-                .collect(Collectors.toList());
+    public Page<UserResponse> findUsersByDateAndKeywordPaged(LocalDate startDate, LocalDate endDate, String keyword, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<User> usersPage = userRepository.findUsersByDateAndKeywordPaged(startDate, endDate, keyword, pageRequest);
+        return usersPage.map(UserResponse::fromEntity);
     }
 
 }
