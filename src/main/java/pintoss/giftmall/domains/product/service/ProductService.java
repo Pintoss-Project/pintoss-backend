@@ -9,6 +9,7 @@ import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
+import pintoss.giftmall.domains.product.dto.UpdateDiscountRequest;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 import pintoss.giftmall.domains.product.infra.ProductReader;
@@ -77,8 +78,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Long updateDiscount(Long id, BigDecimal discount, String type) {
-        return productRepository.updateDiscount(id, discount, type);
+    public Long updateDiscount(Long id, UpdateDiscountRequest updateDiscountRequest) {
+        return productRepository.updateDiscount(id, updateDiscountRequest);
     }
 
     @Transactional(readOnly = true)

@@ -38,7 +38,7 @@ public class PriceCategoryAdminController {
     }
 
     @PatchMapping("/{id}/category/{category_id}/stock")
-    public ApiResponse<Long> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestParam @NotNull int stock) {
+    public ApiResponse<Long> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestBody @NotNull int stock) {
         Long updatedPriceCategoryId = priceCategoryService.updateStock(id, category_id, stock);
         return ApiResponse.ok(updatedPriceCategoryId);
     }

@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
+import pintoss.giftmall.domains.product.dto.UpdateDiscountRequest;
 import pintoss.giftmall.domains.product.service.ProductService;
 
 import java.math.BigDecimal;
@@ -38,8 +39,8 @@ public class ProductAdminController {
     }
 
     @PatchMapping("/{id}/fee")
-    public ApiResponse<Long> updateProductFee(@PathVariable Long id, @RequestParam @NotNull BigDecimal discount, @RequestParam @NotNull String type) {
-        Long updatedProductId = productService.updateDiscount(id, discount, type);
+    public ApiResponse<Long> updateProductFee(@PathVariable Long id, @RequestBody UpdateDiscountRequest updateRequest) {
+        Long updatedProductId = productService.updateDiscount(id, updateRequest);
         return ApiResponse.ok(updatedProductId);
     }
 
