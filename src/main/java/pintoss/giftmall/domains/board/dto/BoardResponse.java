@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.domain.Board;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class BoardResponse {
@@ -15,6 +17,7 @@ public class BoardResponse {
     private String title;
     private String content;
     private String writer;
+    private LocalDateTime createdAt;
 
     @Builder
     public BoardResponse(Long id, BoardType type, String title, String content, String writer) {
@@ -23,6 +26,7 @@ public class BoardResponse {
         this.title = title;
         this.content = content;
         this.writer = writer;
+        this.createdAt = LocalDateTime.now();
     }
 
     public static BoardResponse fromEntity(Board board) {

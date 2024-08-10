@@ -1,9 +1,11 @@
 package pintoss.giftmall.domains.board.controller;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.service.BoardService;
@@ -19,7 +21,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam @NotBlank String type) {
+    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam @NotNull BoardType type) {
         List<BoardResponse> boards = boardService.findAllByType(type);
         return ApiResponse.ok(boards);
     }

@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.board.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardRequest {
 
-    @NotBlank(message = "게시판 유형은 필수 항목입니다.")
+    @NotNull(message = "게시판 유형은 필수 항목입니다.")
     @Enumerated(EnumType.STRING)
     private BoardType type;
 

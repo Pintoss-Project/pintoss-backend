@@ -3,7 +3,9 @@ package pintoss.giftmall.domains.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.common.exceptions.client.FieldMissingException;
 import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.domain.BoardImage;
@@ -27,8 +29,8 @@ public class BoardService {
     private final ImageRepository imageRepository;
 
     @Transactional(readOnly = true)
-    public List<BoardResponse> findAllByType(String type) {
-        if (!StringUtils.hasText(type)) {
+    public List<BoardResponse> findAllByType(BoardType type) {
+        if (ObjectUtils.isEmpty(type)) {
             throw new FieldMissingException("type");
         }
 

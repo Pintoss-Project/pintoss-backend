@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.service.BoardService;
