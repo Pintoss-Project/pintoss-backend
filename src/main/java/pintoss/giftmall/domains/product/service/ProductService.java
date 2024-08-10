@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
+import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
+import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 
@@ -21,6 +24,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductReader productReader;
+    private final PriceCategoryRepository priceCategoryRepository;
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
@@ -31,7 +35,10 @@ public class ProductService {
         }
 
         return products.stream()
-                .map(ProductResponse::fromEntity)
+                .map(product -> {
+                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
+                    return ProductResponse.fromEntity(product, priceCategories);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +46,12 @@ public class ProductService {
     public ProductResponse findById(Long id) {
         Product product = productReader.findById(id);
 
-        return ProductResponse.fromEntity(product);
+        List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(id);
+        List<PriceCategoryResponse> priceCategoryResponses = priceCategories.stream()
+                .map(PriceCategoryResponse::fromEntity)
+                .toList();
+
+        return ProductResponse.fromEntity(product, priceCategories);
     }
 
     public Long create(ProductRequest requestDTO) {
@@ -69,7 +81,10 @@ public class ProductService {
         List<Product> products = productRepository.findByCategory(category);
 
         return products.stream()
-                .map(ProductResponse::fromEntity)
+                .map(product -> {
+                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
+                    return ProductResponse.fromEntity(product, priceCategories);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +93,10 @@ public class ProductService {
         List<Product> products = productRepository.findByIsPopularTrue();
 
         return products.stream()
-                .map(ProductResponse::fromEntity)
+                .map(product -> {
+                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
+                    return ProductResponse.fromEntity(product, priceCategories);
+                })
                 .collect(Collectors.toList());
     }
 }

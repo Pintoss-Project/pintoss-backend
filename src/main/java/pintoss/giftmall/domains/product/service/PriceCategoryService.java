@@ -49,9 +49,15 @@ public class PriceCategoryService {
     public Long create(PriceCategoryRequest requestDTO) {
         Product product = productReader.findById(requestDTO.getProductId());
         PriceCategory priceCategory = requestDTO.toEntity(product);
-        priceCategoryRepository.save(priceCategory);
+        PriceCategory savedCategory = priceCategoryRepository.save(priceCategory);
 
-        return priceCategory.getId();
+        return savedCategory.getId();
+    }
+
+    public List<Long> create(List<PriceCategoryRequest> requestDTOs) {
+        return requestDTOs.stream()
+                .map(this::create)
+                .collect(Collectors.toList());
     }
 
     public void delete(Long productId, Long categoryId) {

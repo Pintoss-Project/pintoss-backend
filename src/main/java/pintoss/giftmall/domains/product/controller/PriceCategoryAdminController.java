@@ -9,6 +9,9 @@ import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.product.dto.PriceCategoryRequest;
 import pintoss.giftmall.domains.product.service.PriceCategoryService;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/admin/product")
 @RequiredArgsConstructor
@@ -18,9 +21,14 @@ public class PriceCategoryAdminController {
     private final PriceCategoryService priceCategoryService;
 
     @PostMapping("/{id}/category")
-    public ApiResponse<Long> createPriceCategory(@RequestBody @Valid PriceCategoryRequest requestDTO) {
-        Long createdPriceCategoryId = priceCategoryService.create(requestDTO);
-        return ApiResponse.ok(createdPriceCategoryId);
+    public ApiResponse<List<Long>> createPriceCategory(
+            @RequestBody @Valid List<PriceCategoryRequest> requestDTOs) {
+
+        List<Long> createdPriceCategoryIds = requestDTOs.stream()
+                .map(priceCategoryService::create)
+                .collect(Collectors.toList());
+
+        return ApiResponse.ok(createdPriceCategoryIds);
     }
 
     @DeleteMapping("/{id}/category/{category_id}")

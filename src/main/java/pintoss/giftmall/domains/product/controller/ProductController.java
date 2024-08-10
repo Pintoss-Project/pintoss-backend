@@ -19,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ApiResponse<List<ProductResponse>> getAllProducts(@RequestParam(value = "category", required = false) @NotNull String category) {
+    public ApiResponse<List<ProductResponse>> getAllProducts(@RequestParam(value = "category", required = false) String category) {
         if (category != null) {
             List<ProductResponse> products = productService.findByCategory(category);
             return ApiResponse.ok(products);

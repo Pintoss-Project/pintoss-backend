@@ -43,7 +43,7 @@ public class ProductRequest {
     @NotBlank(message = "발행자는 필수 항목입니다.")
     private String publisher;
 
-    @NotBlank(message = "카테고리는 필수 항목입니다.")
+    @NotNull(message = "카테고리는 필수 항목입니다.")
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
