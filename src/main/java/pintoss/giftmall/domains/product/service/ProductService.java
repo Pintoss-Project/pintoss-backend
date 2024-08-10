@@ -69,6 +69,11 @@ public class ProductService {
     }
 
     public void delete(Long id) {
+        List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(id);
+        if (!priceCategories.isEmpty()) {
+            priceCategoryRepository.deleteAll(priceCategories);
+        }
+
         productRepository.deleteById(id);
     }
 
