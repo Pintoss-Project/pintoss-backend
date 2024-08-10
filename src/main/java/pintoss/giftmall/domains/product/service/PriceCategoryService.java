@@ -12,6 +12,7 @@ import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,11 @@ public class PriceCategoryService {
             throw new NotFoundException("상품의 가격 카테고리를 찾을 수 없습니다.");
         }
 
-        return priceCategories.stream()
+        List<PriceCategory> sortedPriceCategories = priceCategories.stream()
+                .sorted(Comparator.comparing(PriceCategory::getPrice))
+                .toList();
+
+        return sortedPriceCategories.stream()
                 .map(PriceCategoryResponse::fromEntity)
                 .collect(Collectors.toList());
     }
