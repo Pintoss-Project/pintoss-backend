@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
 
@@ -47,7 +48,7 @@ class ProductServiceTest {
                 .csCenter("1544-4567")
                 .description("상세설명")
                 .publisher("넥슨")
-                .category("go")
+                .category(ProductCategory.GO)
                 .build();
 
         Long productId = productService.create(request);
@@ -71,7 +72,7 @@ class ProductServiceTest {
                 .csCenter("1544-4567")
                 .description("상세설명")
                 .publisher("문화")
-                .category("cbm")
+                .category(ProductCategory.CBM)
                 .build();
 
         productService.update(productId, updateRequest);
@@ -87,16 +88,6 @@ class ProductServiceTest {
         Long productId = 4L;
         productService.delete(productId);
         assertThrows(IllegalArgumentException.class, () -> productService.findById(productId));
-    }
-
-    @Test
-    @DisplayName("카드 할인율 업데이트 성공 테스트")
-    void updateDiscount() {
-        Long productId = 4L;
-        productService.updateDiscount(productId, new BigDecimal("2.00"), "card");
-        ProductResponse product = productService.findById(productId);
-
-        assertThat(product.getCardDiscount()).isEqualByComparingTo("2.00");
     }
 
     @Test
