@@ -3,18 +3,15 @@ package pintoss.giftmall.domains.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
-import pintoss.giftmall.domains.product.dto.PriceCategoryResponse;
-import pintoss.giftmall.domains.product.dto.ProductRequest;
-import pintoss.giftmall.domains.product.dto.ProductResponse;
-import pintoss.giftmall.domains.product.dto.UpdateDiscountRequest;
+import pintoss.giftmall.domains.product.dto.*;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +37,15 @@ public class ProductService {
                     List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
                     return ProductResponse.fromEntity(product, priceCategories);
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleProductResponse> findAllSimpleProduct() {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .map(SimpleProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -83,7 +89,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findByCategory(String category) {
+    public List<ProductResponse> findByCategory(ProductCategory category) {
         List<Product> products = productRepository.findByCategory(category);
 
         return products.stream()
@@ -95,14 +101,21 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findPopularProducts() {
+    public List<SimpleProductResponse> findSimpleByCategory(ProductCategory category) {
+        List<Product> products = productRepository.findByCategory(category);
+
+        return products.stream()
+                .map(SimpleProductResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleProductResponse> findPopularProducts() {
         List<Product> products = productRepository.findByIsPopularTrue();
 
         return products.stream()
-                .map(product -> {
-                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
-                    return ProductResponse.fromEntity(product, priceCategories);
-                })
+                .map(SimpleProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+
 }

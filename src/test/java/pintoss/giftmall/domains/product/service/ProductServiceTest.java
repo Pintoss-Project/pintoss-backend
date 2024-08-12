@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.domains.product.dto.ProductRequest;
 import pintoss.giftmall.domains.product.dto.ProductResponse;
+import pintoss.giftmall.domains.product.dto.SimpleProductResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -93,14 +94,14 @@ class ProductServiceTest {
     @Test
     @DisplayName("카테고리별 상품 리스트 조회 성공 테스트")
     void findByCategory() {
-        List<ProductResponse> products = productService.findByCategory("cbm");
+        List<ProductResponse> products = productService.findByCategory(ProductCategory.CBM);
         assertThat(products).hasSize(2);
     }
 
     @Test
     @DisplayName("인기 상품별 상품 리스트 조회 성공 테스트")
     void findPopularProducts() {
-        List<ProductResponse> products = productService.findPopularProducts();
+        List<SimpleProductResponse> products = productService.findPopularProducts();
         assertThat(products).hasSize(1);
     }
 

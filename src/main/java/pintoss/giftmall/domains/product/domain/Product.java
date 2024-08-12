@@ -31,6 +31,7 @@ public class Product {
     @Column(length = 50)
     private String name;
 
+    @Column(name = "is_popular")
     private boolean isPopular;
 
     @Setter

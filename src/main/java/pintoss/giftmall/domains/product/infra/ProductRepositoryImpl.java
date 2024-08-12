@@ -1,14 +1,11 @@
 package pintoss.giftmall.domains.product.infra;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.product.domain.QProduct;
 import pintoss.giftmall.domains.product.dto.UpdateDiscountRequest;
-
-import java.math.BigDecimal;
 
 @Repository
 @RequiredArgsConstructor
