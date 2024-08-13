@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.user.domain.User;
 
@@ -38,12 +39,17 @@ public class Cart {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "price_category_id")
+    private PriceCategory priceCategory;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Cart(Product product, User user, int quantity, int price, PayMethod payMethod) {
+    public Cart(Product product, PriceCategory priceCategory, User user, int quantity, int price, PayMethod payMethod) {
         this.product = product;
+        this.priceCategory = priceCategory;
         this.user = user;
         this.quantity = quantity;
         this.price = price;

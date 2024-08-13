@@ -8,7 +8,9 @@ import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
 import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.cart.infra.CartReader;
+import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
@@ -25,12 +27,14 @@ public class CartService {
     private final CartReader cartReader;
     private final ProductReader productReader;
     private final UserReader userReader;
+    private final PriceCategoryReader priceCategoryReader;
 
     public Long addToCart(Long userId, CartRequest requestDTO) {
         Product product = productReader.findById(requestDTO.getProductId());
+        PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
-        Cart cart = requestDTO.toEntity(product, user);
+        Cart cart = requestDTO.toEntity(product, priceCategory, user);
         cartRepository.save(cart);
 
         return cart.getId();

@@ -24,6 +24,7 @@ public class CartController {
     public ApiResponse<Long> addToCart(@PathVariable("product_id") Long productId, @RequestBody @Valid CartRequest requestDTO, @RequestParam @NotNull Long userId) {
         CartRequest updatedRequest = CartRequest.builder()
                 .productId(productId)
+                .priceCategoryId(requestDTO.getPriceCategoryId())
                 .quantity(requestDTO.getQuantity())
                 .price(requestDTO.getPrice())
                 .payMethod(requestDTO.getPayMethod())
