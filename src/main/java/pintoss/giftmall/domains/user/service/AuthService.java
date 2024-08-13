@@ -40,10 +40,10 @@ public class AuthService {
     @Transactional
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("아이디 또는 비밀번호가 일치하지 않습니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
+            throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
@@ -60,10 +60,10 @@ public class AuthService {
     @Transactional
     public LoginResponse adminLogin(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("이메일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("아이디 또는 비밀번호가 일치하지 않습니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new UnauthorizedException("비밀번호가 일치하지 않습니다.");
+            throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
         if (user.getRole() != UserRole.ADMIN) {
