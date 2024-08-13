@@ -31,7 +31,7 @@ public class CartRequest {
     @Min(value = 1, message = "수량은 최소 1 이상이어야 합니다.")
     private int quantity;
 
-    @NotBlank(message = "결제 방법은 필수 항목입니다.")
+    @NotNull(message = "결제 방법은 필수 항목입니다.")
     @Enumerated(EnumType.STRING)
     private PayMethod payMethod;
 
