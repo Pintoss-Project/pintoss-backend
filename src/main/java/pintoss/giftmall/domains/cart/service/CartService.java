@@ -3,6 +3,7 @@ package pintoss.giftmall.domains.cart.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.cart.domain.Cart;
 import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
@@ -15,6 +16,7 @@ import pintoss.giftmall.domains.product.infra.ProductReader;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,5 +70,29 @@ public class CartService {
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
         cartRepository.deleteAll(cartItems);
     }
+
+    public void updateAllCartItemsToPayMethod(Long userId, PayMethod newPayMethod) {
+        List<Cart> cartItems = cartRepository.findAllByUserId(userId);
+
+        for (Cart cart : cartItems) {
+            Product product = cart.getProduct();
+            BigDecimal originalPrice = new BigDecimal(cart.getPrice());
+            BigDecimal discount;
+
+            if (newPayMethod == PayMethod.CARD) {
+                discount = product.getCardDiscount();
+            } else if (newPayMethod == PayMethod.PHONE) {
+                discount = product.getPhoneDiscount();
+            } else {
+                throw new IllegalArgumentException("지원하지 않는 결제 수단입니다.");
+            }
+
+            BigDecimal newPrice = originalPrice.multiply(BigDecimal.ONE.subtract(discount.divide(new BigDecimal(100))));
+
+            cart.updatePayMethod(newPayMethod);
+            cart.updatePrice(newPrice.intValue());
+        }
+    }
+
 
 }

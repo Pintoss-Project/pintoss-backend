@@ -60,4 +60,12 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public void updatePayMethod(PayMethod payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public void updatePrice(int price) {
+        this.price = price;
+    }
+
 }

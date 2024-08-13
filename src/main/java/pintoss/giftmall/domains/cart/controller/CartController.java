@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
@@ -56,6 +57,12 @@ public class CartController {
     public ApiResponse<String> deleteAllCartItems(@RequestParam @NotNull Long userId) {
         cartService.deleteAllCartItems(userId);
         return ApiResponse.ok("모든 장바구니 상품이 삭제되었습니다.");
+    }
+
+    @PatchMapping("/update-paymethod")
+    public ApiResponse<String> updateCartPayMethod(@RequestParam @NotNull Long userId, @RequestParam @NotNull PayMethod newPayMethod) {
+        cartService.updateAllCartItemsToPayMethod(userId, newPayMethod);
+        return ApiResponse.ok("장바구니의 결제 수단이 업데이트되었습니다.");
     }
 
 }
