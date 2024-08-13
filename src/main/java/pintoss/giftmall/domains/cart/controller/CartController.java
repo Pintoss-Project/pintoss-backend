@@ -52,4 +52,10 @@ public class CartController {
         return ApiResponse.ok("장바구니 상품이 삭제되었습니다.");
     }
 
+    @DeleteMapping("/all")
+    public ApiResponse<String> deleteAllCartItems(@RequestParam @NotNull Long userId) {
+        cartService.deleteAllCartItems(userId);
+        return ApiResponse.ok("모든 장바구니 상품이 삭제되었습니다.");
+    }
+
 }
