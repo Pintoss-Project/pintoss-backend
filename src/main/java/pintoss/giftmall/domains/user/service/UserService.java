@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
+import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.UserResponse;
@@ -27,6 +28,11 @@ public class UserService {
         String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        if (!user.isActive()) {
+            throw new UnauthorizedException("비활성화된 사용자입니다.");
+        }
+
         return UserResponse.fromEntity(user);
     }
 

@@ -46,6 +46,10 @@ public class AuthService {
             throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
+        if (!user.isActive()) {
+            throw new UnauthorizedException("비활성화된 계정입니다.");
+        }
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
@@ -55,6 +59,17 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void deactivateUser(String token) {
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        user.deactivate();
+        userRepository.save(user);
     }
 
     @Transactional

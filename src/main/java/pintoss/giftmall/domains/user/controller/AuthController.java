@@ -49,4 +49,11 @@ public class AuthController {
         return ApiResponse.ok(null);
     }
 
+    @PostMapping("/deactivate")
+    public ApiResponse<Void> deactivateUser(@RequestHeader("Authorization") @NotBlank String token) {
+        String cleanedToken = token.replace("bearer ", "");
+        authService.deactivateUser(cleanedToken);
+        return ApiResponse.ok(null);
+    }
+
 }

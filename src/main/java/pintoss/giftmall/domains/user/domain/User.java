@@ -40,6 +40,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    private boolean isActive = true;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -50,6 +52,14 @@ public class User {
         this.name = name;
         this.phone = phone;
         this.role = role;
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+        this.email = "deactivated_" + this.id + "@user.com";
+        this.name = "탈퇴 사용자";
+        this.phone = "000-0000-0000";
     }
 
 }
