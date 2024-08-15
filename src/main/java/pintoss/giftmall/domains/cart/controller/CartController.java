@@ -27,7 +27,6 @@ public class CartController {
                 .productId(productId)
                 .priceCategoryId(requestDTO.getPriceCategoryId())
                 .quantity(requestDTO.getQuantity())
-                .price(requestDTO.getPrice())
                 .payMethod(requestDTO.getPayMethod())
                 .build();
 

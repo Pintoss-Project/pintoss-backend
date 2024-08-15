@@ -11,6 +11,7 @@ import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
 import pintoss.giftmall.domains.user.domain.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,11 +26,13 @@ public class Cart {
 
     @Setter
     private int quantity;
-    private int price;
 
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
     private PayMethod payMethod;
+
+    private BigDecimal cardDiscount;
+    private BigDecimal phoneDiscount;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -47,15 +50,15 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(Product product, PriceCategory priceCategory, User user, int quantity, int price, PayMethod payMethod) {
+    public Cart(Product product, PriceCategory priceCategory, User user, int quantity, PayMethod payMethod) {
         this.product = product;
         this.priceCategory = priceCategory;
         this.user = user;
         this.quantity = quantity;
-        this.price = price;
         this.payMethod = payMethod;
+        this.cardDiscount = product.getCardDiscount();
+        this.phoneDiscount = product.getPhoneDiscount();
     }
-
     public void updateQuantity(int quantity) {
         this.quantity = quantity;
     }
@@ -64,8 +67,8 @@ public class Cart {
         this.payMethod = payMethod;
     }
 
-    public void updatePrice(int price) {
-        this.price = price;
+    public BigDecimal getOriginalPrice() {
+        return BigDecimal.valueOf(priceCategory.getPrice());
     }
 
 }

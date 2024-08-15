@@ -75,22 +75,7 @@ public class CartService {
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
 
         for (Cart cart : cartItems) {
-            Product product = cart.getProduct();
-            BigDecimal originalPrice = new BigDecimal(cart.getPrice());
-            BigDecimal discount;
-
-            if (newPayMethod == PayMethod.CARD) {
-                discount = product.getCardDiscount();
-            } else if (newPayMethod == PayMethod.PHONE) {
-                discount = product.getPhoneDiscount();
-            } else {
-                throw new IllegalArgumentException("지원하지 않는 결제 수단입니다.");
-            }
-
-            BigDecimal newPrice = originalPrice.multiply(BigDecimal.ONE.subtract(discount.divide(new BigDecimal(100))));
-
             cart.updatePayMethod(newPayMethod);
-            cart.updatePrice(newPrice.intValue());
         }
     }
 

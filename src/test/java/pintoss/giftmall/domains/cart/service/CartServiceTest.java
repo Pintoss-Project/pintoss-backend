@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.cart.dto.CartRequest;
 import pintoss.giftmall.domains.cart.dto.CartResponse;
@@ -46,7 +48,7 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        Product product = new Product("문화상품권", true, BigDecimal.ONE, BigDecimal.ZERO, "http://example.com", "1544-4567", "상세설명", "발행처", "cbm");
+        Product product = new Product("문화상품권", true, BigDecimal.ONE, BigDecimal.ZERO, "http://example.com", "1544-4567", "상세설명", "발행처", ProductCategory.CBM);
         productRepository.save(product);
         productId = product.getId();
 
@@ -60,8 +62,7 @@ class CartServiceTest {
         CartRequest request = CartRequest.builder()
                 .productId(productId)
                 .quantity(1)
-                .price(3000)
-                .payMethod("card")
+                .payMethod(PayMethod.CARD)
                 .build();
 
         cartItemId = cartService.addToCart(userId, request);
@@ -81,8 +82,7 @@ class CartServiceTest {
         CartRequest request = CartRequest.builder()
                 .productId(productId)
                 .quantity(2)
-                .price(2000)
-                .payMethod("card")
+                .payMethod(PayMethod.CARD)
                 .build();
 
         Long newCartItemId = cartService.addToCart(userId, request);

@@ -25,9 +25,6 @@ public class CartRequest {
     @NotBlank(message = "상품 이름은 필수 항목입니다.")
     private String name;
 
-    @Min(value = 1000, message = "가격은 1000원 이상이어야 합니다.")
-    private int price;
-
     @Min(value = 1, message = "수량은 최소 1 이상이어야 합니다.")
     private int quantity;
 
@@ -36,11 +33,10 @@ public class CartRequest {
     private PayMethod payMethod;
 
     @Builder
-    public CartRequest(Long productId, Long priceCategoryId, String name, int price, int quantity, PayMethod payMethod) {
+    public CartRequest(Long productId, Long priceCategoryId, String name, int quantity, PayMethod payMethod) {
         this.productId = productId;
         this.priceCategoryId = priceCategoryId;
         this.name = name;
-        this.price = price;
         this.quantity = quantity;
         this.payMethod = payMethod;
     }
@@ -51,7 +47,6 @@ public class CartRequest {
                 .priceCategory(priceCategory)
                 .user(user)
                 .quantity(quantity)
-                .price(price)
                 .payMethod(payMethod)
                 .build();
     }
