@@ -18,6 +18,7 @@ import pintoss.giftmall.domains.user.infra.UserReader;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,11 +37,21 @@ public class CartService {
         PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
-        Cart cart = requestDTO.toEntity(product, priceCategory, user);
-        cartRepository.save(cart);
+
+        Optional<Cart> existingCartOptional = cartRepository.findByUserAndProductAndPriceCategory(user, product, priceCategory);
+
+        Cart cart;
+        if (existingCartOptional.isPresent()) {
+            cart = existingCartOptional.get();
+            cart.updateQuantity(cart.getQuantity() + requestDTO.getQuantity());
+        } else {
+            cart = requestDTO.toEntity(product, priceCategory, user);
+            cartRepository.save(cart);
+        }
 
         return cart.getId();
     }
+
 
     @Transactional(readOnly = true)
     public List<CartResponse> getCartItems(Long userId) {
