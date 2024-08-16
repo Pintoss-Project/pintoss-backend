@@ -45,6 +45,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             if (user.getName() != null && !user.getName().isEmpty() &&
                     user.getPhone() != null && !user.getPhone().isEmpty()) {
 
+                String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
+                Cookie accessTokenCookie = new Cookie("accessToken", encodedAccessToken);
+                accessTokenCookie.setHttpOnly(true);
+                accessTokenCookie.setPath("/");
+                accessTokenCookie.setMaxAge(30 * 60);
+                response.addCookie(accessTokenCookie);
+
                 response.sendRedirect(frontendBaseUrl);
                 return;
             }
