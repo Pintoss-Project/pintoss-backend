@@ -65,8 +65,16 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        String email = principalDetails.getEmail();
+        String email;
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof PrincipalDetails) {
+            email = ((PrincipalDetails) principal).getEmail();
+        } else if (principal instanceof String) {
+            email = (String) principal;
+        } else {
+            throw new IllegalStateException("Unexpected principal type: " + principal.getClass());
+        }
 
         return Jwts.builder()
                 .setSubject(email)
@@ -76,6 +84,8 @@ public class TokenProvider {
                 .signWith(secretKey, io.jsonwebtoken.SignatureAlgorithm.HS512)
                 .compact();
     }
+
+
 
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
