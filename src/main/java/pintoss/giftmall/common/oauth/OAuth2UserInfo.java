@@ -27,20 +27,19 @@ public record OAuth2UserInfo(
         Map<String, Object> profile = (Map<String, Object>) account.get("profile");
 
         return OAuth2UserInfo.builder()
-                .name((String) profile.get("nickname"))
+                .name((String) profile.get("name"))
                 .email((String) account.get("email"))
                 .profile((String) profile.get("profile_image_url"))
                 .build();
     }
 
     private static OAuth2UserInfo ofNaver(Map<String, Object> attributes) {
-        Map<String, Object> account = (Map<String, Object>) attributes.get("naver_account");
-        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2UserInfo.builder()
-                .name((String) profile.get("nickname"))
-                .email((String) account.get("email"))
-                .profile((String) profile.get("profile_image_url"))
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .profile((String) response.get("profile_image"))
                 .build();
     }
 

@@ -25,12 +25,15 @@ public class RegisterRequest {
     @NotBlank(message = "전화번호는 필수 항목입니다.")
     private String phone;
 
+    private String inflow;
+
     @Builder
-    public RegisterRequest(String email, String password, String name, String phone) {
+    public RegisterRequest(String email, String password, String name, String phone, String inflow) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
+        this.inflow = inflow;
     }
 
     public User toEntity(String encPassword) {
@@ -40,6 +43,7 @@ public class RegisterRequest {
                 .name(this.name)
                 .phone(this.phone)
                 .role(UserRole.USER)
+                .inflow(this.inflow)
                 .build();
     }
 

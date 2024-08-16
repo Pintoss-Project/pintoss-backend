@@ -36,10 +36,10 @@ public record PrincipalDetails(
         return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
     }
 
-    @Override
-    public String getName() {
-        return attributes.get(attributeKey).toString();
-    }
+//    @Override
+//    public String getName() {
+//        return attributes.get(attributeKey).toString();
+//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -61,4 +61,21 @@ public record PrincipalDetails(
         return true;
     }
 
+    public String getEmail() {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        if (response != null) {
+            return (String) response.get("email");
+        }
+        return (String) attributes.get("email");
+    }
+
+    public String getName() {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        if (response != null) {
+            return (String) response.get("name");
+        }
+        return (String) attributes.get("name");
+    }
+
 }
+

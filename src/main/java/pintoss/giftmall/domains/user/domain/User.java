@@ -42,17 +42,20 @@ public class User {
 
     private boolean isActive = true;
 
+    private String inflow;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String email, String password, String name, String phone, UserRole role) {
+    public User(String email, String password, String name, String phone, UserRole role, String inflow) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
-        this.role = role;
+        this.role = role != null ? role : UserRole.USER;
         this.isActive = true;
+        this.inflow = inflow;
     }
 
     public void deactivate() {
