@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.user.dto.LoginRequest;
 import pintoss.giftmall.domains.user.dto.LoginResponse;
+import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
 import pintoss.giftmall.domains.user.dto.RegisterRequest;
 import pintoss.giftmall.domains.user.service.AuthService;
 
@@ -18,6 +20,7 @@ import pintoss.giftmall.domains.user.service.AuthService;
 public class AuthController {
 
     private final AuthService authService;
+    private final TokenProvider tokenProvider;
 
     @PostMapping("/register")
     public ApiResponse<Void> register(@RequestBody @Valid RegisterRequest request) {
@@ -53,6 +56,13 @@ public class AuthController {
     public ApiResponse<Void> deactivateUser(@RequestHeader("Authorization") @NotBlank String token) {
         String cleanedToken = token.replace("bearer ", "");
         authService.deactivateUser(cleanedToken);
+        return ApiResponse.ok(null);
+    }
+
+    @PatchMapping("/update")
+    public ApiResponse<Void> updateUser(@RequestHeader("Authorization") @NotBlank String token,
+                                        @RequestBody @Valid OAuthRegisterRequest request) {
+        authService.updateUser(request.getEmail(), request);
         return ApiResponse.ok(null);
     }
 

@@ -15,6 +15,7 @@ import pintoss.giftmall.common.utils.MailService;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.LoginRequest;
 import pintoss.giftmall.domains.user.dto.LoginResponse;
+import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
 import pintoss.giftmall.domains.user.dto.RegisterRequest;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
@@ -115,6 +116,17 @@ public class AuthService {
         String text = user.getName() + "님의 비밀번호는 : " + user.getPassword() + " 입니다.";
 
         mailService.sendEmail(email, subject, text);
+    }
+
+    @Transactional
+    public void updateUser(String email, OAuthRegisterRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        user.updateName(request.getName());
+        user.updatePhone(request.getPhone());
+
+        userRepository.save(user);
     }
 
 }

@@ -63,6 +63,8 @@ public record PrincipalDetails(
 
     public String getEmail() {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        System.out.println("Response Data: " + response);
+
         if (response != null) {
             return (String) response.get("email");
         }

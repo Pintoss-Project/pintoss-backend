@@ -65,4 +65,12 @@ public class User {
         this.phone = "000-0000-0000";
     }
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updatePhone(String phone) {
+        this.phone = phone;
+    }
+
 }
