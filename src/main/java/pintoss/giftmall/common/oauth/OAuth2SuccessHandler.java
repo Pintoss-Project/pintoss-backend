@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
+import pintoss.giftmall.domains.user.domain.User;
+import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
@@ -22,9 +24,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private String frontendBaseUrl;
 
     private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
-    public OAuth2SuccessHandler(TokenProvider tokenProvider) {
+    public OAuth2SuccessHandler(TokenProvider tokenProvider, UserRepository userRepository) {
         this.tokenProvider = tokenProvider;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,6 +38,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String name = principalDetails.getName();
         String email = principalDetails.getEmail();
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getName() != null && !user.getName().isEmpty() &&
+                    user.getPhone() != null && !user.getPhone().isEmpty()) {
+
+                response.sendRedirect(frontendBaseUrl);
+                return;
+            }
+        }
 
         String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
         String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8);
@@ -58,7 +73,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.addCookie(nameCookie);
         response.addCookie(emailCookie);
         response.addCookie(accessTokenCookie);
-
 
         response.sendRedirect(frontendBaseUrl + "/register?oauth=true");
     }
