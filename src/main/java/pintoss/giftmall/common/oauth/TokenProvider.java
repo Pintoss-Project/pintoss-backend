@@ -65,8 +65,11 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining());
 
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String email = principalDetails.getEmail();
+
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(email)
                 .claim(KEY_ROLE, authorities)
                 .setIssuedAt(now)
                 .setExpiration(expiredDate)

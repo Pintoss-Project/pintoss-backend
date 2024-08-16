@@ -33,10 +33,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String accessToken = tokenProvider.generateAccessToken(authentication);
-
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        String name = principalDetails.getName();
         String email = principalDetails.getEmail();
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -45,7 +42,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             if (user.getName() != null && !user.getName().isEmpty() &&
                     user.getPhone() != null && !user.getPhone().isEmpty()) {
 
+                String accessToken = tokenProvider.generateAccessToken(authentication);
                 String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
+
                 Cookie accessTokenCookie = new Cookie("accessToken", encodedAccessToken);
                 accessTokenCookie.setHttpOnly(true);
                 accessTokenCookie.setPath("/");
@@ -57,12 +56,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             }
         }
 
-        String encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8);
-        String encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8);
+        String accessToken = tokenProvider.generateAccessToken(authentication);
         String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
 
-        Cookie nameCookie = new Cookie("name", encodedName);
-        Cookie emailCookie = new Cookie("email", encodedEmail);
+        Cookie nameCookie = new Cookie("name", URLEncoder.encode(principalDetails.getName(), StandardCharsets.UTF_8));
+        Cookie emailCookie = new Cookie("email", URLEncoder.encode(email, StandardCharsets.UTF_8));
         Cookie accessTokenCookie = new Cookie("accessToken", encodedAccessToken);
 
         nameCookie.setHttpOnly(true);
