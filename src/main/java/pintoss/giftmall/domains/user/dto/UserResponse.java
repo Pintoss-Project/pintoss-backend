@@ -14,14 +14,18 @@ public class UserResponse {
     private String name;
     private String phone;
     private LocalDateTime timestamp;
+    private boolean isNaverConnected;
+    private boolean isKakaoConnected;
 
     @Builder
-    public UserResponse(Long id, String email, String name, String phone, LocalDateTime timestamp) {
+    public UserResponse(Long id, String email, String name, String phone, LocalDateTime timestamp, boolean isNaverConnected, boolean isKakaoConnected) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.phone = phone;
         this.timestamp = timestamp;
+        this.isNaverConnected = isNaverConnected;
+        this.isKakaoConnected = isKakaoConnected;
     }
 
     public static UserResponse fromEntity(User user) {
@@ -31,6 +35,9 @@ public class UserResponse {
                 .name(user.getName())
                 .phone(user.getPhone())
                 .timestamp(user.getCreatedAt())
+                .isNaverConnected(user.isNaverConnected())
+                .isKakaoConnected(user.isKakaoConnected())
                 .build();
     }
+
 }

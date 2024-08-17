@@ -44,11 +44,14 @@ public class User {
 
     private String inflow;
 
+    private boolean isNaverConnected = false;
+    private boolean isKakaoConnected = false;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String email, String password, String name, String phone, UserRole role, String inflow) {
+    public User(String email, String password, String name, String phone, UserRole role, String inflow, boolean isNaverConnected, boolean isKakaoConnected) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -56,6 +59,8 @@ public class User {
         this.role = role != null ? role : UserRole.USER;
         this.isActive = true;
         this.inflow = inflow;
+        this.isNaverConnected = isNaverConnected;
+        this.isKakaoConnected = isKakaoConnected;
     }
 
     public void deactivate() {
@@ -71,6 +76,14 @@ public class User {
 
     public void updatePhone(String phone) {
         this.phone = phone;
+    }
+
+    public void connectNaver() {
+        this.isNaverConnected = true;
+    }
+
+    public void connectKakao() {
+        this.isKakaoConnected = true;
     }
 
 }
