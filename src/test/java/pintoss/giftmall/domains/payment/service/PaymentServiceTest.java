@@ -5,6 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.OrderStatus;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderProductRequest;
@@ -56,7 +59,7 @@ class PaymentServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User("testuser@example.com", "123456789", "testuser", "010-1234-5678", UserRole.USER));
+        user = userRepository.save(new User("testuser@example.com", "123456789", "testuser", "010-1234-5678", UserRole.USER, "지인"));
         product = productRepository.save(Product.builder()
                 .name("문화상품권")
                 .isPopular(true)
@@ -66,7 +69,7 @@ class PaymentServiceTest {
                 .csCenter("1544-6789")
                 .description("상셋설명")
                 .publisher("문화")
-                .category("cbm")
+                .category(ProductCategory.CBM)
                 .build());
         priceCategory = priceCategoryRepository.save(new PriceCategory("문화상품권 3000원권", 3000, 50, product));
     }
@@ -84,8 +87,8 @@ class PaymentServiceTest {
         OrderRequest orderRequest = OrderRequest.builder()
                 .orderNo("1234567-1234567")
                 .orderPrice(30000)
-                .orderStatus("success")
-                .payMethod("card")
+                .orderStatus(OrderStatus.ORDER_CONFIRMED)
+                .payMethod(PayMethod.CARD)
                 .orderProducts(Collections.singletonList(orderProductRequest))
                 .build();
 
@@ -93,7 +96,7 @@ class PaymentServiceTest {
 
         PaymentRequest paymentRequest = PaymentRequest.builder()
                 .payPrice(30000)
-                .payMethod("card")
+                .payMethod(PayMethod.CARD)
                 .build();
 
         PaymentResponse paymentResponse = paymentService.processPayment(user.getId(), orderId, paymentRequest);
@@ -122,8 +125,8 @@ class PaymentServiceTest {
         OrderRequest orderRequest = OrderRequest.builder()
                 .orderNo("1234567-1234567")
                 .orderPrice(30000)
-                .orderStatus("success")
-                .payMethod("card")
+                .orderStatus(OrderStatus.ORDER_CONFIRMED)
+                .payMethod(PayMethod.CARD)
                 .orderProducts(Collections.singletonList(orderProductRequest))
                 .build();
 
@@ -131,7 +134,7 @@ class PaymentServiceTest {
 
         PaymentRequest paymentRequest = PaymentRequest.builder()
                 .payPrice(30000)
-                .payMethod("card")
+                .payMethod(PayMethod.CARD)
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {

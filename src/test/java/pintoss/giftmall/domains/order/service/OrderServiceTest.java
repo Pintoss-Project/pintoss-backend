@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.OrderStatus;
+import pintoss.giftmall.common.enums.PayMethod;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.order.dto.OrderRequest;
@@ -36,7 +39,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("user@example.com", "password", "유저1", "010-1234-5678", UserRole.USER);
+        user = new User("user@example.com", "password", "유저1", "010-1234-5678", UserRole.USER, "지인");
         userRepository.save(user);
         userId = user.getId();
     }
@@ -49,8 +52,8 @@ class OrderServiceTest {
         OrderRequest orderRequest = OrderRequest.builder()
                 .orderNo("1234567-1234567")
                 .orderPrice(10000)
-                .orderStatus("주문완료")
-                .payMethod("card")
+                .orderStatus(OrderStatus.ORDER_CONFIRMED)
+                .payMethod(PayMethod.CARD)
                 .build();
         orderId = orderService.createOrder(userId, orderRequest);
 
@@ -69,8 +72,8 @@ class OrderServiceTest {
         testCreateOrder();
 
         PaymentRequest paymentRequest = PaymentRequest.builder()
-                .payStatus("결제요청")
-                .payMethod("card")
+                .payStatus(PayStatus.COMPLETED)
+                .payMethod(PayMethod.CARD)
                 .payPrice(10000)
                 .build();
 
@@ -91,8 +94,8 @@ class OrderServiceTest {
         testCreateOrder();
 
         PaymentRequest paymentRequest = PaymentRequest.builder()
-                .payStatus("결제요청")
-                .payMethod("card")
+                .payStatus(PayStatus.PENDING)
+                .payMethod(PayMethod.CARD)
                 .payPrice(10000)
                 .build();
 

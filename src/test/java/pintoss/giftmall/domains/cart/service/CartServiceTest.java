@@ -55,7 +55,7 @@ class CartServiceTest {
         PriceCategory priceCategory = new PriceCategory("3천원권", 3000, 100, product);
         priceCategoryRepository.save(priceCategory);
 
-        User user = new User("user@example.com", "유저1", "password", "010-1234-5678", UserRole.USER);
+        User user = new User("user@example.com", "유저1", "password", "010-1234-5678", UserRole.USER, "지인");
         userRepository.save(user);
         userId = user.getId();
 

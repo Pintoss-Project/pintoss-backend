@@ -51,7 +51,7 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String email, String password, String name, String phone, UserRole role, String inflow, boolean isNaverConnected, boolean isKakaoConnected) {
+    public User(String email, String password, String name, String phone, UserRole role, String inflow) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -59,8 +59,6 @@ public class User {
         this.role = role != null ? role : UserRole.USER;
         this.isActive = true;
         this.inflow = inflow;
-        this.isNaverConnected = isNaverConnected;
-        this.isKakaoConnected = isKakaoConnected;
     }
 
     public void deactivate() {

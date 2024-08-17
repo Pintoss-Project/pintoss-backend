@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pintoss.giftmall.common.enums.BoardType;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
 import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.infra.BoardRepository;
@@ -27,7 +28,7 @@ class BoardServiceTest {
     @BeforeEach
     void setUp() {
         BoardRequest request = BoardRequest.builder()
-                .type("notice")
+                .type(BoardType.NOTICE)
                 .title("공지사항1")
                 .content("공지내용")
                 .writer("관리자")
@@ -52,7 +53,7 @@ class BoardServiceTest {
     @DisplayName("게시글 생성 성공 테스트")
     void create() {
         BoardRequest request = BoardRequest.builder()
-                .type("faqs")
+                .type(BoardType.FAQS)
                 .title("자주묻는질문1")
                 .content("자주묻는질문 내용")
                 .writer("관리자")
