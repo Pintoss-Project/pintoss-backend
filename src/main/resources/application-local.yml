@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pintoss_local
+    username: pintoss_local
+    password: pintoss_local
+    driver-class-name: org.postgresql.Driver
+
+JWT_KEY: test1test2test3FMETR9bzr4D79QUgeG7zujVfLRxcSrY6KHuhTVY4gZjAbCepNpAxJ46Vec5C4VQfSuH5HfYdX95PNzhYSrjFdbAq4vHDKhe3SEB7kMhdummytest1
+
+FRONTEND_BASE_URL: http://localhost:3000
+
+server:
+  port: 8084
+
