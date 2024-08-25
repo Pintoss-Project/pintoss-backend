@@ -24,4 +24,8 @@ public class ProductImage extends Image {
         this.product = product;
     }
 
+    public void updateLogoImage(String newUrl) {
+        super.updateUrl(newUrl);
+    }
+
 }

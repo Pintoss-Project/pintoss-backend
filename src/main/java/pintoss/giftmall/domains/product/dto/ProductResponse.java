@@ -24,12 +24,13 @@ public class ProductResponse {
     private String description;
     private String publisher;
     private ProductCategory category;
+    private String logoImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<PriceCategoryResponse> priceCategories;
 
     @Builder
-    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, LocalDateTime createdAt, LocalDateTime updatedAt, List<PriceCategoryResponse> priceCategories) {
+    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl, LocalDateTime createdAt, LocalDateTime updatedAt, List<PriceCategoryResponse> priceCategories) {
         this.id = id;
         this.name = name;
         this.isPopular = isPopular;
@@ -40,16 +41,13 @@ public class ProductResponse {
         this.description = description;
         this.publisher = publisher;
         this.category = category;
+        this.logoImageUrl = logoImageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.priceCategories = priceCategories;
-
     }
 
-    public ProductResponse(Product product) {
-    }
-
-    public static ProductResponse fromEntity(Product product, List<PriceCategory> priceCategoryList) {
+    public static ProductResponse fromEntity(Product product, List<PriceCategory> priceCategoryList, String logoImageUrl) {
         List<PriceCategoryResponse> priceCategoryResponses = priceCategoryList.stream()
                 .map(PriceCategoryResponse::fromEntity)
                 .collect(Collectors.toList());
@@ -65,6 +63,7 @@ public class ProductResponse {
                 .description(product.getDescription())
                 .publisher(product.getPublisher())
                 .category(product.getCategory())
+                .logoImageUrl(logoImageUrl)
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .priceCategories(priceCategoryResponses)

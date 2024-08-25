@@ -32,14 +32,14 @@ public class PriceCategoryAdminController {
     }
 
     @DeleteMapping("/{id}/category/{category_id}")
-    public ApiResponse<String> deletePriceCategory(@PathVariable Long id, @PathVariable Long category_id) {
-        priceCategoryService.delete(id, category_id);
+    public ApiResponse<String> deletePriceCategory(@PathVariable(name = "id") Long id, @PathVariable(name = "category_id") Long categoryId) {
+        priceCategoryService.delete(id, categoryId);
         return ApiResponse.ok("가격 카테고리가 삭제되었습니다.");
     }
 
     @PatchMapping("/{id}/category/{category_id}/stock")
-    public ApiResponse<Long> updateStock(@PathVariable Long id, @PathVariable Long category_id, @RequestBody @NotNull int stock) {
-        Long updatedPriceCategoryId = priceCategoryService.updateStock(id, category_id, stock);
+    public ApiResponse<Long> updateStock(@PathVariable(name = "id") Long id, @PathVariable(name = "category_id") Long categoryId, @RequestBody @NotNull int stock) {
+        Long updatedPriceCategoryId = priceCategoryService.updateStock(id, categoryId, stock);
         return ApiResponse.ok(updatedPriceCategoryId);
     }
 
