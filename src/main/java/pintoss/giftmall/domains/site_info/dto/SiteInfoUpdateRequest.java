@@ -41,8 +41,11 @@ public class SiteInfoUpdateRequest {
     @NotBlank(message = "오픈 채팅 링크는 필수 항목입니다.")
     private String openChat;
 
+    private String topImageUrl;
+    private String bottomImageUrl;
+
     @Builder
-    public SiteInfoUpdateRequest(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat) {
+    public SiteInfoUpdateRequest(String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat, String topImageUrl, String bottomImageUrl) {
         this.name = name;
         this.tel = tel;
         this.businessHour = businessHour;
@@ -53,6 +56,8 @@ public class SiteInfoUpdateRequest {
         this.email = email;
         this.kakao = kakao;
         this.openChat = openChat;
+        this.topImageUrl = topImageUrl;
+        this.bottomImageUrl = bottomImageUrl;
     }
 
     public SiteInfo toEntity() {

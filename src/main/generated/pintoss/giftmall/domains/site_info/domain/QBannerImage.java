@@ -26,7 +26,7 @@ public class QBannerImage extends EntityPathBase<BannerImage> {
 
     public final QBanner banner;
 
-    public final StringPath category = createString("category");
+    public final EnumPath<pintoss.giftmall.common.enums.BannerImageCategory> category = createEnum("category", pintoss.giftmall.common.enums.BannerImageCategory.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;

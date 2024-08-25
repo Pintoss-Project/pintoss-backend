@@ -13,13 +13,20 @@ public class BannerRequest {
     @NotBlank(message = "배너 제목은 필수 항목입니다.")
     private String bannerTitle;
 
-    @NotBlank(message = "배너 링크는 필수 항목입니다.")
     private String bannerLink;
 
+    @NotBlank(message = "배너 데스크탑 이미지 URL은 필수 항목입니다.")
+    private String desktopImageUrl;
+
+    @NotBlank(message = "배너 모바일 이미지 URL은 필수 항목입니다.")
+    private String mobileImageUrl;
+
     @Builder
-    public BannerRequest(String bannerTitle, String bannerLink) {
+    public BannerRequest(String bannerTitle, String bannerLink, String desktopImageUrl, String mobileImageUrl) {
         this.bannerTitle = bannerTitle;
         this.bannerLink = bannerLink;
+        this.desktopImageUrl = desktopImageUrl;
+        this.mobileImageUrl = mobileImageUrl;
     }
 
     public Banner toEntity() {
@@ -28,5 +35,4 @@ public class BannerRequest {
                 .bannerLink(this.bannerLink)
                 .build();
     }
-
 }

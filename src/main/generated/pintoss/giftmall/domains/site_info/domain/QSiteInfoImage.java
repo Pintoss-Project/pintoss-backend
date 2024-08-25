@@ -24,7 +24,7 @@ public class QSiteInfoImage extends EntityPathBase<SiteInfoImage> {
 
     public final pintoss.giftmall.domains.image.domain.QImage _super = new pintoss.giftmall.domains.image.domain.QImage(this);
 
-    public final StringPath category = createString("category");
+    public final EnumPath<pintoss.giftmall.common.enums.SiteInfoImageCategory> category = createEnum("category", pintoss.giftmall.common.enums.SiteInfoImageCategory.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;

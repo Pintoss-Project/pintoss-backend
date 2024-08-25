@@ -29,15 +29,15 @@ public class BoardRequest {
     @NotBlank(message = "작성자는 필수 항목입니다.")
     private String writer;
 
-    private List<Long> imageIds;
+    private List<String> imageUrls;
 
     @Builder
-    public BoardRequest(BoardType type, String title, String content, String writer, List<Long> imageIds) {
+    public BoardRequest(BoardType type, String title, String content, String writer, List<String> imageUrls) {
         this.type = type;
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.imageIds = imageIds;
+        this.imageUrls = imageUrls;
     }
 
     public Board toEntity() {

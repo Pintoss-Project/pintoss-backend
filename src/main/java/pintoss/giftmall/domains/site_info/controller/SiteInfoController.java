@@ -22,7 +22,7 @@ public class SiteInfoController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<SiteInfoResponse> getSiteInfoById(@PathVariable Long id) {
+    public ApiResponse<SiteInfoResponse> getSiteInfoById(@PathVariable(name = "id") Long id) {
         SiteInfoResponse siteInfo = siteInfoService.findById(id);
         return ApiResponse.ok(siteInfo);
     }
