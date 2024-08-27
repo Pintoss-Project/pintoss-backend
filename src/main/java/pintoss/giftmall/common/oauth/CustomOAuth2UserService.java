@@ -1,7 +1,8 @@
 package pintoss.giftmall.common.oauth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.oauth2.client.userinfo.*;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +29,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
 
-        User user = getOrSave(oAuth2UserInfo);
+        User user = getOrSaveUser(oAuth2UserInfo);
 
         return new PrincipalDetails(user, oAuth2UserAttributes, userNameAttributeName);
     }
 
-    private User getOrSave(OAuth2UserInfo oAuth2UserInfo) {
-        User user = userRepository.findByEmail(oAuth2UserInfo.email()).orElseGet(oAuth2UserInfo::toEntity);
+    private User getOrSaveUser(OAuth2UserInfo oAuth2UserInfo) {
+        Optional<User> optionalUser = userRepository.findByEmail(oAuth2UserInfo.email());
 
-        return userRepository.save(user);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            User newUser = oAuth2UserInfo.toEntity();
+            newUser.updateEmail(oAuth2UserInfo.email());
+
+            return newUser;
+        }
     }
-
 }

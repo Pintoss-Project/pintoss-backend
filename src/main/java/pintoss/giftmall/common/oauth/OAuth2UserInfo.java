@@ -9,9 +9,7 @@ import java.util.Map;
 
 @Builder
 public record OAuth2UserInfo(
-        String name,
-        String email,
-        String profile
+        String email
 ) {
 
     public static OAuth2UserInfo of(String registrationId, Map<String, Object> attributes) {
@@ -24,12 +22,8 @@ public record OAuth2UserInfo(
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
-
         return OAuth2UserInfo.builder()
-                .name((String) profile.get("name"))
                 .email((String) account.get("email"))
-                .profile((String) profile.get("profile_image_url"))
                 .build();
     }
 
@@ -37,15 +31,12 @@ public record OAuth2UserInfo(
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2UserInfo.builder()
-                .name((String) response.get("name"))
                 .email((String) response.get("email"))
-                .profile((String) response.get("profile_image"))
                 .build();
     }
 
     public User toEntity() {
         return User.builder()
-                .name(name)
                 .email(email)
                 .build();
     }

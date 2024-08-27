@@ -23,7 +23,7 @@ public record PrincipalDetails(
 
     @Override
     public String getUsername() {
-        return user.getName();
+        return user.getEmail();
     }
 
     @Override
@@ -35,11 +35,6 @@ public record PrincipalDetails(
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()));
     }
-
-//    @Override
-//    public String getName() {
-//        return attributes.get(attributeKey).toString();
-//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -71,13 +66,9 @@ public record PrincipalDetails(
         return (String) attributes.get("email");
     }
 
+    @Override
     public String getName() {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-        if (response != null) {
-            return (String) response.get("name");
-        }
-        return (String) attributes.get("name");
+        return null;
     }
 
 }
-

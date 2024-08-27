@@ -1,10 +1,7 @@
 package pintoss.giftmall.domains.user.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -84,4 +81,7 @@ public class User {
         this.isKakaoConnected = true;
     }
 
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 }
