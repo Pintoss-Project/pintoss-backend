@@ -1,9 +1,0 @@
-cloud:
-aws:
-  credentials:
-    accessKey: AKIAXXXXXXXEXAMPLE
-    secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  region:
-    static: us-east-1
-  s3:
-    bucketName: my-example-bucket

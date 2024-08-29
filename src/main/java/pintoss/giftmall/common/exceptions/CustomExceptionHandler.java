@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pintoss.giftmall.common.exceptions.client.*;
-import pintoss.giftmall.common.exceptions.s3.CustomAmazonS3Exception;
 import pintoss.giftmall.common.exceptions.server.ImageUploadException;
 import pintoss.giftmall.common.exceptions.server.ServerErrorException;
 import pintoss.giftmall.common.responseobj.ApiErrorResponse;
@@ -156,16 +155,6 @@ public class CustomExceptionHandler {
                 ex.getErrorCode(),
                 ex.getMessage(),
                 LocalDateTime.now());
-        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
-    }
-
-    @ExceptionHandler(CustomAmazonS3Exception.class)
-    public final ResponseEntity<ApiErrorResponse> handleCustomAmazonS3Exception(CustomAmazonS3Exception ex) {
-        ApiErrorResponse errorResponse = ApiErrorResponse.of(
-                ex.getHttpStatus(),
-                ex.getCustomErrorCode(),
-                ex.getMessage()
-        );
         return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
     }
 
