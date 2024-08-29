@@ -32,8 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    @Value("${JWT_KEY}")
-    private String key;
+    private String key = "7GpDbii7H429gsoxV/eRApcirwTTSKa7zKSlFtpqBeqYoW+u3bZ9a+NqkowZQ74S+myXcGiQl0Wawgw1o68nqA==";
     private SecretKey secretKey;
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;

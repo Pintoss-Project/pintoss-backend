@@ -21,8 +21,8 @@ import java.util.Optional;
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    @Value("${FRONTEND_BASE_URL}")
-    private String frontendBaseUrl;
+
+    private String frontendBaseUrl = "http://localhost:3000";
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;

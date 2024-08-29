@@ -35,14 +35,11 @@ public class NaverOAuthController {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
-    @Value("${NAVER_CLIENT}")
-    private String clientId;
+    private String clientId = "ntP6_ogtZLkuD6J774IT";
 
-    @Value("${NAVER_CALLBACK_URL}")
-    private String redirectUri;
+    private String redirectUri = "http://localhost:3000/my-page";
 
-    @Value("${NAVER_SECRET}")
-    private String clientSecret;
+    private String clientSecret = "9cIj0Lo1b_";
 
     @GetMapping("/connect")
     public void redirectToNaverLogin(HttpSession session, HttpServletResponse response) throws IOException {

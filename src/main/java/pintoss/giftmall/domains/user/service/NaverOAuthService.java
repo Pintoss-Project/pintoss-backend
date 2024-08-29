@@ -17,11 +17,8 @@ import java.util.Map;
 @Service
 public class NaverOAuthService {
 
-    @Value("${NAVER_CLIENT}")
-    private String clientId;
-
-    @Value("${NAVER_SECRET}")
-    private String clientSecret;
+    private String clientId = "ntP6_ogtZLkuD6J774IT";
+    private String clientSecret = "9cIj0Lo1b_";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String getAccessToken(String code, String state) {

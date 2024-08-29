@@ -1,9 +1,9 @@
 cloud:
-  aws:
-    credentials:
-      accessKey: ${ACCESS_KEY}
-      secretKey: ${SECRET_KEY}
-    region:
-      static: ${AWS_REGION}
-    s3:
-      bucketName: ${BUCKET_NAME}
+aws:
+  credentials:
+    accessKey: AKIAXXXXXXXEXAMPLE
+    secretKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  region:
+    static: us-east-1
+  s3:
+    bucketName: my-example-bucket
