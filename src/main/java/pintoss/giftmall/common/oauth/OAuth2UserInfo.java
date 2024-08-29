@@ -16,12 +16,18 @@ public record OAuth2UserInfo(
         return switch (registrationId) {
             case "kakao" -> ofKakao(attributes);
             case "naver" -> ofNaver(attributes);
-            default -> throw new AuthException(ErrorCode.ILLEGAL_REGISTRATION_ID, "");
+            default -> throw new AuthException(ErrorCode.ILLEGAL_REGISTRATION_ID, "Invalid registrationId: " + registrationId);
         };
     }
 
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+
+        // 이메일 정보가 없는 경우 처리
+        if (account == null || account.get("email") == null) {
+            throw new AuthException(ErrorCode.NOT_FOUND, "Email not found in Kakao response.");
+        }
+
         return OAuth2UserInfo.builder()
                 .email((String) account.get("email"))
                 .build();
@@ -29,6 +35,11 @@ public record OAuth2UserInfo(
 
     private static OAuth2UserInfo ofNaver(Map<String, Object> attributes) {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        // 이메일 정보가 없는 경우 처리
+        if (response == null || response.get("email") == null) {
+            throw new AuthException(ErrorCode.NOT_FOUND, "Email not found in Naver response.");
+        }
 
         return OAuth2UserInfo.builder()
                 .email((String) response.get("email"))
@@ -40,4 +51,5 @@ public record OAuth2UserInfo(
                 .email(email)
                 .build();
     }
+
 }

@@ -58,11 +58,15 @@ public record PrincipalDetails(
 
     public String getEmail() {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-        System.out.println("Response Data: " + response);
-
-        if (response != null) {
+        if (response != null && response.containsKey("email")) {
             return (String) response.get("email");
         }
+
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        if (kakaoAccount != null && kakaoAccount.containsKey("email")) {
+            return (String) kakaoAccount.get("email");
+        }
+
         return (String) attributes.get("email");
     }
 

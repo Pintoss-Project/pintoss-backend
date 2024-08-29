@@ -37,6 +37,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String email = principalDetails.getEmail();
 
+        System.out.println("principalDetails : " + principalDetails);
+
         if (email == null || email.isEmpty()) {
             throw new ServletException("Email information is missing after OAuth login.");
         }
@@ -97,6 +99,5 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         response.sendRedirect(frontendBaseUrl);
     }
-
 
 }

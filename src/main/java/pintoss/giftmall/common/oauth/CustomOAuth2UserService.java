@@ -1,6 +1,8 @@
 package pintoss.giftmall.common.oauth;
 
+import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -15,14 +17,18 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
     @Transactional
     @Override
+
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.debug("OAuth2 User Request received for client: " + userRequest.getClientRegistration().getRegistrationId());
         Map<String, Object> oAuth2UserAttributes = super.loadUser(userRequest).getAttributes();
+        log.debug("OAuth2 User Attributes: " + oAuth2UserAttributes);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
