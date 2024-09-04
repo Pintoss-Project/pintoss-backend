@@ -9,10 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.responseobj.ApiResponse;
-import pintoss.giftmall.domains.user.dto.LoginRequest;
-import pintoss.giftmall.domains.user.dto.LoginResponse;
-import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
-import pintoss.giftmall.domains.user.dto.RegisterRequest;
+import pintoss.giftmall.domains.user.dto.*;
 import pintoss.giftmall.domains.user.service.AuthService;
 
 @RestController
@@ -49,8 +46,14 @@ public class AuthController {
     }
 
     @GetMapping("/check-id")
-    public ApiResponse<Boolean> checkEmailDuplicate(@RequestParam @NotBlank String email) {
+    public ApiResponse<Boolean> checkEmailDuplicate(@RequestParam(name = "email") @NotBlank String email) {
         boolean isDuplicate = authService.checkEmailDuplicate(email);
+        return ApiResponse.ok(isDuplicate);
+    }
+
+    @GetMapping("/check-phone")
+    public ApiResponse<Boolean> checkPhoneDuplicate(@RequestParam(name = "phone") @NotBlank String phone) {
+        boolean isDuplicate = authService.checkPhoneDuplicate(phone);
         return ApiResponse.ok(isDuplicate);
     }
 
@@ -77,6 +80,12 @@ public class AuthController {
     public ApiResponse<Void> updateUser(@RequestHeader("Authorization") @NotBlank String token,
                                         @RequestBody @Valid OAuthRegisterRequest request) {
         authService.updateUser(request.getEmail(), request);
+        return ApiResponse.ok(null);
+    }
+
+    @PatchMapping("/reset-password")
+    public ApiResponse<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        authService.resetPassword(request.getName(), request.getPhone(), request.getNewPassword());
         return ApiResponse.ok(null);
     }
 
