@@ -101,6 +101,10 @@ public class AuthService {
         return userRepository.existsByEmail(email);
     }
 
+    public boolean checkPhoneDuplicate(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
+
     public String findUserIdByNameAndPhone(String name, String phone) {
         User user = userRepository.findByNameAndPhone(name, phone)
                 .orElseThrow(() -> new NotFoundException("해당 정보를 가진 사용자를 찾을 수 없습니다."));
@@ -126,6 +130,16 @@ public class AuthService {
         user.updateName(request.getName());
         user.updatePhone(request.getPhone());
 
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void resetPassword(String name, String phone, String newPassword) {
+        User user = userRepository.findByNameAndPhone(name, phone)
+                .orElseThrow(() -> new NotFoundException("해당 정보를 가진 사용자를 찾을 수 없습니다."));
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.updatePassword(encodedPassword);
         userRepository.save(user);
     }
 
