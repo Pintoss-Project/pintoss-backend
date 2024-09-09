@@ -12,6 +12,7 @@ import pintoss.giftmall.domains.cart.dto.CartResponse;
 import pintoss.giftmall.domains.cart.service.CartService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -21,17 +22,18 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/{productId}")
-    public ApiResponse<Long> addToCart(@PathVariable(name = "productId") Long productId, @RequestBody @Valid CartRequest requestDTO, @RequestParam(name = "userId") @NotNull Long userId) {
-        CartRequest updatedRequest = CartRequest.builder()
-                .priceCategoryId(requestDTO.getPriceCategoryId())
-                .quantity(requestDTO.getQuantity())
-                .payMethod(requestDTO.getPayMethod())
-                .build();
+    @PostMapping("/register")
+    public ApiResponse<List<Long>> addToCart(
+            @RequestBody @Valid List<CartRequest> requestDTOs,
+            @RequestParam(name = "userId") @NotNull Long userId) {
 
-        Long cartItemId = cartService.addToCart(userId, productId, updatedRequest);
-        return ApiResponse.ok(cartItemId);
+        List<Long> cartItemIds = requestDTOs.stream()
+                .map(requestDTO -> cartService.addToCart(userId, requestDTO.getProductId(), requestDTO))
+                .collect(Collectors.toList());
+
+        return ApiResponse.ok(cartItemIds);
     }
+
 
     @GetMapping
     public ApiResponse<List<CartResponse>> getCartItems(@RequestParam(name = "userId") @NotNull Long userId) {

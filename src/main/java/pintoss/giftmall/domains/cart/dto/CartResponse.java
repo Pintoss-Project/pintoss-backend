@@ -19,9 +19,10 @@ public class CartResponse {
     private BigDecimal price;
     private BigDecimal cardDiscount;
     private BigDecimal phoneDiscount;
+    private String logoImageUrl;
 
     @Builder
-    public CartResponse(Long id, Long productId, Long priceCategoryId, String name, int quantity, PayMethod payMethod, BigDecimal price, BigDecimal cardDiscount, BigDecimal phoneDiscount) {
+    public CartResponse(Long id, Long productId, Long priceCategoryId, String name, int quantity, PayMethod payMethod, BigDecimal price, BigDecimal cardDiscount, BigDecimal phoneDiscount, String logoImageUrl) {
         this.id = id;
         this.productId = productId;
         this.priceCategoryId = priceCategoryId;
@@ -31,9 +32,10 @@ public class CartResponse {
         this.price = price;
         this.cardDiscount = cardDiscount;
         this.phoneDiscount = phoneDiscount;
+        this.logoImageUrl = logoImageUrl;
     }
 
-    public static CartResponse fromEntity(Cart cart) {
+    public static CartResponse fromEntity(Cart cart, String logoImageUrl) {
         return CartResponse.builder()
                 .id(cart.getId())
                 .productId(cart.getProduct().getId())
@@ -44,6 +46,7 @@ public class CartResponse {
                 .price(cart.getOriginalPrice())
                 .cardDiscount(cart.getCardDiscount())
                 .phoneDiscount(cart.getPhoneDiscount())
+                .logoImageUrl(logoImageUrl)
                 .build();
     }
 }

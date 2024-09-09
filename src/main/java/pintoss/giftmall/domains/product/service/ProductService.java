@@ -158,4 +158,11 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public String getProductLogoImageUrl(Long productId) {
+        return productImageRepository.findByProductId(productId).stream()
+                .findFirst()
+                .map(ProductImage::getUrl)
+                .orElse(null);
+    }
+
 }
