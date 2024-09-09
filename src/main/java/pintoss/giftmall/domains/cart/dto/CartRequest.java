@@ -16,8 +16,8 @@ import pintoss.giftmall.domains.user.domain.User;
 @NoArgsConstructor
 public class CartRequest {
 
-    @NotNull(message = "상품 ID는 필수 항목입니다.")
-    private Long productId;
+//    @NotNull(message = "상품 ID는 필수 항목입니다.")
+//    private Long productId;
 
     @NotNull(message = "가격 카테고리 ID는 필수 항목입니다.")
     private Long priceCategoryId;
@@ -33,8 +33,7 @@ public class CartRequest {
     private PayMethod payMethod;
 
     @Builder
-    public CartRequest(Long productId, Long priceCategoryId, String name, int quantity, PayMethod payMethod) {
-        this.productId = productId;
+    public CartRequest(Long priceCategoryId, String name, int quantity, PayMethod payMethod) {
         this.priceCategoryId = priceCategoryId;
         this.name = name;
         this.quantity = quantity;

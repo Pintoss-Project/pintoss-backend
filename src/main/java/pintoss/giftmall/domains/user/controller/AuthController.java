@@ -58,13 +58,13 @@ public class AuthController {
     }
 
     @GetMapping("/find-id")
-    public ApiResponse<String> findUserId(@RequestParam @NotBlank String name, @RequestParam @NotBlank String phone) {
+    public ApiResponse<String> findUserId(@RequestParam(name = "name") @NotBlank String name, @RequestParam(name = "phone") @NotBlank String phone) {
         String email = authService.findUserIdByNameAndPhone(name, phone);
         return ApiResponse.ok(email);
     }
 
     @GetMapping("/find-password")
-    public ApiResponse<Void> findPassword(@RequestParam @NotBlank String name, @RequestParam @NotBlank String email) {
+    public ApiResponse<Void> findPassword(@RequestParam(name = "name") @NotBlank String name, @RequestParam(name = "email") @NotBlank String email) {
         authService.findPassword(name, email);
         return ApiResponse.ok(null);
     }

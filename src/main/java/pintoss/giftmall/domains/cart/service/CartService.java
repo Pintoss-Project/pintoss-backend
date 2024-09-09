@@ -32,8 +32,8 @@ public class CartService {
     private final UserReader userReader;
     private final PriceCategoryReader priceCategoryReader;
 
-    public Long addToCart(Long userId, CartRequest requestDTO) {
-        Product product = productReader.findById(requestDTO.getProductId());
+    public Long addToCart(Long userId, Long productId, CartRequest requestDTO) {
+        Product product = productReader.findById(productId);
         PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
