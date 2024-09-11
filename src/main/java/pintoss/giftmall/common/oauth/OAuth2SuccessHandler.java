@@ -17,12 +17,14 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+    private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
-
-    private String frontendBaseUrl = "http://localhost:3000";
+    private String frontendBaseUrl = "https://pin-toss.com";
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
@@ -37,7 +39,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         String email = principalDetails.getEmail();
 
-        System.out.println("principalDetails : " + principalDetails);
+        logger.info(email);
 
         if (email == null || email.isEmpty()) {
             throw new ServletException("Email information is missing after OAuth login.");
@@ -57,8 +59,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             emailCookie.setHttpOnly(true);
             emailCookie.setPath("/");
             emailCookie.setMaxAge(30 * 60);
+            emailCookie.setDomain("pintossmall2.cafe24.com");
             response.addCookie(emailCookie);
 
+            logger.info("Email Cookie: {}", emailCookie.getValue());
 
             response.sendRedirect(frontendBaseUrl + "/register?oauth=true");
             return;
@@ -73,7 +77,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             emailCookie.setHttpOnly(true);
             emailCookie.setPath("/");
             emailCookie.setMaxAge(30 * 60);
+            emailCookie.setDomain("pintossmall2.cafe24.com");
             response.addCookie(emailCookie);
+
+            logger.info("Email Cookie: {}", emailCookie.getValue());
 
             response.sendRedirect(frontendBaseUrl + "/register?oauth=true");
             return;
@@ -85,13 +92,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Cookie emailCookie = new Cookie("email", URLEncoder.encode(email, StandardCharsets.UTF_8));
         Cookie accessTokenCookie = new Cookie("accessToken", encodedAccessToken);
 
+        logger.info("Email Cookie: {}", emailCookie.getValue());
+        logger.info("Access Token Cookie: {}", accessTokenCookie.getValue());
+
         emailCookie.setHttpOnly(true);
         emailCookie.setPath("/");
         emailCookie.setMaxAge(30 * 60);
+        emailCookie.setDomain("pintossmall2.cafe24.com");
 
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge(30 * 60);
+        accessTokenCookie.setDomain("pintossmall2.cafe24.com");
 
         response.addCookie(emailCookie);
         response.addCookie(accessTokenCookie);
