@@ -3,9 +3,7 @@ package pintoss.giftmall.domains.user.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,14 +33,11 @@ public class NaverOAuthController {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
-    @Value("${NAVER_CLIENT}")
-    private String clientId;
+    private String clientId = "ntP6_ogtZLkuD6J774IT";
 
-    @Value("${NAVER_CALLBACK_URL}")
-    private String redirectUri;
+    private String redirectUri = "http://localhost:3000/my-page";
 
-    @Value("${NAVER_SECRET}")
-    private String clientSecret;
+    private String clientSecret = "9cIj0Lo1b_";
 
     @GetMapping("/connect")
     public void redirectToNaverLogin(HttpSession session, HttpServletResponse response) throws IOException {

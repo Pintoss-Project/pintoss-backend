@@ -10,6 +10,7 @@ import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +34,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User getOrSave(OAuth2UserInfo oAuth2UserInfo) {
-        User user = userRepository.findByEmail(oAuth2UserInfo.email()).orElseGet(oAuth2UserInfo::toEntity);
+        Optional<User> optionalUser = userRepository.findByEmail(oAuth2UserInfo.email());
 
-        return userRepository.save(user);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            User newUser = oAuth2UserInfo.toEntity();
+            newUser.updateEmail(oAuth2UserInfo.email());
+
+            return newUser;
+        }
     }
 
 }

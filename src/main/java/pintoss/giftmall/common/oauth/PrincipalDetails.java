@@ -62,6 +62,9 @@ public record PrincipalDetails(
     }
 
     public String getEmail() {
+        if (attributes == null) {
+            return null; // attributes가 null일 경우 null 반환
+        }
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         System.out.println("Response Data: " + response);
 

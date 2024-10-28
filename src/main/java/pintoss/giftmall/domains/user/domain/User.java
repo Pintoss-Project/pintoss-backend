@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pintoss.giftmall.common.enums.UserRole;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -46,6 +47,9 @@ public class User {
 
     private boolean isNaverConnected = false;
     private boolean isKakaoConnected = false;
+
+    @Column(name = "user_uuid", unique = true, nullable = false, columnDefinition = "BINARY(50)")
+    private UUID userId; // 추가된 UUID 필드
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -84,4 +88,16 @@ public class User {
         this.isKakaoConnected = true;
     }
 
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.userId = UUID.randomUUID();
+    }
 }

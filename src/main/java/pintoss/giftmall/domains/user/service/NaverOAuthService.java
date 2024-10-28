@@ -2,7 +2,6 @@ package pintoss.giftmall.domains.user.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
@@ -17,11 +16,8 @@ import java.util.Map;
 @Service
 public class NaverOAuthService {
 
-    @Value("${NAVER_CLIENT}")
-    private String clientId;
-
-    @Value("${NAVER_SECRET}")
-    private String clientSecret;
+    private String clientId = "ntP6_ogtZLkuD6J774IT";
+    private String clientSecret = "9cIj0Lo1b_";
     private final RestTemplate restTemplate = new RestTemplate();
 
     public String getAccessToken(String code, String state) {

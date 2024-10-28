@@ -8,12 +8,13 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pintoss.giftmall.common.enums.UserRole;
@@ -21,25 +22,27 @@ import pintoss.giftmall.common.exceptions.ErrorCode;
 import pintoss.giftmall.common.exceptions.TokenException;
 import pintoss.giftmall.domains.token.domain.Token;
 import pintoss.giftmall.domains.token.service.TokenService;
+import pintoss.giftmall.domains.user.domain.User;
+import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import javax.crypto.SecretKey;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    @Value("${JWT_KEY}")
-    private String key;
+    private String key = "7GpDbii7H429gsoxV/eRApcirwTTSKa7zKSlFtpqBeqYoW+u3bZ9a+NqkowZQ74S+myXcGiQl0Wawgw1o68nqA==";
     private SecretKey secretKey;
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final String KEY_ROLE = "role";
 
     private final TokenService tokenService;
+
+    private final UserRepository userRepository;
 
     @PostConstruct
     private void setSecretKey() {
@@ -68,14 +71,16 @@ public class TokenProvider {
         String email;
 
         Object principal = authentication.getPrincipal();
+        log.info("result:::"+principal);
+
         if (principal instanceof PrincipalDetails) {
-            email = ((PrincipalDetails) principal).getEmail();
+            email = ((PrincipalDetails) principal).getUsername();
         } else if (principal instanceof String) {
             email = (String) principal;
         } else {
             throw new IllegalStateException("Unexpected principal type: " + principal.getClass());
         }
-
+        log.info("userEmail:::"+email);
         return Jwts.builder()
                 .setSubject(email)
                 .claim(KEY_ROLE, authorities)
@@ -85,14 +90,19 @@ public class TokenProvider {
                 .compact();
     }
 
-
-
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
+        log.info("parsingValue::"+claims.getSubject());
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
 
-        User principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        User user = userRepository.findByEmail(claims.getSubject())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        log.info("result::"+user);
+        // attributes를 빈 Map으로 초기화 (필요에 따라 적절한 값으로 설정)
+        Map<String, Object> attributes = new HashMap<>();
+
+        PrincipalDetails principalDetails = new PrincipalDetails(user, attributes, null);
+        return new UsernamePasswordAuthenticationToken(principalDetails, token, authorities);
     }
 
     private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
