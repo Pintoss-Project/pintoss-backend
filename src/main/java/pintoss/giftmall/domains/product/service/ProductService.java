@@ -34,7 +34,8 @@ public class ProductService {
 
         return products.stream()
                 .map(product -> {
-                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
+                    List<PriceCategory> priceCategories = priceCategoryRepository
+                            .findAllByProductId(product.getId());
                     return ProductResponse.fromEntity(product, priceCategories);
                 })
                 .collect(Collectors.toList());
@@ -117,5 +118,14 @@ public class ProductService {
                 .map(SimpleProductResponse::fromEntity)
                 .collect(Collectors.toList());
     }
-
+    
+    //상품권 순서 변경
+    @Transactional
+    public void reorderProducts(List<Long> productIdsInNewOrder) {
+        for (int i = 0; i < productIdsInNewOrder.size(); i++) {
+            Product product = productRepository.findById(productIdsInNewOrder.get(i))
+                    .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+            product.changeIndex(i); // changeIndex 메서드를 통해 인덱스 값 변경
+        }
+    }
 }

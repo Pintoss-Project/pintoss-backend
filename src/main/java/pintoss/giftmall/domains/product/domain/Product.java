@@ -54,6 +54,13 @@ public class Product {
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
+    //유의 사항 컬럼
+    @Column(columnDefinition = "TEXT")
+    private String note;
+
+    //드래그 드랍 인덱스 컬럼
+    @Column(name = "product_index")
+    private int index;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -62,7 +69,7 @@ public class Product {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Product(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category) {
+    public Product(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, String note, int index) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -72,6 +79,8 @@ public class Product {
         this.description = description;
         this.publisher = publisher;
         this.category = category;
+        this.note = note;
+        this.index = index;
     }
 
     public void update(ProductRequest requestDTO) {
@@ -99,4 +108,11 @@ public class Product {
         }
     }
 
+    //인덱스 순서 변경 메서드
+    public void changeIndex(int newIndex) {
+        if (newIndex < 0) {
+            throw new IllegalArgumentException("인덱스는 0 이상의 값이어야 합니다.");
+        }
+        this.index = newIndex;
+    }
 }

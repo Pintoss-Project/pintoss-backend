@@ -47,9 +47,12 @@ public class ProductRequest {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
+    @NotBlank(message = "상품 유의사항은 필수 항목입니다.")
+    private String note;
+
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, ProductCategory category) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -59,6 +62,7 @@ public class ProductRequest {
         this.description = description;
         this.publisher = publisher;
         this.category = category;
+        this.note = note;
     }
 
     public Product toEntity() {
@@ -72,6 +76,7 @@ public class ProductRequest {
                 .description(description)
                 .publisher(publisher)
                 .category(category)
+                .note(note)//추가한 부분.
                 .build();
     }
 

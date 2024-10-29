@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.product.controller;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,4 +52,10 @@ public class ProductController {
         return ApiResponse.ok(product);
     }
 
+    //상품권 목록 순서 변경 api
+    @PutMapping("/order")
+    public ApiResponse<String> updateProductOrder(@RequestBody List<Long> orderUpdateRequests) {
+        productService.reorderProducts(orderUpdateRequests);
+        return ApiResponse.ok("수정이 되었습니다.");
+    }
 }
