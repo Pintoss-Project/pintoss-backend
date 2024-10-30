@@ -24,7 +24,7 @@ public class Board {
     @Column(name = "board_id")
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 40)
     @Enumerated(EnumType.STRING)
     private BoardType type;
 

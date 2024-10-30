@@ -47,12 +47,15 @@ public class ProductRequest {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
+    @NotBlank(message = "로고 이미지는 필수 항목입니다.")
+    private String logoImageUrl;
+
     @NotBlank(message = "상품 유의사항은 필수 항목입니다.")
     private String note;
 
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note, String logoImageUrl) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -63,6 +66,7 @@ public class ProductRequest {
         this.publisher = publisher;
         this.category = category;
         this.note = note;
+        this.logoImageUrl = logoImageUrl;
     }
 
     public Product toEntity() {

@@ -3,16 +3,20 @@ package pintoss.giftmall.domains.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import pintoss.giftmall.common.enums.ProductCategory;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.domain.ProductImage;
 import pintoss.giftmall.domains.product.dto.*;
 import pintoss.giftmall.domains.product.infra.PriceCategoryRepository;
+import pintoss.giftmall.domains.product.infra.ProductImageRepository;
 import pintoss.giftmall.domains.product.infra.ProductRepository;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +27,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductReader productReader;
     private final PriceCategoryRepository priceCategoryRepository;
+    private final ProductImageRepository productImageRepository;
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
@@ -32,13 +37,7 @@ public class ProductService {
             throw new NotFoundException("상품을 찾을 수 없습니다.");
         }
 
-        return products.stream()
-                .map(product -> {
-                    List<PriceCategory> priceCategories = priceCategoryRepository
-                            .findAllByProductId(product.getId());
-                    return ProductResponse.fromEntity(product, priceCategories);
-                })
-                .collect(Collectors.toList());
+        return getProductResponses(products);
     }
 
     @Transactional(readOnly = true)
@@ -46,7 +45,11 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream()
-                .map(SimpleProductResponse::fromEntity)
+                .map(product -> {
+                    Optional<ProductImage> logoImage = productImageRepository.findByProductId(product.getId());
+                    String logoImageUrl = logoImage.map(ProductImage::getUrl).orElse(null);
+                    return SimpleProductResponse.fromEntity(product, logoImageUrl);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -55,16 +58,20 @@ public class ProductService {
         Product product = productReader.findById(id);
 
         List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(id);
-        List<PriceCategoryResponse> priceCategoryResponses = priceCategories.stream()
-                .map(PriceCategoryResponse::fromEntity)
-                .toList();
+        Optional<ProductImage> logoImage = productImageRepository.findByProductId(id);
+        String logoImageUrl = logoImage.map(ProductImage::getUrl).orElse(null);
 
-        return ProductResponse.fromEntity(product, priceCategories);
+        return ProductResponse.fromEntity(product, priceCategories, logoImageUrl);
     }
 
     public Long create(ProductRequest requestDTO) {
         Product product = requestDTO.toEntity();
         productRepository.save(product);
+
+        if (StringUtils.hasText(requestDTO.getLogoImageUrl())) {
+            ProductImage productImage = new ProductImage(requestDTO.getLogoImageUrl(), product);
+            productImageRepository.save(productImage);
+        }
 
         return product.getId();
     }
@@ -72,6 +79,18 @@ public class ProductService {
     public Long update(Long id, ProductRequest requestDTO) {
         Product product = productReader.findById(id);
         product.update(requestDTO);
+
+        Optional<ProductImage> existingImage = productImageRepository.findByProductId(id);
+        if (StringUtils.hasText(requestDTO.getLogoImageUrl())) {
+            if (existingImage.isPresent()) {
+                existingImage.get().updateLogoImage(requestDTO.getLogoImageUrl());
+            } else {
+                ProductImage newProductImage = new ProductImage(requestDTO.getLogoImageUrl(), product);
+                productImageRepository.save(newProductImage);
+            }
+        } else if (existingImage.isPresent()) {
+            productImageRepository.delete(existingImage.get());
+        }
 
         return product.getId();
     }
@@ -81,6 +100,9 @@ public class ProductService {
         if (!priceCategories.isEmpty()) {
             priceCategoryRepository.deleteAll(priceCategories);
         }
+
+        Optional<ProductImage> productImage = productImageRepository.findByProductId(id);
+        productImage.ifPresent(productImageRepository::delete);
 
         productRepository.deleteById(id);
     }
@@ -93,12 +115,7 @@ public class ProductService {
     public List<ProductResponse> findByCategory(ProductCategory category) {
         List<Product> products = productRepository.findByCategory(category);
 
-        return products.stream()
-                .map(product -> {
-                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
-                    return ProductResponse.fromEntity(product, priceCategories);
-                })
-                .collect(Collectors.toList());
+        return getProductResponses(products);
     }
 
     @Transactional(readOnly = true)
@@ -106,7 +123,11 @@ public class ProductService {
         List<Product> products = productRepository.findByCategory(category);
 
         return products.stream()
-                .map(SimpleProductResponse::fromEntity)
+                .map(product -> {
+                    Optional<ProductImage> logoImage = productImageRepository.findByProductId(product.getId());
+                    String logoImageUrl = logoImage.map(ProductImage::getUrl).orElse(null);
+                    return SimpleProductResponse.fromEntity(product, logoImageUrl);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -115,8 +136,19 @@ public class ProductService {
         List<Product> products = productRepository.findByIsPopularTrue();
 
         return products.stream()
-                .map(SimpleProductResponse::fromEntity)
+                .map(product -> {
+                    Optional<ProductImage> logoImage = productImageRepository.findByProductId(product.getId());
+                    String logoImageUrl = logoImage.map(ProductImage::getUrl).orElse(null);
+                    return SimpleProductResponse.fromEntity(product, logoImageUrl);
+                })
                 .collect(Collectors.toList());
+    }
+
+    public String getProductLogoImageUrl(Long productId) {
+        return productImageRepository.findByProductId(productId).stream()
+                .findFirst()
+                .map(ProductImage::getUrl)
+                .orElse(null);
     }
     
     //상품권 순서 변경
@@ -128,4 +160,16 @@ public class ProductService {
             product.changeIndex(i); // changeIndex 메서드를 통해 인덱스 값 변경
         }
     }
+
+    private List<ProductResponse> getProductResponses(List<Product> products) {
+        return products.stream()
+                .map(product -> {
+                    List<PriceCategory> priceCategories = priceCategoryRepository.findAllByProductId(product.getId());
+                    Optional<ProductImage> logoImage = productImageRepository.findByProductId(product.getId());
+                    String logoImageUrl = logoImage.map(ProductImage::getUrl).orElse(null);
+                    return ProductResponse.fromEntity(product, priceCategories, logoImageUrl);
+                })
+                .collect(Collectors.toList());
+    }
+
 }

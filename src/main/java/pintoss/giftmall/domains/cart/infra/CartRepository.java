@@ -9,12 +9,12 @@ import pintoss.giftmall.domains.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long> ,CustomCartRepository {
 
     List<Cart> findAllByUserId(Long userId);
 
     void deleteAllByUser(User user);
 
-    Optional<Cart> findByUserAndProductAndPriceCategory(User user, Product product, PriceCategory priceCategory);
+    //Optional<Cart> findByUserAndProductAndPriceCategory(User user, Product product, PriceCategory priceCategory);
 
 }

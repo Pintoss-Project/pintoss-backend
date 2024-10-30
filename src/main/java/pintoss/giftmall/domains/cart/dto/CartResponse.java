@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.domains.cart.domain.Cart;
+import pintoss.giftmall.domains.product.domain.PriceCategory;
+import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
+import pintoss.giftmall.domains.product.infra.ProductReader;
 
 import java.math.BigDecimal;
 
@@ -44,6 +48,20 @@ public class CartResponse {
                 .price(cart.getOriginalPrice())
                 .cardDiscount(cart.getCardDiscount())
                 .phoneDiscount(cart.getPhoneDiscount())
+                .build();
+    }
+
+    public static Cart toEntity(CartResponse cartResponse, ProductReader productReader, PriceCategoryReader priceCategoryReader) {
+        Product product = productReader.findById(cartResponse.getProductId()); // 적절한 예외 처리
+
+        PriceCategory priceCategory = priceCategoryReader.findById(cartResponse.getPriceCategoryId()); // 적절한 예외 처리
+
+        return Cart.builder()
+                .id(cartResponse.getId())
+                .quantity(cartResponse.getQuantity())
+                .payMethod(cartResponse.getPayMethod())
+                .product(product) // Product 객체
+                .priceCategory(priceCategory) // PriceCategory 객체
                 .build();
     }
 }

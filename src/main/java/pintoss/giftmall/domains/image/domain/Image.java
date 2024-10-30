@@ -33,4 +33,9 @@ public class Image {
         this.url = url;
     }
 
+    public void updateUrl(String url) {
+        if (url != null && !url.isEmpty()) {
+            this.url = url;
+        }
+    }
 }
