@@ -48,7 +48,7 @@ class CartServiceTest {
 
     @BeforeEach
     void setUp() {
-        Product product = new Product("문화상품권", true, BigDecimal.ONE, BigDecimal.ZERO, "http://example.com", "1544-4567", "상세설명", "발행처", ProductCategory.CBM);
+        Product product = new Product("문화상품권", true, BigDecimal.ONE, BigDecimal.ZERO, "http://example.com", "1544-4567", "상세설명", "발행처", ProductCategory.CBM,"유의 사항",1);
         productRepository.save(product);
         productId = product.getId();
 
