@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.product.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -31,7 +33,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponse> findAll() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllByIndexOrder();
 
         if (products.isEmpty()) {
             throw new NotFoundException("상품을 찾을 수 없습니다.");
@@ -65,7 +67,9 @@ public class ProductService {
     }
 
     public Long create(ProductRequest requestDTO) {
+        int nextIndex = productRepository.findMaxIndex() + 1; // 현재 최대 인덱스의 다음 값으로 설정
         Product product = requestDTO.toEntity();
+        product.changeIndex(nextIndex);// 자동 증가된 인덱스를 설정
         productRepository.save(product);
 
         if (StringUtils.hasText(requestDTO.getLogoImageUrl())) {
@@ -152,12 +156,14 @@ public class ProductService {
     }
     
     //상품권 순서 변경
-    @Transactional
     public void reorderProducts(List<Long> productIdsInNewOrder) {
         for (int i = 0; i < productIdsInNewOrder.size(); i++) {
+            log.info(productIdsInNewOrder.size());
             Product product = productRepository.findById(productIdsInNewOrder.get(i))
                     .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
-            product.changeIndex(i); // changeIndex 메서드를 통해 인덱스 값 변경
+            log.info(productIdsInNewOrder.get(i));
+            product.changeIndex(i + 1); // changeIndex 메서드를 통해 인덱스 값 변경
+            productRepository.save(product);  // 변경된 엔티티를 저장
         }
     }
 

@@ -52,10 +52,13 @@ public class ProductRequest {
 
     @NotBlank(message = "상품 유의사항은 필수 항목입니다.")
     private String note;
+    //상품권의 인덱스
+    private int index;
 
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note, String logoImageUrl) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note, String logoImageUrl,
+                          int index) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -67,6 +70,7 @@ public class ProductRequest {
         this.category = category;
         this.note = note;
         this.logoImageUrl = logoImageUrl;
+        this.index = index;
     }
 
     public Product toEntity() {

@@ -53,7 +53,7 @@ public class ProductController {
     }
 
     //상품권 목록 순서 변경 api
-    @PutMapping("/order")
+    @PatchMapping("/reorder")
     public ApiResponse<String> updateProductOrder(@RequestBody List<Long> orderUpdateRequests) {
         productService.reorderProducts(orderUpdateRequests);
         return ApiResponse.ok("수정이 되었습니다.");

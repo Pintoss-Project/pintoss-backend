@@ -25,12 +25,14 @@ public class ProductResponse {
     private String publisher;
     private ProductCategory category;
     private String logoImageUrl;
+    private String note;
+    private int index;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<PriceCategoryResponse> priceCategories;
 
     @Builder
-    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl, LocalDateTime createdAt, LocalDateTime updatedAt, List<PriceCategoryResponse> priceCategories) {
+    public ProductResponse(Long id, String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount, String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl, String note, int index, LocalDateTime createdAt, LocalDateTime updatedAt, List<PriceCategoryResponse> priceCategories) {
         this.id = id;
         this.name = name;
         this.isPopular = isPopular;
@@ -42,6 +44,8 @@ public class ProductResponse {
         this.publisher = publisher;
         this.category = category;
         this.logoImageUrl = logoImageUrl;
+        this.note = note;
+        this.index = index;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.priceCategories = priceCategories;
@@ -67,6 +71,8 @@ public class ProductResponse {
                 .publisher(product.getPublisher())
                 .category(product.getCategory())
                 .logoImageUrl(logoImageUrl)
+                .note(product.getNote())
+                .index(product.getIndex())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .priceCategories(priceCategoryResponses)
