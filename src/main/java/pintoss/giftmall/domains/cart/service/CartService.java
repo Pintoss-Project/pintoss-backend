@@ -11,7 +11,9 @@ import pintoss.giftmall.domains.cart.infra.CartRepository;
 import pintoss.giftmall.domains.cart.infra.CartReader;
 import pintoss.giftmall.domains.product.domain.PriceCategory;
 import pintoss.giftmall.domains.product.domain.Product;
+import pintoss.giftmall.domains.product.domain.ProductImage;
 import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
+import pintoss.giftmall.domains.product.infra.ProductImageRepository;
 import pintoss.giftmall.domains.product.infra.ProductReader;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
@@ -30,15 +32,16 @@ public class CartService {
     private final ProductReader productReader;
     private final UserReader userReader;
     private final PriceCategoryReader priceCategoryReader;
+    private final ProductImageRepository productImageRepository;
 
-    public Long addToCart(Long userId, CartRequest requestDTO) {
-        Product product = productReader.findById(requestDTO.getProductId());
+    public Long addToCart(Long userId, Long productId, CartRequest requestDTO) {
+        Product product = productReader.findById(productId);
         PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
         // CartResponse 대신 Cart를 반환하도록 메서드를 호출합니다.
         Optional<CartResponse> existingCartOptional = cartRepository
-                .findByUserAndProductAndPriceCategory(user, product, priceCategory); // CartResponse를 Cart로 변환하는 메서드를 추가합니다.
+                .findByUserAndProductAndPriceCategory(user, product, priceCategory);
 
         Cart cart;
         if (existingCartOptional.isPresent()) {
@@ -60,25 +63,33 @@ public class CartService {
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
 
         return cartItems.stream()
-                .map(CartResponse::fromEntity)
+                .map(cart -> {
+                    String logoImageUrl = productImageRepository.findByProductId(cart.getProduct().getId())
+                            .stream()
+                            .findFirst()
+                            .map(ProductImage::getUrl)
+                            .orElse(null);
+                    return CartResponse.fromEntity(cart, logoImageUrl);
+                })
                 .collect(Collectors.toList());
     }
 
 
     public void updateCartItem(Long cartItemId, int quantity) {
         Cart cart = cartReader.findById(cartItemId);
-
         cart.updateQuantity(quantity);
     }
 
     public void deleteCartItem(Long cartItemId) {
         Cart cart = cartReader.findById(cartItemId);
-
         cartRepository.delete(cart);
     }
 
     public void deleteAllCartItems(Long userId) {
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
+        if (cartItems.isEmpty()) {
+            throw new IllegalArgumentException("장바구니가 비어 있습니다.");
+        }
         cartRepository.deleteAll(cartItems);
     }
 

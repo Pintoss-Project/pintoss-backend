@@ -21,13 +21,13 @@ public class PriceCategoryController {
     private final PriceCategoryService priceCategoryService;
 
     @GetMapping("/{id}/category")
-    public ApiResponse<List<PriceCategoryResponse>> getAllPriceCategory(@PathVariable("id") Long productId) {
+    public ApiResponse<List<PriceCategoryResponse>> getAllPriceCategory(@PathVariable(name = "id") Long productId) {
         List<PriceCategoryResponse> priceCategoryList = priceCategoryService.findAllByProductId(productId);
         return ApiResponse.ok(priceCategoryList);
     }
 
     @GetMapping("/{id}/category/{category_id}")
-    public ApiResponse<PriceCategoryResponse> getPriceCategoryById(@PathVariable("id") Long productId, @PathVariable("category_id") Long categoryId) {
+    public ApiResponse<PriceCategoryResponse> getPriceCategoryById(@PathVariable(name = "id") Long productId, @PathVariable(name = "category_id") Long categoryId) {
         PriceCategoryResponse priceCategory = priceCategoryService.findByIdAndProductId(categoryId, productId);
         return ApiResponse.ok(priceCategory);
     }

@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.board.controller;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -21,13 +20,13 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam @NotNull BoardType type) {
+    public ApiResponse<List<BoardResponse>> getAllBoardByType(@RequestParam(name = "type") @NotNull BoardType type) {
         List<BoardResponse> boards = boardService.findAllByType(type);
         return ApiResponse.ok(boards);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BoardResponse> getBoardById(@PathVariable Long id) {
+    public ApiResponse<BoardResponse> getBoardById(@PathVariable(name="id") Long id) {
         BoardResponse board = boardService.findById(id);
         return ApiResponse.ok(board);
     }

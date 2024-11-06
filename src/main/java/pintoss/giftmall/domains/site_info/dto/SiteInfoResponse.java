@@ -23,12 +23,13 @@ public class SiteInfoResponse {
     private String email;
     private String kakao;
     private String openChat;
-    private List<SiteImage> logoImages;
+    private String topImageUrl;
+    private String bottomImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    public SiteInfoResponse(Long id, String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat, List<SiteImage> logoImages, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public SiteInfoResponse(Long id, String name, String tel, String businessHour, String address, String owner, String businesses, String reportNumber, String email, String kakao, String openChat, String topImageUrl, String bottomImageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.tel = tel;
@@ -40,15 +41,13 @@ public class SiteInfoResponse {
         this.email = email;
         this.kakao = kakao;
         this.openChat = openChat;
-        this.logoImages = logoImages;
+        this.topImageUrl = topImageUrl;
+        this.bottomImageUrl = bottomImageUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public SiteInfoResponse(SiteInfo siteInfo) {
-    }
-
-    public static SiteInfoResponse fromEntity(SiteInfo siteInfo) {
+    public static SiteInfoResponse fromEntity(SiteInfo siteInfo, String topImageUrl, String bottomImageUrl) {
         return SiteInfoResponse.builder()
                 .id(siteInfo.getId())
                 .name(siteInfo.getName())
@@ -61,6 +60,8 @@ public class SiteInfoResponse {
                 .email(siteInfo.getEmail())
                 .kakao(siteInfo.getKakao())
                 .openChat(siteInfo.getOpenChat())
+                .topImageUrl(topImageUrl)
+                .bottomImageUrl(bottomImageUrl)
                 .createdAt(siteInfo.getCreatedAt())
                 .updatedAt(siteInfo.getUpdatedAt())
                 .build();

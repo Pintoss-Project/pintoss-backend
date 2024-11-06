@@ -1,12 +1,10 @@
 package pintoss.giftmall.domains.site_info.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pintoss.giftmall.common.enums.SiteInfoImageCategory;
 import pintoss.giftmall.domains.image.domain.Image;
 
 @Entity
@@ -18,10 +16,11 @@ public class SiteInfoImage extends Image {
     @JoinColumn(name = "site_id")
     private SiteInfo siteInfo;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private SiteInfoImageCategory category;
 
     @Builder
-    public SiteInfoImage(String url, SiteInfo siteInfo, String category) {
+    public SiteInfoImage(String url, SiteInfo siteInfo, SiteInfoImageCategory category) {
         super(url);
         this.siteInfo = siteInfo;
         this.category = category;

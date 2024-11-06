@@ -25,19 +25,19 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public ApiResponse<PaymentResponse> getPayment(@PathVariable Long paymentId) {
+    public ApiResponse<PaymentResponse> getPayment(@PathVariable(value = "paymentId") Long paymentId) {
         PaymentResponse payment = paymentService.getPayment(paymentId);
         return ApiResponse.ok(payment);
     }
 
     @PostMapping("/{paymentId}/cancel")
-    public ApiResponse<String> cancelPayment(@PathVariable Long paymentId) {
+    public ApiResponse<String> cancelPayment(@PathVariable(value = "paymentId") Long paymentId) {
         paymentService.cancelPayment(paymentId);
         return ApiResponse.ok("결제가 취소되었습니다.");
     }
 
     @PostMapping("/{paymentId}/refund")
-    public ApiResponse<String> refundPayment(@PathVariable Long paymentId) {
+    public ApiResponse<String> refundPayment(@PathVariable(value = "paymentId") Long paymentId) {
         paymentService.refundPayment(paymentId);
         return ApiResponse.ok("결제 금액이 환불되었습니다.");
     }

@@ -12,6 +12,7 @@ import pintoss.giftmall.domains.cart.dto.CartResponse;
 import pintoss.giftmall.domains.cart.service.CartService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -21,45 +22,44 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/{product_id}")
-    public ApiResponse<Long> addToCart(@PathVariable("product_id") Long productId, @RequestBody @Valid CartRequest requestDTO, @RequestParam @NotNull Long userId) {
-        CartRequest updatedRequest = CartRequest.builder()
-                .productId(productId)
-                .priceCategoryId(requestDTO.getPriceCategoryId())
-                .quantity(requestDTO.getQuantity())
-                .payMethod(requestDTO.getPayMethod())
-                .build();
+    @PostMapping("/register")
+    public ApiResponse<List<Long>> addToCart(
+            @RequestBody @Valid List<CartRequest> requestDTOs,
+            @RequestParam(name = "userId") @NotNull Long userId) {
 
-        Long cartItemId = cartService.addToCart(userId, updatedRequest);
-        return ApiResponse.ok(cartItemId);
+        List<Long> cartItemIds = requestDTOs.stream()
+                .map(requestDTO -> cartService.addToCart(userId, requestDTO.getProductId(), requestDTO))
+                .collect(Collectors.toList());
+
+        return ApiResponse.ok(cartItemIds);
     }
 
     @GetMapping
-    public ApiResponse<List<CartResponse>> getCartItems(@RequestParam @NotNull Long userId) {
+    public ApiResponse<List<CartResponse>> getCartItems(@RequestParam(name = "userId") @NotNull Long userId) {
         List<CartResponse> cartItems = cartService.getCartItems(userId);
         return ApiResponse.ok(cartItems);
     }
 
-    @PatchMapping("/{cart_item_id}")
-    public ApiResponse<String> updateCartItem(@PathVariable("cart_item_id") Long cartItemId, @RequestBody @Valid int quantity) {
+    @PatchMapping("/{cartItemId}")
+    public ApiResponse<String> updateCartItem(@PathVariable("cartItemId") Long cartItemId, @RequestBody @Valid int quantity) {
         cartService.updateCartItem(cartItemId, quantity);
         return ApiResponse.ok("장바구니 상품의 수량이 수정되었습니다.");
     }
 
-    @DeleteMapping("/{cart_item_id}")
-    public ApiResponse<String> deleteCartItem(@PathVariable("cart_item_id") Long cartItemId) {
+    @DeleteMapping("/{cartItemId}")
+    public ApiResponse<String> deleteCartItem(@PathVariable("cartItemId") Long cartItemId) {
         cartService.deleteCartItem(cartItemId);
         return ApiResponse.ok("장바구니 상품이 삭제되었습니다.");
     }
 
     @DeleteMapping("/all")
-    public ApiResponse<String> deleteAllCartItems(@RequestParam @NotNull Long userId) {
+    public ApiResponse<String> deleteAllCartItems(@RequestParam(name = "userId") @NotNull Long userId) {
         cartService.deleteAllCartItems(userId);
         return ApiResponse.ok("모든 장바구니 상품이 삭제되었습니다.");
     }
 
     @PatchMapping("/update-paymethod")
-    public ApiResponse<String> updateCartPayMethod(@RequestParam @NotNull Long userId, @RequestParam @NotNull PayMethod newPayMethod) {
+    public ApiResponse<String> updateCartPayMethod(@RequestParam(name = "userId") @NotNull Long userId, @RequestParam(name = "newPayMethod") @NotNull PayMethod newPayMethod) {
         cartService.updateAllCartItemsToPayMethod(userId, newPayMethod);
         return ApiResponse.ok("장바구니의 결제 수단이 업데이트되었습니다.");
     }

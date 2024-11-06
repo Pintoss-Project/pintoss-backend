@@ -27,7 +27,7 @@ public class BannerController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BannerResponse> getBannerById(@PathVariable Long id) {
+    public ApiResponse<BannerResponse> getBannerById(@PathVariable(name = "id") Long id) {
         BannerResponse banner = bannerService.findById(id);
         return ApiResponse.ok(banner);
     }

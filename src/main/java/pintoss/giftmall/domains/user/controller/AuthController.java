@@ -56,13 +56,13 @@ public class AuthController {
     }
 
     @GetMapping("/find-id")
-    public ApiResponse<String> findUserId(@RequestParam @NotBlank String name, @RequestParam @NotBlank String phone) {
+    public ApiResponse<String> findUserId(@RequestParam(value = "name") @NotBlank String name, @RequestParam(value = "phone") @NotBlank String phone) {
         String email = authService.findUserIdByNameAndPhone(name, phone);
         return ApiResponse.ok(email);
     }
 
     @GetMapping("/find-password")
-    public ApiResponse<Void> findPassword(@RequestParam @NotBlank String name, @RequestParam @NotBlank String email) {
+    public ApiResponse<Void> findPassword(@RequestParam(value = "name") @NotBlank String name, @RequestParam(value = "email") @NotBlank String email) {
         authService.findPassword(name, email);
         return ApiResponse.ok(null);
     }
@@ -81,4 +81,9 @@ public class AuthController {
         return ApiResponse.ok(null);
     }
 
+    @PatchMapping("/reset-password")
+    public ApiResponse<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        authService.resetPassword(request.getName(), request.getPhone(), request.getNewPassword());
+        return ApiResponse.ok(null);
+    }
 }

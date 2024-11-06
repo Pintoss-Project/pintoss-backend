@@ -16,8 +16,8 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping("/save")
-    public ApiResponse<List<ImageResponse>> uploadImages(@RequestPart("files") List<String> imageUrl) {
-        List<ImageResponse> imageResponses = imageService.saveImageUrls(imageUrl);
+    public ApiResponse<List<ImageResponse>> saveImageUrls(@RequestBody List<String> imageUrls) {
+        List<ImageResponse> imageResponses = imageService.saveImageUrls(imageUrls);
         return ApiResponse.ok(imageResponses);
     }
 
