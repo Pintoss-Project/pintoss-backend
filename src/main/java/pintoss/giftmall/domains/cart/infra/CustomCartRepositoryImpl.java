@@ -31,6 +31,6 @@ public class CustomCartRepositoryImpl implements CustomCartRepository {
                         .and(cart.priceCategory.eq(priceCategory)))
                 .fetchOne();
         // Cart 엔티티를 CartResponse로 변환
-        return Optional.ofNullable(foundCart).map(CartResponse::fromEntity);
+        return Optional.ofNullable(foundCart).map(cartEntity-> CartResponse.fromEntity(cartEntity,null));
     }
 }

@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import pintoss.giftmall.common.enums.ProductCategory;
@@ -16,6 +17,7 @@ public class ProductResponse {
 
     private Long id;
     private String name;
+    @JsonProperty("isPopular")
     private boolean isPopular;
     private BigDecimal cardDiscount;
     private BigDecimal phoneDiscount;

@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -21,6 +22,7 @@ public class ProductRequest {
     private String name;
 
     @NotNull(message = "인기 여부는 필수 항목입니다.")
+    @JsonProperty("isPopular")
     private boolean isPopular = false;
 
     @NotNull(message = "카드 할인 금액은 필수 항목입니다.")
