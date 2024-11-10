@@ -35,6 +35,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	implementation 'de.huxhorn.sulky:de.huxhorn.sulky.ulid:8.2.0'
+	// https://mvnrepository.com/artifact/org.ini4j/ini4j
+	implementation 'org.ini4j:ini4j:0.5.4'
+	// billgateApi 관련
+	implementation fileTree(dir: 'libs', includes: ['*.jar'])
+
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
