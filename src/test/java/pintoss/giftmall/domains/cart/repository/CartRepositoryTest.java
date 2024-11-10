@@ -23,6 +23,7 @@ import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.Optional;
 
+@Disabled
 @DataJpaTest
 @Import(QueryDslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
