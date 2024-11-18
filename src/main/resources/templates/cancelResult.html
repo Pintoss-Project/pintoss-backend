@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <meta charset="EUC-KR">
+    <script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js"></script>
+    <title>결제 취소결과</title>
+</head>
+<body>
+<h1>결제 취소 결과</h1>
+<p th:if="${error}" th:text="${error}"></p>
+<p th:if="${response}">
+    응답코드: <span th:text="${response.responseCode}"></span><br>
+    응답메시지: <span th:text="${response.responseMessage}"></span><br>
+    상세응답코드: <span th:text="${response.detailResponseCode}"></span><br>
+    상세응답메시지: <span th:text="${response.detailResponseMessage}"></span><br>
+    거래번호: <span th:text="${response.transactionId}"></span><br>
+    취소금액: <span th:text="${response.cancelAmount}"></span><br>
+</p>
+</body>
+</html>

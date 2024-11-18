@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <meta charset="EUC-KR">
+    <title>빌게이트 결제 테스트 샘플페이지</title>
+    <script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js"></script>
+    <script type="text/javascript">
+        // 결제창 호출 함수
+        function checkSubmit(viewType) {
+            console.log(viewType);
+            const serviceCode = document.getElementById("selectPay").value;
+            const form = document.forms["payment"];
+
+            console.log(serviceCode);
+            console.log(form);
+
+            if (!form) {
+                console.error("Error: Form with name 'payment' not found.");
+                alert("결제 폼을 찾을 수 없습니다.");
+                return;
+            }
+
+            if (!serviceCode) {
+                alert("결제수단을 선택해주세요.");
+                console.error("Error: Service code is not selected.");
+                return;
+            }
+
+            if (!viewType) {
+                alert("뷰 타입을 입력해주세요.");
+                console.error("Error: View type is not specified.");
+                return;
+            }
+
+            try {
+                GX_pay("payment", viewType, "http_tpay");  // 실제 결제 호출
+                console.log("Payment submitted successfully.");
+            } catch (error) {
+                console.error("Error during payment submission:", error);
+            }
+        }
+
+        // 결제 수단 선택 시 호출되는 함수
+        function paySelect() {
+            const form = document.forms["payment"];
+            const serviceCode = document.getElementById("selectPay").value;
+            console.log(serviceCode);
+            if (form && serviceCode) {
+                form.SERVICE_CODE.value = serviceCode;  // 폼의 SERVICE_CODE 필드에 값 설정
+                form.ORDER_ID.value = "test_" + getStrDate();
+                form.ORDER_DATE.value = getStrDate();
+                console.log(form.SERVICE_CODE.value);
+                console.log(form.ORDER_ID.value);
+                console.log(form.ORDER_DATE.value);
+                makeCheckSum();//체크섬 생성 하수.
+            }
+
+            // 추가 파라미터 UI 초기화
+            document.querySelectorAll("#add_view, #add_card_view1, #add_card_view2, #add_card_view3, #add_vaccount_view, #add_mobile_view1, #add_mobile_view2, #add_moneytree_view, #add_common_view1, #add_common_view2").forEach(element => {
+                element.style.display = "none";
+            });
+
+            // 결제 수단에 따른 추가 파라미터 설정
+            switch (serviceCode) {
+                case '0900':  // 신용카드
+                    document.getElementById("add_view").style.display = "";
+                    document.getElementById("add_card_view1").style.display = "";
+                    document.getElementById("add_card_view2").style.display = "";
+                    document.getElementById("add_card_view3").style.display = "";
+                    break;
+                case '1800':  // 가상계좌
+                    document.getElementById("add_view").style.display = "";
+                    document.getElementById("add_vaccount_view").style.display = "";
+                    document.getElementById("add_common_view2").style.display = "";
+                    break;
+                case '1100':  // 휴대폰
+                    document.getElementById("add_view").style.display = "";
+                    document.getElementById("add_mobile_view1").style.display = "";
+                    document.getElementById("add_mobile_view2").style.display = "";
+                    document.getElementById("add_common_view1").style.display = "";
+                    document.getElementsByName("SOCIAL_NUMBER")[0].disabled = false;
+                    document.getElementsByName("SOCIAL_NUMBER")[1].disabled = true;
+                    break;
+                case '4100':  // 머니트리
+                    document.getElementById("add_view").style.display = "";
+                    document.getElementById("add_moneytree_view").style.display = "";
+                    document.getElementById("add_common_view1").style.display = "";
+                    document.getElementsByName("SOCIAL_NUMBER")[0].disabled = true;
+                    document.getElementsByName("SOCIAL_NUMBER")[1].disabled = false;
+                    break;
+                default:
+                    console.log("No additional parameters for selected service code.");
+                    break;
+            }
+        }
+
+        // 체크섬 생성 함수
+        function makeCheckSum() {
+            const form = document.forms["payment"];
+            form.ORDER_ID.value = "test_" + getStrDate();
+
+            const checksumValue = form.SERVICE_ID.value + form.ORDER_ID.value + form.AMOUNT.value;
+            const xhr = new XMLHttpRequest();
+
+            xhr.onload = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    form.CHECK_SUM.value = xhr.responseText.trim();
+                } else {
+                    console.error("Checksum request failed:", xhr.status);
+                }
+            };
+
+            xhr.open("POST", "/sample/check-sum", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("CheckSum=" + encodeURIComponent(checksumValue));
+        }
+
+        // 현재 날짜시간 가져오기
+        function getStrDate() {
+            const date = new Date();
+            return date.getFullYear() +
+                String(date.getMonth() + 1).padStart(2, '0') +
+                String(date.getDate()).padStart(2, '0') +
+                String(date.getHours()).padStart(2, '0') +
+                String(date.getMinutes()).padStart(2, '0') +
+                String(date.getSeconds()).padStart(2, '0');
+        }
+    </script>
+    <style>
+        header { position: fixed; top: 0; left: 0; right: 0; }
+        body, tr, td { font-size: 9pt; font-family: 맑은고딕, verdana; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="width:100%; height:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280; text-align: center;">
+        빌게이트 결제 테스트 샘플페이지
+        </div>
+    </header><div style="padding: 20px;">
+        <form name="payment" method="post">
+            <input type="hidden" name="SERVICE_CODE">
+            <table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">
+                <tr>
+                    <td colspan="4" bgcolor="#C0C0C0"><b>결제 정보</b></td>
+                </tr>
+                <tr>
+                    <td width="150" bgcolor="#F6F6F6">결제수단</td>
+                    <td colspan="3" bgcolor="#FFFFFF">
+                        <select id="selectPay" onchange="paySelect()">
+                            <option value="">==선택==</option>
+                            <option th:each="option : ${paymentOptions}" th:value="${option}" th:text="${option}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="150" bgcolor="#F6F6F6">가맹점아이디</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="SERVICE_ID" th:value="${serviceId}" size="30"></td>
+                    <td bgcolor="#F6F6F6">결제 금액</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="AMOUNT" th:value="${amount}" size="40"></td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F6F6F6">상품명</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" th:value="${itemName}" size="30"></td>
+                    <td bgcolor="#F6F6F6">고객 아이디</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="USER_ID" th:value="${userId}" size="30"></td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F6F6F6">주문번호</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="ORDER_ID" th:value="${orderId}" size="30"></td>
+                    <td bgcolor="#F6F6F6">주문일시</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="ORDER_DATE" th:value="${orderDate}" size="40"></td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F6F6F6">리턴 URL</td>
+                    <td colspan="3" bgcolor="#FFFFFF"><input type="text" name="RETURN_URL" th:value="${returnUrl}" size="80"></td>
+                </tr>
+                <tr>
+                    <td bgcolor="#F6F6F6">고객이메일</td>
+                    <td bgcolor="#FFFFFF"><input type="text" name="USER_EMAIL" th:value="${userEmail}" size="30"></td>
+                    <td bgcolor="#F6F6F6">CheckSum</td>
+                    <td bgcolor="#FFFFFF">
+                        <input type="text" name="CHECK_SUM" size="40">
+                        <input type="button" value="체크썸 재생성" onclick="makeCheckSum()">
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+        <br/>
+        <input type="button" value="결제창 호출(layerpopup)" onclick="checkSubmit('layerpopup')">
+        <input type="button" value="결제창 호출(submit)" onclick="checkSubmit('submit')">
+        <input type="button" value="결제창 호출(popup)" onclick="checkSubmit('popup')">
+    </div>
+</body>
+</html>

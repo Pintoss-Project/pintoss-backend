@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <meta charset="EUC-KR">
+    <title>빌게이트 결제 테스트 샘플페이지</title>
+    <script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js"></script>
+    <title>결제 결과</title>
+    <style>
+        body, tr, td { font-size: 9pt; font-family: Malgun Gothic, Verdana; }
+        div { width: 98%; height: 100%; overflow-y: auto; overflow-x: hidden; }
+    </style>
+</head>
+<body>
+<div>
+    <table width="380px" cellpadding="0" cellspacing="0">
+        <tr><td>&nbsp;</td></tr>
+
+        <tr>
+            <td align="center">
+                <table width="380" border="0" cellpadding="4" cellspacing="1" bgcolor="#B0B0B0">
+                    <tr><td colspan="2"><b>인증결과</b></td></tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">가맹점 아이디</td>
+                        <td bgcolor="#FFFFFF" th:text="${serviceId}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">서비스 코드</td>
+                        <td bgcolor="#FFFFFF" th:text="${serviceCode}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">응답코드</td>
+                        <td bgcolor="#FFFFFF" th:text="${responseCode}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">응답메시지</td>
+                        <td bgcolor="#FFFFFF" th:text="${responseMessage}"></td>
+                    </tr>
+
+                    <tr><td colspan="2"><b>승인결과</b></td></tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">거래번호</td>
+                        <td bgcolor="#FFFFFF" th:text="${transactionId}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">승인일시</td>
+                        <td bgcolor="#FFFFFF" th:text="${authDate}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">승인금액</td>
+                        <td bgcolor="#FFFFFF" th:text="${authAmount}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">상세응답코드</td>
+                        <td bgcolor="#FFFFFF" th:text="${detailResponseCode}"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#F6F6F6" align="center">상세응답메시지</td>
+                        <td bgcolor="#FFFFFF" th:text="${detailResponseMessage}"></td>
+                    </tr>
+
+                    <tr><td colspan="2" th:if="${errorMessage != null}">[오류] <span th:text="${errorMessage}"></span></td></tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

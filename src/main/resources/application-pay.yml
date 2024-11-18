@@ -1,0 +1,57 @@
+
+# 영동 IDC 센터 정보
+main:
+  ip: api.billgate.net
+  batchIp: bos.billgate.net
+
+# 분당 센터 정보
+backup:
+  ip: api.billgate.net
+  batchIp: bos.billgate.net
+
+# 테스트 정보
+test:
+  ip: tapi.billgate.net
+  batchIp: tbos.billgate.net
+
+# 서비스 포트
+servicePorts:
+  BOOKNLIFE_COUPON: 30100
+  CULTURELAND_COUPON: 30200
+  GAME_CULTURE_COUPON: 30300
+  WISH_COUPON: 30400
+  HAPPYMONEY_COUPON: 30500
+  MOBILE_PANGPANG: 30600
+  CASHGATE: 30700
+  ARS700: 30800
+  CREDIT_CARD: 30900
+  ACCOUNT_TRANSFER: 31000
+  MOBILE: 31100
+  PHONEBILL: 31200
+  KTMPAY: 31300
+  DOTORI_COUPON: 31400
+  CASH_RECEIPT: 31500
+  T_MONEY: 31600
+  ALARM: 31700
+  VIRTUAL_ACCOUNT: 31800
+  IDENTITY: 31900
+  TEEN_CASH: 32500
+  EGG_MONEY: 32600
+  CAPITAL_PAY: 32800
+  BITCOIN: 32900
+  TENPAY: 33500
+  MPAY: 33700
+  ACCOUNT_QUERY: 33900
+  MONEYTREE: 34100
+
+# 설정 정보 (로그의 경우에는 지정 폴더로 변경)
+# mode 0은 테스트용이고 1은 실거래용.
+mode: 0
+timeout: 20000
+log: 1
+logFile: C:\logs\
+encryption:
+  key: QkZJRlBDRTI4T0c1OUtBMw==
+  iv: PRJ59Q2GHPT844TQ
+
+

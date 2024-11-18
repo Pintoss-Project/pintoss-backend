@@ -9,8 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pintoss.giftmall.common.enums.UserRole;
+import pintoss.giftmall.domains.payment.domain.RenewPayment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -53,6 +56,9 @@ public class User {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RenewPayment> payments = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String name, String phone, UserRole role, String inflow) {
