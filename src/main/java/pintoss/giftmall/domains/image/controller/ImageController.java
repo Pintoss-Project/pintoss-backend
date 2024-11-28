@@ -22,7 +22,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteImage(@PathVariable Long id) {
+    public ApiResponse<Void> deleteImage(@PathVariable(value = "id") Long id) {
         imageService.deleteImage(id);
         return ApiResponse.ok(null);
     }

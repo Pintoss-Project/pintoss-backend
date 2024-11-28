@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @GetMapping("/check-id")
-    public ApiResponse<Boolean> checkEmailDuplicate(@RequestParam @NotBlank String email) {
+    public ApiResponse<Boolean> checkEmailDuplicate(@RequestParam(value = "email") @NotBlank String email) {
         boolean isDuplicate = authService.checkEmailDuplicate(email);
         return ApiResponse.ok(isDuplicate);
     }
