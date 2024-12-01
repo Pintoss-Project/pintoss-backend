@@ -39,9 +39,12 @@ dependencies {
 	implementation 'org.ini4j:ini4j:0.5.4'
 	// billgateApi 관련
 	implementation fileTree(dir: 'libs', includes: ['*.jar'])
+	// 휴대폰 본인 인증
+	implementation 'net.nurigo:sdk:4.3.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

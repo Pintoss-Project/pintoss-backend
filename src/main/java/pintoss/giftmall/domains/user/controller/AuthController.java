@@ -86,4 +86,11 @@ public class AuthController {
         authService.resetPassword(request.getName(), request.getPhone(), request.getNewPassword());
         return ApiResponse.ok(null);
     }
+
+    //휴대폰 본인인증
+    @PostMapping("/send")
+    public ApiResponse<?> SendSms(@RequestBody @Valid UserPhoneRequestDto request) {
+        String code = authService.SendSms(request);
+        return ApiResponse.ok(code);
+    }
 }

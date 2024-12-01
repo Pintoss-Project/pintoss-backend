@@ -16,7 +16,7 @@ spring:
     hibernate:
       ddl-auto: update
   profiles:
-    include: oauth,pay
+    include: oauth,pay,coolsm
   config:
     import: optional:file:.env[.properties]
   mail:

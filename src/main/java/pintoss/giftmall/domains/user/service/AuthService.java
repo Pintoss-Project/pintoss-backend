@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +14,11 @@ import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
 import pintoss.giftmall.common.oauth.PrincipalDetails;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.utils.MailService;
+import pintoss.giftmall.common.utils.SmsCertificationUtil;
 import pintoss.giftmall.domains.token.domain.RefreshToken;
 import pintoss.giftmall.domains.token.infra.RefreshTokenRepository;
 import pintoss.giftmall.domains.user.domain.User;
-import pintoss.giftmall.domains.user.dto.LoginRequest;
-import pintoss.giftmall.domains.user.dto.LoginResponse;
-import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
-import pintoss.giftmall.domains.user.dto.RegisterRequest;
+import pintoss.giftmall.domains.user.dto.*;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
 @Log4j2
@@ -34,11 +31,16 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final MailService mailService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final SmsCertificationUtil smsCertificationUtil;
 
     @Transactional
     public void register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ConflictException("중복된 이메일이 존재합니다.");
+        }
+
+        if (checkPhoneDuplicate(request.getPhone())) {
+            throw new ConflictException("중복된 전화번호가 존재합니다.");
         }
 
         User user = request.toEntity(passwordEncoder.encode(request.getPassword()));
@@ -211,5 +213,13 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.updatePassword(encodedPassword);
         userRepository.save(user);
+    }
+
+    //휴대폰 본인 인증
+    public String SendSms(UserPhoneRequestDto request) {
+        String userPhone = request.getPhone();
+        String certificationCode = Integer.toString((int)(Math.random() * (999999 - 100000 + 1)) + 100000); // 6자리 인증 코드를 랜덤으로 생성
+        smsCertificationUtil.sendSMS(userPhone, certificationCode); // SMS 인증 유틸리티를 사용하여 SMS 발송
+        return certificationCode;
     }
 }
