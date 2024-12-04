@@ -54,19 +54,20 @@ public class TestPaymentService {
         return responseMsg;
     }
 
-    //결제 저장
-    @Transactional(noRollbackFor = IllegalArgumentException.class)
-    public RenewPayment savePayment(PaymentRequestDTO dto) {
-        RenewPayment payment = RenewPayment.builder()
+    @Transactional
+    public RenewPayment saveRenewPayment(PaymentRequestDTO dto) {
+        RenewPayment renewPayment = RenewPayment
+                .builder()
+                .itemName(dto.getItemName())
                 .serviceId(dto.getServiceId())
                 .orderId(dto.getOrderId())
                 .orderDate(dto.getOrderDate())
-                .transactionId(dto.getTransactionId())
                 .payMethod(dto.getPayMethod())
                 .payPrice(dto.getPayPrice())
                 .payStatus(dto.getPayStatus())
+                .checksum(dto.getChecksum())
                 .build();
-        return renewPaymentRepository.save(payment);
+        return renewPaymentRepository.save(renewPayment);
     }
 
     //환불 저장

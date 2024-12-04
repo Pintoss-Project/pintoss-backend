@@ -9,8 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pintoss.giftmall.domains.TestPaymentService;
-import pintoss.giftmall.domains.payment.domain.Refund;
-import pintoss.giftmall.domains.payment.dto.RefundRequestDTO;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -29,8 +27,8 @@ public class RenewPaymentController {
     public ModelAndView payInputPage() {
         ModelAndView mv = new ModelAndView();
 
-        // 옵션 리스트 생성 및 모델에 추가
-        List<String> paymentOptions = Arrays.asList( "0200", "0900", "1100", "1800", "4100");
+        // 옵션 리스트 생성 및 모델에 추가 (900:신용카드/1100:핸드폰)
+        List<String> paymentOptions = Arrays.asList( "0900", "1100");
 
         mv.addObject("paymentOptions", paymentOptions);
         mv.addObject("serviceId", "M2103135");
@@ -40,11 +38,11 @@ public class RenewPaymentController {
         mv.addObject("userName", "홍길동");
         mv.addObject("orderId", "test_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
         mv.addObject("orderDate", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-        mv.addObject("returnUrl", "http://localhost:88/sample/payreturn");
+        mv.addObject("returnUrl", "http://localhost:88/sample/payreturn");//실용서버로 변경시 	pin-toss.com로 변경하기.
         mv.addObject("reserved1", "예비변수1");
         mv.addObject("reserved2", "예비변수2");
         mv.addObject("reserved3", "예비변수3");
-        //mv.addObject("cancelFlag", "Y");
+        mv.addObject("cancelFlag", "N");
 
         mv.setViewName("payinput");
 
@@ -93,6 +91,7 @@ public class RenewPaymentController {
                 authInfo.put("message", message);
 
                 Message respMsg = testPaymentService.MessageAuthProcess(authInfo);
+                //RenewPayment payment = testPaymentService.saveRenewPayment();
                 log.info("responseMsg::::"+respMsg);
                 // 승인 응답 처리
                 model.addAttribute("authDate", respMsg.get("1005"));
@@ -122,19 +121,51 @@ public class RenewPaymentController {
         return model;
     }
 
+//    @PostMapping("/refund-process")
+//    public ModelAndView processRefund(@RequestBody RefundRequestDTO dto) {
+//        ModelAndView mav = new ModelAndView("cancelResult"); // 결과 페이지 뷰 이름 설정
+//
+//        try {
+//            // 요청 처리 로직
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("refundDate", LocalDateTime.now());
+//            response.put("transactionId", dto.getTransactionId());
+//            response.put("responseCode", "0000");
+//            response.put("responseMessage", "환불이 성공적으로 처리되었습니다.");
+//            response.put("detailResponseCode", "1000");
+//            response.put("detailResponseMessage", "정상 처리");
+//            response.put("cancelAmount", dto.getCancelAmount() != null ? dto.getCancelAmount() : "전액취소");
+//
+//            // 결과 데이터를 모델에 추가
+//            mav.addObject("response", response);
+//        } catch (Exception e) {
+//            // 에러 메시지를 모델에 추가
+//            mav.addObject("error", "취소 요청 중 에러가 발생했습니다. 관리자에게 문의하세요.");
+//            log.error("환불 처리 중 예외 발생", e);
+//        }
+//
+//        return mav; // 결과 페이지로 이동
+//    }
+
     @PostMapping("/refund-process")
-    public ModelAndView cancelProcess(@RequestBody RefundRequestDTO dto) {
-        ModelAndView mav = new ModelAndView("cancelResult"); // 뷰 이름 설정
+    public ModelAndView processRefund(@RequestParam Map<String, String> params) {
+        ModelAndView mav = new ModelAndView("cancelResult"); // 결과 페이지 뷰 이름
 
         try {
-            Refund response = testPaymentService.processCancel(dto);
-            log.info("환불 페이지::" + response);
-            mav.addObject("response", response); // 모델 데이터 추가
+            Map<String, Object> response = new HashMap<>();
+            response.put("refundDate", LocalDateTime.now());
+            response.put("transactionId", params.get("transactionId"));
+            response.put("responseCode", "0000");
+            response.put("responseMessage", "환불이 성공적으로 처리되었습니다.");
+            response.put("detailResponseCode", "1000");
+            response.put("detailResponseMessage", "정상 처리");
+            response.put("cancelAmount", params.get("cancelAmount") != null ? params.get("cancelAmount") : "전액취소");
+
+            mav.addObject("response", response); // 결과 데이터 추가
         } catch (Exception e) {
             mav.addObject("error", "취소 요청 중 에러가 발생했습니다. 관리자에게 문의하세요.");
-            log.error("환불 처리 중 예외 발생", e);
         }
 
-        return mav;
+        return mav; // 결과 페이지로 이동
     }
 }

@@ -14,39 +14,39 @@
 </head>
 <body>
 <header>
-    <div style="width:100%; height:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280;text-align: center;">
+    <div style="width:100%; height:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280; text-align: center;">
         빌게이트 결제 테스트 샘플페이지
     </div>
 </header>
 
 <div style="padding: 20px 0; width:100%; display: block; float:left;">
     <b style="color:red;">유의사항</b><br/>
-    <b>- 당사에서 제공하는 샘플은 연동에 이해를 돕기위해 단계별로 나열한 것이므로, 동일한 구조를 유지할 필요가 없음을 알려드립니다.</b><br/>
-    - 휴대폰, 신용카드, 계좌이체 서비스만 부분취소 기능 제공이 가능합니다. <b style="color:red;">※(담당자 협의 후 제공 가능)</b><br/>
+    <b>- 연동에 대한 이해를 돕기 위한 샘플이며, 구조를 변경하여도 무방합니다.</b><br/>
+    - 휴대폰, 신용카드, 계좌이체만 부분취소 가능 (담당자 협의 필요).<br/>
 </div>
 
 <div style="width:100%; display: block; float:left;">
-    <form method="post" name="cancel">
+    <form method="post" action="/sample/refund-process">
         <table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">
             <tr>
                 <td colspan="2" height="20" align="left" bgcolor="#C0C0C0"><b>취소 정보</b></td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">가맹점아이디<br/>(SERVICE_ID)</td>
+                <td width="150" align="left" bgcolor="#F6F6F6">가맹점아이디 (SERVICE_ID)</td>
                 <td width="150" bgcolor="#FFFFFF"><input type="text" name="serviceId" size="30" th:value="${serviceId}"></td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">주문번호<br/>(ORDER_ID)</td>
+                <td width="150" align="left" bgcolor="#F6F6F6">주문번호 (ORDER_ID)</td>
                 <td width="150" bgcolor="#FFFFFF"><input type="text" name="orderId" size="30" th:value="${orderId}"></td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">주문일시<br/>(ORDER_DATE)</td>
+                <td width="150" align="left" bgcolor="#F6F6F6">주문일시 (ORDER_DATE)</td>
                 <td width="150" bgcolor="#FFFFFF"><input type="text" name="orderDate" size="30" th:value="${orderDate}"></td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">서비스코드<br/>(SERVICE_CODE)</td>
+                <td width="150" align="left" bgcolor="#F6F6F6">서비스코드 (SERVICE_CODE)</td>
                 <td width="150" bgcolor="#FFFFFF">
-                    <select id="SERVICE_CODE" name="serviceCode" onchange="paySelect()">
+                    <select name="serviceCode">
                         <option value="" selected>==선택==</option>
                         <option value="0100">도서(0100)</option>
                         <option value="0200">문화(0200)</option>
@@ -54,65 +54,22 @@
                         <option value="0900">신용카드(0900)</option>
                         <option value="1000">계좌이체(1000)</option>
                         <option value="1100">휴대폰(1100)</option>
-                        <option value="1800">1800</option>
+                        <option value="1800">기타(1800)</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">취소타입<br/>(CANCEL_TYPE)</td>
-                <td width="150" bgcolor="#FFFFFF">
-                    <select name="CANCEL_TYPE" onchange="selectCancelType()">
-                        <option value="" selected>전체취소(공백)</option>
-                    </select>
-                </td>
+                <td width="150" align="left" bgcolor="#F6F6F6">거래번호 (TRANSACTION_ID)</td>
+                <td width="150" bgcolor="#FFFFFF"><input type="text" name="transactionId" size="30" placeholder="거래번호 입력"></td>
             </tr>
             <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">거래번호<br/>(TRANSACTION_ID)</td>
-                <td width="150" bgcolor="#FFFFFF"><input type="text" name="transactionId" size="30" placeholder="취소요청 할 거래번호를 적어주세요."></td>
-            </tr>
-            <tr>
-                <td width="150" align="left" bgcolor="#F6F6F6">취소요청 URL<br/>(CANCEL_URL)</td>
-                <td width="150" bgcolor="#FFFFFF"><input type="text" name="CANCEL_URL" size="80" th:value="${cancelUrl}"></td>
+                <td width="150" align="left" bgcolor="#F6F6F6">취소금액 (CANCEL_AMOUNT)</td>
+                <td width="150" bgcolor="#FFFFFF"><input type="text" name="cancelAmount" size="30" placeholder="취소 금액 입력"></td>
             </tr>
         </table>
-    </form>
-
-    <div>
-        <br/><input type="button" value="취소요청" onclick="requestCancel()">
         <br/>
-    </div>
+        <input type="submit" value="취소요청">
+    </form>
 </div>
-<script>
-    //환불 취소처리.
-    function requestCancel() {
-        var HForm = document.cancel;
-        HForm.action = "/sample/refund-process"
-        HForm.method = "POST"
-        var serviceCode = HForm.elements['serviceCode'].value; // name 속성 기준 값 가져오기
-        var transactionId = HForm.elements['transactionId'].value; // name 속성 기준 값 가져오기
-        console.log(serviceCode);
-        console.log(transactionId);
-        if (!serviceCode) {
-            alert("결제수단을 선택해주세요.");
-            return;
-        }
-        if (!transactionId) {
-            alert("거래번호를 입력해주세요.");
-            return;
-        }
-        HForm.submit();
-    }
-
-    function  paySelect() {
-        const serviceCode= document.getElementById("SERVICE_CODE").value;
-        console.log(serviceCode);
-    }
-
-    function selectCancelType(){
-        var HForm = document.cancel;
-
-        HForm.CANCEL_AMOUNT.value = "";
-    }
-</script>
 </body>
 </html>

@@ -34,11 +34,27 @@
                 return;
             }
 
-            try {
-                GX_pay("payment", viewType, "http_tpay");  // 실제 결제 호출
-                console.log("Payment submitted successfully.");
-            } catch (error) {
-                console.error("Error during payment submission:", error);
+
+            if (viewType === 'popup') {
+                // 팝업창 열기
+                const popupWindow = window.open("", "paymentPopup", "width=600,height=800");
+                popupWindow.document.write('<html><head><title>결제 진행</title></head><body><h1>결제가 진행 중입니다...</h1></body></html>');
+
+                try {
+                    GX_pay("payment", viewType, "http_tpay"); // 실제 결제 호출
+                } catch (error) {
+                    console.error("Error during payment submission:", error);
+                    popupWindow.close();
+                }
+            } else if (viewType === 'layerpopup') {
+                // 레이어 팝업 열기
+                document.getElementById("layerPopup").style.display = "block";
+            } else {
+                try {
+                    GX_pay("payment", viewType, "http_tpay"); // 일반 호출
+                } catch (error) {
+                    console.error("Error during payment submission:", error);
+                }
             }
         }
 
@@ -70,11 +86,6 @@
                     document.getElementById("add_card_view2").style.display = "";
                     document.getElementById("add_card_view3").style.display = "";
                     break;
-                case '1800':  // 가상계좌
-                    document.getElementById("add_view").style.display = "";
-                    document.getElementById("add_vaccount_view").style.display = "";
-                    document.getElementById("add_common_view2").style.display = "";
-                    break;
                 case '1100':  // 휴대폰
                     document.getElementById("add_view").style.display = "";
                     document.getElementById("add_mobile_view1").style.display = "";
@@ -82,13 +93,6 @@
                     document.getElementById("add_common_view1").style.display = "";
                     document.getElementsByName("SOCIAL_NUMBER")[0].disabled = false;
                     document.getElementsByName("SOCIAL_NUMBER")[1].disabled = true;
-                    break;
-                case '4100':  // 머니트리
-                    document.getElementById("add_view").style.display = "";
-                    document.getElementById("add_moneytree_view").style.display = "";
-                    document.getElementById("add_common_view1").style.display = "";
-                    document.getElementsByName("SOCIAL_NUMBER")[0].disabled = true;
-                    document.getElementsByName("SOCIAL_NUMBER")[1].disabled = false;
                     break;
                 default:
                     console.log("No additional parameters for selected service code.");
@@ -112,7 +116,7 @@
                 }
             };
 
-            xhr.open("POST", "/sample/check-sum", true);
+            xhr.open("POST", "/api/payment/checksum", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.send("CheckSum=" + encodeURIComponent(checksumValue));
         }
@@ -163,7 +167,7 @@
                 <tr>
                     <td bgcolor="#F6F6F6">상품명</td>
                     <td bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" th:value="${itemName}" size="30"></td>
-                    <td bgcolor="#F6F6F6">고객 아이디</td>
+                    <td bgcolor="#F6F6F6">고객 이메일</td>
                     <td bgcolor="#FFFFFF"><input type="text" name="USER_ID" th:value="${userId}" size="30"></td>
                 </tr>
                 <tr>
@@ -189,9 +193,15 @@
             </table>
         </form>
         <br/>
-        <input type="button" value="결제창 호출(layerpopup)" onclick="checkSubmit('layerpopup')">
         <input type="button" value="결제창 호출(submit)" onclick="checkSubmit('submit')">
         <input type="button" value="결제창 호출(popup)" onclick="checkSubmit('popup')">
     </div>
+
+    <div id="layerPopup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:80%; max-width:500px; background:white; box-shadow:0px 4px 6px rgba(0,0,0,0.1); z-index:1000; padding:20px;">
+        <h2>결제 진행</h2>
+        <p>결제가 진행 중입니다. 잠시만 기다려 주세요...</p>
+        <button onclick="document.getElementById('layerPopup').style.display='none';">닫기</button>
+    </div>
+    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;" onclick="document.getElementById('layerPopup').style.display='none'; document.getElementById('overlay').style.display='none';"></div>
 </body>
 </html>

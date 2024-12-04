@@ -28,14 +28,17 @@ public class RenewPayment {
     @Column(length = 50, nullable = false)
     private String serviceId;
 
-    @Column(length = 50, nullable = false)
+    @Column(name = "logical_order_id",length = 50, nullable = false)
     private String orderId;
 
     @Column(nullable = false)
-    private LocalDateTime orderDate;
+    private String orderDate;
 
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, unique = true)
     private String transactionId;
+
+    @Column(length = 260)
+    private String itemName;
 
     @Enumerated(EnumType.STRING)
     private PayMethod payMethod;
@@ -48,6 +51,12 @@ public class RenewPayment {
     @CreatedDate
     private LocalDateTime approvedAt;
 
+    @Column(length = 255)
+    private String returnUrl;
+
+    @Column(length = 255)
+    private String checksum;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
@@ -55,4 +64,11 @@ public class RenewPayment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @PrePersist
+    private void prePersist() {
+        if (payStatus == null) {
+            this.payStatus = PayStatus.PENDING;
+        }
+    }
 }

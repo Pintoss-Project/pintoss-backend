@@ -1,15 +1,23 @@
 package pintoss.giftmall.domains.payment.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RefundRequestDTO {
     private String transactionId;
     private BigDecimal cancelAmount;
     private String responseCode;
     private String responseMessage;
-    private String cancelType;    // 환불 타입 (부분 환불 여부)
-
+    private String cancelType;
+    private String serviceId;
+    private String serviceCode;
+    private String orderDate;
+    private String orderId;
+    private String cancelurl;
 }
