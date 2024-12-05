@@ -11,6 +11,7 @@ import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.user.domain.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,6 +35,10 @@ public class Payment {
 
     private int payPrice;
 
+    private BigDecimal amount;
+
+    private String transactionId;
+
     @CreatedDate
     private LocalDateTime approvedAt;
 
@@ -46,10 +51,12 @@ public class Payment {
     private User user;
 
     @Builder
-    public Payment(PayStatus payStatus, PayMethod payMethod, int payPrice, User user, Order order) {
+    public Payment(PayStatus payStatus, PayMethod payMethod, int payPrice,String transactionId,BigDecimal amount, User user, Order order) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
         this.payPrice = payPrice;
+        this.transactionId = transactionId;
+        this.amount = amount;
         this.user = user;
         this.order = order;
     }

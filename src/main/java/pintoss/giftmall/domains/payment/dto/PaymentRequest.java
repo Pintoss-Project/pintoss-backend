@@ -10,6 +10,8 @@ import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.order.domain.Order;
 import pintoss.giftmall.domains.user.domain.User;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor
 public class PaymentRequest {
@@ -22,6 +24,10 @@ public class PaymentRequest {
 
     @Min(value = 1000, message = "결제 금액은 1000원 이상이어야 합니다.")
     private int payPrice;
+
+    private String transactionId;
+
+    private BigDecimal amount;
 
     @Builder
     public PaymentRequest(PayStatus payStatus, PayMethod payMethod, int payPrice) {
