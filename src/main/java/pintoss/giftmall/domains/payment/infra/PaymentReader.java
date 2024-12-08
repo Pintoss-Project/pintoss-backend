@@ -15,4 +15,7 @@ public class PaymentReader {
         return paymentRepository.findById(id).orElseThrow(() -> new NotFoundException("결제 id를 다시 확인해주세요."));
     }
 
+    public Payment findByTransactionId(String transactionId) {
+        return paymentRepository.findByTransactionId(transactionId);
+    }
 }

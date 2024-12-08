@@ -1,68 +1,61 @@
 package pintoss.giftmall.domains.payment.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.service.PaymentServiceV2;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 public class PaymentRestController {
 
-    private final PaymentServiceV2 paymentServiceV2;
+    private final PaymentServiceV2 paymentService;
 
-    /**
-     * 결제 처리
-     *
-     * @param userId 사용자 ID
-     * @param orderId 주문 ID
-     * @param paymentRequest 결제 요청 정보
-     * @return PaymentResponse
-     */
-    @PostMapping("/{userId}/orders/{orderId}")
-    public ResponseEntity<PaymentResponse> processPayment(
-            @PathVariable(value = "userId") Long userId,
-            @PathVariable(value = "orderId") Long orderId,
-            @RequestBody PaymentRequest paymentRequest) {
-        PaymentResponse paymentResponse = paymentServiceV2.processPayment(userId, orderId, paymentRequest);
-        return ResponseEntity.ok(paymentResponse);
+    // 결제 승인
+    @PostMapping("/approve")
+    public ResponseEntity<PaymentResponse> approvePayment(@RequestBody PaymentRequest paymentRequest) {
+        PaymentResponse response = paymentService.processPayment(paymentRequest.getUserId(), paymentRequest.getOrderId(), paymentRequest);
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * 결제 조회
-     *
-     * @param paymentId 결제 ID
-     * @return PaymentResponse
-     */
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<PaymentResponse> getPayment(@PathVariable(value = "paymentId") Long paymentId) {
-        PaymentResponse paymentResponse = paymentServiceV2.getPayment(paymentId);
-        return ResponseEntity.ok(paymentResponse);
+    // 결제 취소
+    @PostMapping("/cancel")
+    public ResponseEntity<String> cancelPayment(@RequestParam Long paymentId) {
+        paymentService.cancelPayment(paymentId);
+        return ResponseEntity.ok("결제가 취소되었습니다.");
     }
 
-    /**
-     * 결제 취소
-     *
-     * @param paymentId 결제 ID
-     * @return 성공 메시지
-     */
-    @PostMapping("/{paymentId}/cancel")
-    public ResponseEntity<String> cancelPayment(@PathVariable(value = "paymentId") Long paymentId) {
-        paymentServiceV2.cancelPayment(paymentId);
-        return ResponseEntity.ok("결제가 성공적으로 취소되었습니다.");
+    // 부분 취소
+    @PostMapping("/partial-cancel")
+    public ResponseEntity<String> partialCancelPayment(
+            @RequestParam Long paymentId,
+            @RequestParam BigDecimal cancelAmount,
+            @RequestParam(required = false) String cancelReason) {
+        paymentService.partialCancelPayment(paymentId, cancelAmount, cancelReason);
+        return ResponseEntity.ok("부분 결제가 성공적으로 처리되었습니다.");
     }
 
-    /**
-     * 결제 환불
-     *
-     * @param paymentId 결제 ID
-     * @return 성공 메시지
-     */
-    @PostMapping("/{paymentId}/refund")
-    public ResponseEntity<String> refundPayment(@PathVariable(value = "paymentId") Long paymentId) {
-        paymentServiceV2.refundPayment(paymentId);
-        return ResponseEntity.ok("결제가 성공적으로 환불되었습니다.");
+    // 환불
+    @PostMapping("/refund")
+    public ResponseEntity<String> refundPayment(@RequestParam Long paymentId) {
+        paymentService.refundPayment(paymentId);
+        return ResponseEntity.ok("결제가 환불되었습니다.");
+    }
+
+    // 결제 결과 콜백 처리
+    @PostMapping("/callback")
+    public ResponseEntity<String> handlePaymentCallback(@RequestParam Map<String, String> params) {
+        try {
+            paymentService.handleCallback(params);
+            return ResponseEntity.ok("콜백 처리 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("콜백 처리 실패: " + e.getMessage());
+        }
     }
 }

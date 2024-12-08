@@ -26,7 +26,9 @@ import pintoss.giftmall.domains.product.infra.PriceCategoryReader;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -64,6 +66,7 @@ public class PaymentServiceV2 {
 
         // 결제 성공 처리
         Payment payment = paymentRequest.toEntity(user, order);
+        payment.setPayStatus(PayStatus.PENDING);//승인 대기 -> 콜백 처리이후 승인으로 변경하기.
         paymentRepository.save(payment);
         payment.completePayment();
         order.updatePayStatus(payment.getPayStatus());
@@ -94,6 +97,38 @@ public class PaymentServiceV2 {
         Payment payment = paymentReader.findById(paymentId);
         billgateService.cancelPayment(payment.getTransactionId(), payment.getPayMethod());
         payment.refund();
+    }
+
+    public void partialCancelPayment(Long paymentId, BigDecimal cancelAmount, String cancelReason) {
+        Payment payment = paymentReader.findById(paymentId);
+
+        // Billgate 부분 취소 요청
+        billgateService.partialCancelPayment(payment.getTransactionId(), cancelAmount, payment.getPayMethod(), cancelReason);
+
+        // 부분 취소 후 DB 반영 로직 (원래 결제 금액 업데이트)
+        payment.updateAmountAfterPartialCancel(cancelAmount);
+        paymentRepository.save(payment);
+    }
+
+    @Transactional
+    public void handleCallback(Map<String, String> params) {
+        String transactionId = params.get("TRANSACTION_ID");
+        String responseCode = params.get("RESPONSE_CODE");
+        String responseMessage = params.get("RESPONSE_MESSAGE");
+
+        Payment payment = paymentReader.findByTransactionId(transactionId);
+
+        if (payment == null) {
+            throw new IllegalArgumentException("유효하지 않은 TRANSACTION_ID: " + transactionId);
+        }
+
+        if ("0000".equals(responseCode)) {
+            payment.completePayment();
+        } else {
+            payment.failPayment();
+        }
+
+        paymentRepository.save(payment);
     }
 
     private void handleOrderSuccess(Order order) {

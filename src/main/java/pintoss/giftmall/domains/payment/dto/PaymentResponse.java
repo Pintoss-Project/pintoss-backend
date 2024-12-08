@@ -31,7 +31,6 @@ public class PaymentResponse {
                 .id(payment.getId())
                 .payStatus(payment.getPayStatus())
                 .payMethod(payment.getPayMethod())
-                .payPrice(payment.getPayPrice())
                 .approvedAt(payment.getApprovedAt())
                 .build();
     }
