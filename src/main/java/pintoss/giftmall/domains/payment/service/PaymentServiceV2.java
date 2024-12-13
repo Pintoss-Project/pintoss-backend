@@ -17,7 +17,6 @@ import pintoss.giftmall.domains.order.infra.OrderReader;
 import pintoss.giftmall.domains.order.infra.OrderRepository;
 import pintoss.giftmall.domains.payment.domain.Payment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequest;
-import pintoss.giftmall.domains.payment.dto.PaymentRequestDTO;
 import pintoss.giftmall.domains.payment.dto.PaymentResponse;
 import pintoss.giftmall.domains.payment.infra.PaymentReader;
 import pintoss.giftmall.domains.payment.infra.PaymentRepository;
@@ -68,7 +67,6 @@ public class PaymentServiceV2 {
         Payment payment = paymentRequest.toEntity(user, order);
         payment.setPayStatus(PayStatus.PENDING);//승인 대기 -> 콜백 처리이후 승인으로 변경하기.
         paymentRepository.save(payment);
-        payment.completePayment();
         order.updatePayStatus(payment.getPayStatus());
         handleOrderSuccess(order);
         return PaymentResponse.fromEntity(payment);
@@ -82,6 +80,7 @@ public class PaymentServiceV2 {
         cartRepository.deleteAllByUser(user);
     }
 
+    @Transactional(readOnly = true)
     public PaymentResponse getPayment(Long paymentId) {
         Payment payment = paymentReader.findById(paymentId);
         return PaymentResponse.fromEntity(payment);
@@ -117,6 +116,10 @@ public class PaymentServiceV2 {
         String responseMessage = params.get("RESPONSE_MESSAGE");
 
         Payment payment = paymentReader.findByTransactionId(transactionId);
+        System.out.println(params);
+        System.out.println("transactionId::"+transactionId);
+        System.out.println("responseMessage::"+responseMessage);
+        System.out.println("responseCode::"+responseCode);
 
         if (payment == null) {
             throw new IllegalArgumentException("유효하지 않은 TRANSACTION_ID: " + transactionId);
