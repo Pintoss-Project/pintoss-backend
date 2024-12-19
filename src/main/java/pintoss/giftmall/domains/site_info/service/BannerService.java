@@ -9,8 +9,8 @@ import pintoss.giftmall.domains.site_info.domain.BannerImage;
 import pintoss.giftmall.domains.site_info.dto.BannerRequest;
 import pintoss.giftmall.domains.site_info.dto.BannerResponse;
 import pintoss.giftmall.domains.site_info.infra.BannerImageRepository;
-import pintoss.giftmall.domains.site_info.infra.BannerRepository;
 import pintoss.giftmall.domains.site_info.infra.BannerReader;
+import pintoss.giftmall.domains.site_info.infra.BannerRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,9 +103,11 @@ public class BannerService {
         return BannerResponse.fromEntity(banner, requestDTO.getDesktopImageUrl(), requestDTO.getMobileImageUrl());
     }
 
+
     public void delete(Long id) {
         Banner banner = bannerReader.findById(id);
         bannerImageRepository.deleteByBanner(banner);
         bannerRepository.deleteById(id);
     }
+
 }

@@ -18,4 +18,5 @@ public interface SiteInfoImageRepository extends JpaRepository<SiteInfoImage, Lo
     @Modifying
     @Query("DELETE FROM SiteInfoImage si WHERE si.siteInfo = :siteInfo")
     void deleteBySiteInfo(@Param("siteInfo") SiteInfo siteInfo);
+
 }

@@ -1,7 +1,6 @@
 package pintoss.giftmall.domains.user.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,6 @@ import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.*;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
-@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -51,7 +49,7 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("아이디 또는 비밀번호가 일치하지 않습니다."));
-        log.info(user);
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
@@ -61,10 +59,8 @@ public class AuthService {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
-        log.info("인증::"+authentication);
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
-
         // 리프레시 토큰을 저장
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .userId(user.getUserId()) // 사용자 UUID 설정
@@ -81,46 +77,28 @@ public class AuthService {
     }
 
     @Transactional
-    public void deactivateUser(String token) {
-        Authentication authentication = tokenProvider.getAuthentication(token);
-        String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-        user.deactivate();
-        userRepository.save(user);
-    }
-
-    @Transactional
     public LoginResponse refreshToken(String accessToken, String refreshToken) {
-        log.info(refreshToken);
         // 리프레시 토큰 조회
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new UnauthorizedException("리프레시 토큰이 유효하지 않습니다."));
 
         // 유효한 경우, 새로운 액세스 토큰 생성
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
-        log.info(authentication.getPrincipal());
         String username = ((PrincipalDetails) authentication.getPrincipal()).getUsername();
-        log.info("Username: {}", username); // 로그 추가
 
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         // 새로운 at, rt를 발급
         String newAccessToken = tokenProvider.reissueAccessToken(accessToken);
-        log.info("New Access Token: {}", newAccessToken);
         String newRefreshToken = tokenProvider.generateRefreshToken(authentication, newAccessToken);
-        log.info("New Refresh Token: {}", newRefreshToken);
 
         if (refreshTokenRepository.existsByToken(storedToken.getToken())) {
-            log.info("Deleting existing token: {}", storedToken.getToken());
             refreshTokenRepository.delete(storedToken);
         }
 
         // 새로운 리프레시 토큰을 저장하기 전에 확인
         if (refreshTokenRepository.existsByUserId(user.getUserId())) {
-            log.info("Token already exists, updating existing token: {}", newRefreshToken);
             RefreshToken existingToken = refreshTokenRepository.findByToken(newRefreshToken)
                     .orElseThrow(() -> new NotFoundException("Existing token not found"));
             RefreshToken updatedToken = RefreshToken.builder()
@@ -143,6 +121,17 @@ public class AuthService {
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void deactivateUser(String token) {
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        user.deactivate();
+        userRepository.save(user);
     }
 
     @Transactional

@@ -11,6 +11,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Table(name = "refresh_tokens")
+
 public class RefreshToken {
 
     @Id

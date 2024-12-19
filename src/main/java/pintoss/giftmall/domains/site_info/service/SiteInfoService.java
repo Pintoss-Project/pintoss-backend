@@ -102,6 +102,7 @@ public class SiteInfoService {
                 bottomImage.map(SiteInfoImage::getUrl).orElse(null));
     }
 
+
     private void saveSiteInfoImage(String imageUrl, SiteInfo siteInfo, SiteInfoImageCategory category) {
         SiteInfoImage siteInfoImage = SiteInfoImage.builder()
                 .url(imageUrl)
