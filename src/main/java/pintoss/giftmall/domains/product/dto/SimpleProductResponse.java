@@ -24,7 +24,7 @@ public class SimpleProductResponse {
         this.logoImageUrl = logoImageUrl;
     }
 
-    public static SimpleProductResponse fromEntity(Product product,String logoImageUrl) {
+    public static SimpleProductResponse fromEntity(Product product, String logoImageUrl) {
         return SimpleProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())

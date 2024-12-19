@@ -1,9 +1,6 @@
 package pintoss.giftmall.domains.site_info.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,7 @@ public class BannerImage extends Image {
     @JoinColumn(name = "banner_id")
     private Banner banner;
 
+    @Enumerated(EnumType.STRING)
     private BannerImageCategory category;
 
     @Builder
@@ -33,4 +31,5 @@ public class BannerImage extends Image {
             super.updateUrl(url);
         }
     }
+
 }

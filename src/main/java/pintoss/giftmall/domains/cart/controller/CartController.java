@@ -34,6 +34,7 @@ public class CartController {
         return ApiResponse.ok(cartItemIds);
     }
 
+
     @GetMapping
     public ApiResponse<List<CartResponse>> getCartItems(@RequestParam(name = "userId") @NotNull Long userId) {
         List<CartResponse> cartItems = cartService.getCartItems(userId);
@@ -53,13 +54,13 @@ public class CartController {
     }
 
     @DeleteMapping("/all")
-    public ApiResponse<String> deleteAllCartItems(@RequestParam(name = "userId") @NotNull Long userId) {
+    public ApiResponse<String> deleteAllCartItems(@RequestParam(name= "userId") @NotNull Long userId) {
         cartService.deleteAllCartItems(userId);
         return ApiResponse.ok("모든 장바구니 상품이 삭제되었습니다.");
     }
 
     @PatchMapping("/update-paymethod")
-    public ApiResponse<String> updateCartPayMethod(@RequestParam(name = "userId") @NotNull Long userId, @RequestParam(name = "newPayMethod") @NotNull PayMethod newPayMethod) {
+    public ApiResponse<String> updateCartPayMethod(@RequestParam(name= "userId") @NotNull Long userId, @RequestParam(name= "newPayMethod") @NotNull PayMethod newPayMethod) {
         cartService.updateAllCartItemsToPayMethod(userId, newPayMethod);
         return ApiResponse.ok("장바구니의 결제 수단이 업데이트되었습니다.");
     }

@@ -15,4 +15,5 @@ public class ImageReader {
         return imageRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("이미지 id를 다시 확인해주세요."));
     }
+
 }

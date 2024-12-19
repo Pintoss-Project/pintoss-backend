@@ -1,6 +1,5 @@
 package pintoss.giftmall.domains.product.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -22,7 +21,6 @@ public class ProductRequest {
     private String name;
 
     @NotNull(message = "인기 여부는 필수 항목입니다.")
-    @JsonProperty("isPopular")
     private boolean isPopular = false;
 
     @NotNull(message = "카드 할인 금액은 필수 항목입니다.")
@@ -59,8 +57,7 @@ public class ProductRequest {
 
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String note, String logoImageUrl,
-                          int index) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl, String note, int index) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -70,8 +67,8 @@ public class ProductRequest {
         this.description = description;
         this.publisher = publisher;
         this.category = category;
-        this.note = note;
         this.logoImageUrl = logoImageUrl;
+        this.note = note;
         this.index = index;
     }
 
@@ -86,8 +83,8 @@ public class ProductRequest {
                 .description(description)
                 .publisher(publisher)
                 .category(category)
-                .note(note)//추가한 부분.
+                .note(note)
+                .index(index)
                 .build();
     }
-
 }

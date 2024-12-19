@@ -53,9 +53,6 @@ public class ProductResponse {
         this.priceCategories = priceCategories;
     }
 
-    public ProductResponse(Product product) {
-    }
-
     public static ProductResponse fromEntity(Product product, List<PriceCategory> priceCategoryList, String logoImageUrl) {
         List<PriceCategoryResponse> priceCategoryResponses = priceCategoryList.stream()
                 .map(PriceCategoryResponse::fromEntity)
@@ -80,4 +77,5 @@ public class ProductResponse {
                 .priceCategories(priceCategoryResponses)
                 .build();
     }
+
 }

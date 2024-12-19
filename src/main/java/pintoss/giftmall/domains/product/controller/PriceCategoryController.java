@@ -27,7 +27,7 @@ public class PriceCategoryController {
     }
 
     @GetMapping("/{id}/category/{category_id}")
-    public ApiResponse<PriceCategoryResponse> getPriceCategoryById(@PathVariable(name = "id") Long productId, @PathVariable(name = "category_id") Long categoryId) {
+    public ApiResponse<PriceCategoryResponse> getPriceCategoryById(@PathVariable(name = "id") Long productId, @PathVariable("category_id") Long categoryId) {
         PriceCategoryResponse priceCategory = priceCategoryService.findByIdAndProductId(categoryId, productId);
         return ApiResponse.ok(priceCategory);
     }

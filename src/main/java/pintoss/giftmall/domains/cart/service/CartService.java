@@ -18,6 +18,7 @@ import pintoss.giftmall.domains.product.infra.ProductReader;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.infra.UserReader;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,13 +40,11 @@ public class CartService {
         PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
-        // CartResponse 대신 Cart를 반환하도록 메서드를 호출합니다.
-        Optional<CartResponse> existingCartOptional = cartRepository
-                .findByUserAndProductAndPriceCategory(user, product, priceCategory);
+        Optional<CartResponse> existingCartOptional = cartRepository.findByUserAndProductAndPriceCategory(user, product, priceCategory);
 
         Cart cart;
         if (existingCartOptional.isPresent()) {
-            cart = existingCartOptional.get().toEntity(existingCartOptional.get(),productReader, priceCategoryReader); // CartResponse를 Cart로 변환
+            cart = existingCartOptional.get().toEntity(existingCartOptional.get(),productReader,priceCategoryReader);
             cart.updateQuantity(cart.getQuantity() + requestDTO.getQuantity());
         } else {
             cart = requestDTO.toEntity(product, priceCategory, user);
@@ -54,7 +53,6 @@ public class CartService {
 
         return cart.getId();
     }
-
 
     @Transactional(readOnly = true)
     public List<CartResponse> getCartItems(Long userId) {
@@ -73,7 +71,6 @@ public class CartService {
                 })
                 .collect(Collectors.toList());
     }
-
 
     public void updateCartItem(Long cartItemId, int quantity) {
         Cart cart = cartReader.findById(cartItemId);
@@ -100,6 +97,5 @@ public class CartService {
             cart.updatePayMethod(newPayMethod);
         }
     }
-
 
 }

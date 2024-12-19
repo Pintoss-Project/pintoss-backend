@@ -22,5 +22,4 @@ public class PaymentRequestDTO {
     private PayStatus payStatus;
     private BigDecimal payPrice;
     private String amount;
-    private String checksum;
 }

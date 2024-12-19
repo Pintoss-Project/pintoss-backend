@@ -6,7 +6,10 @@ import com.galaxia.api.crypto.GalaxiaCipher;
 import com.galaxia.api.crypto.Seed;
 import com.galaxia.api.merchant.Message;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.payment.domain.Refund;
 import pintoss.giftmall.domains.payment.domain.RenewPayment;
 import pintoss.giftmall.domains.payment.dto.PaymentRequestDTO;
@@ -16,9 +19,11 @@ import pintoss.giftmall.domains.payment.infra.RenewPaymentRepository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 @Service
 @AllArgsConstructor
 public class RenewPaymentService {
@@ -29,43 +34,75 @@ public class RenewPaymentService {
 
     private final RefundRepository refundRepository;
 
-    // °áÁ¦ ÀúÀå
+    //ê²°ì œ ìŠ¹ì¸ ë° ì €ì¥
+    @Transactional(noRollbackFor = Exception.class)
+    public RenewPayment approveAndSavePayment(PaymentRequestDTO dto) throws Exception {
+        // authInfo ìƒì„±
+        Map<String, String> authInfo = new HashMap<>();
+        authInfo.put("serviceId", dto.getServiceId());
+        authInfo.put("serviceCode", dto.getServiceCode());
+        authInfo.put("orderId", dto.getOrderId());
+        authInfo.put("amount", dto.getAmount());
+
+        // ê²°ì œ ìŠ¹ì¸ ìš”ì²­
+        Message responseMsg = MessageAuthProcess(authInfo);
+        log.info("ê²°ì œ ìŠ¹ì¸ ê²°ê³¼::"+responseMsg);
+
+        // ìŠ¹ì¸ ê²°ê³¼ í™•ì¸
+        if ("0000".equals(responseMsg.get("1002"))) {
+            // ê²°ì œ ìŠ¹ì¸ ì„±ê³µ ì‹œ RenewPayment ì €ì¥
+            RenewPayment payment = RenewPayment.builder()
+                    .serviceId(dto.getServiceId())
+                    .orderId(dto.getOrderId())
+                    .orderDate(dto.getOrderDate())
+                    .transactionId(responseMsg.get("1001")) // ê°¤ëŸ­ì‹œì•„ ì‘ë‹µì—ì„œ íŠ¸ëœì­ì…˜ ID ì„¤ì •
+                    .payMethod(dto.getPayMethod())
+                    .payPrice(dto.getPayPrice())
+                    .payStatus(PayStatus.COMPLETED) // ê²°ì œ ìŠ¹ì¸ ìƒíƒœ ì„¤ì •
+                    .build();
+            return renewPaymentRepository.save(payment);
+        } else {
+            throw new IllegalStateException("ê²°ì œ ìŠ¹ì¸ ì‹¤íŒ¨: " + responseMsg.get("1003"));
+        }
+    }
+
+    // ê²°ì œ ì €ì¥
     public RenewPayment savePayment(PaymentRequestDTO dto) {
         RenewPayment payment = RenewPayment.builder()
                 .serviceId(dto.getServiceId())
                 .orderId(dto.getOrderId())
                 .orderDate(dto.getOrderDate())
-                .transactionId(dto.getTransactionId())
+                .itemName(dto.getItemName())
                 .payMethod(dto.getPayMethod())
                 .payPrice(dto.getPayPrice())
-                .payStatus(dto.getPayStatus())
+                .payStatus(PayStatus.COMPLETED)
+                .approvedAt(LocalDateTime.now())
                 .build();
         return renewPaymentRepository.save(payment);
     }
 
-    // ½ÂÀÎ ¿äÃ»
+    // ê²°ì œ ìŠ¹ì¸
     public Message MessageAuthProcess(Map<String,String> authInfo) throws Exception {
         String serviceId = authInfo.get("serviceId");
         String serviceCode = authInfo.get("serviceCode");
         String msg = authInfo.get("message");
+        String orderId = authInfo.get("orderId");
+        String amount = authInfo.get("amount");
 
-        //¸Ş½ÃÁö Length Á¦°Å
-        byte[] b = new byte[msg.getBytes().length - 4] ;
-        System.arraycopy(msg.getBytes(), 4, b, 0, b.length);
+        // Message ê°ì²´ ìƒì„± (ì•”í˜¸í™” ì œì™¸)
+        Message requestMsg = new Message();
+        requestMsg.put("SERVICE_ID", serviceId);
+        requestMsg.put("ORDER_ID", orderId);
+        requestMsg.put("AMOUNT", amount);
+        requestMsg.put("SERVICE_CODE", serviceCode);
 
-        Message requestMsg = new Message(b, getCipher(serviceId,serviceCode)) ;
-
-        Message responseMsg = null ;
-
+        // ê°¤ëŸ­ì‹œì•„ ServiceBroker í˜¸ì¶œ
         ServiceBroker sb = new ServiceBroker(getConfigFilePath(), serviceCode);
 
-        responseMsg = sb.invoke(requestMsg);
-
-        return responseMsg;
+        return sb.invoke(requestMsg);
     }
 
-
-    // ºÎºĞ È¯ºÒ Ã³¸®
+    // ë¶€ë¶„ í™˜ë¶ˆ
     public Refund processPartialRefund(RefundRequestDTO dto) throws Exception {
         RenewPayment payment = findPaymentByTransactionId(dto.getTransactionId());
 
@@ -75,7 +112,7 @@ public class RenewPaymentService {
         cancelInfo.put("orderId", payment.getOrderId());
         cancelInfo.put("orderDate", payment.getOrderDate().toString());
         cancelInfo.put("transactionId", payment.getTransactionId());
-        cancelInfo.put("command", "9010"); // ºÎºĞ È¯ºÒ ¸í·É¾î
+        cancelInfo.put("command", "9010"); // ë¶€ë¶„ í™˜ë¶ˆì²˜ë¦¬
         cancelInfo.put("cancelType", dto.getCancelType());
         cancelInfo.put("cancelAmount", dto.getCancelAmount().toString());
 
@@ -84,7 +121,7 @@ public class RenewPaymentService {
         return saveRefund(dto, payment, responseMsg);
     }
 
-    // ÀüÃ¼ È¯ºÒ Ã³¸®
+    // ì „ì²´ í™˜ë¶ˆì²˜ë¦¬
     public Refund processFullRefund(RefundRequestDTO dto) throws Exception {
         RenewPayment payment = findPaymentByTransactionId(dto.getTransactionId());
 
@@ -94,14 +131,14 @@ public class RenewPaymentService {
         cancelInfo.put("orderId", payment.getOrderId());
         cancelInfo.put("orderDate", payment.getOrderDate().toString());
         cancelInfo.put("transactionId", payment.getTransactionId());
-        cancelInfo.put("command", "9200"); // ÀüÃ¼ È¯ºÒ ¸í·É¾î
+        cancelInfo.put("command", "9200"); // ì „ì²´ í™˜ë¶ˆì²˜ë¦¬.
 
         Message responseMsg = cancelProcess(cancelInfo);
 
         return saveRefund(dto, payment, responseMsg);
     }
 
-    // È¯ºÒ ÀúÀå
+    // í™˜ë¶ˆ ì €ì¥
     private Refund saveRefund(RefundRequestDTO dto, RenewPayment payment, Message responseMsg) {
         Refund refund = Refund.builder()
                 .transactionId(payment.getTransactionId())
@@ -113,23 +150,23 @@ public class RenewPaymentService {
         return refundRepository.save(refund);
     }
 
-    // °áÁ¦ µ¥ÀÌÅÍ Á¶È¸
+    //ê²°ì œ ì •ë³´ ì¡°íšŒ
     private RenewPayment findPaymentByTransactionId(String transactionId) {
         return renewPaymentRepository.findByTransactionId(transactionId)
-                .orElseThrow(() -> new IllegalArgumentException("°áÁ¦ µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù."));
+                .orElseThrow(() -> new IllegalArgumentException("ê²°ì œ ì •ë³´ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.."));
     }
 
-    // ºÎºĞ È¯ºÒ Àü¹® Åë½Å
+    //ë¶€ë¶„ í™˜ë¶ˆ ì²˜ë¦¬
     private Message partCancelProcess(Map<String, String> cancelInfo) throws Exception {
         return invokeServiceBroker(cancelInfo);
     }
 
-    // ÀüÃ¼ È¯ºÒ Àü¹® Åë½Å
+    //ì „ì²´ í™˜ë¶ˆ ì²˜ë¦¬
     private Message cancelProcess(Map<String, String> cancelInfo) throws Exception {
         return invokeServiceBroker(cancelInfo);
     }
 
-    // ServiceBroker È£Ãâ ·ÎÁ÷
+    // ServiceBroker í˜¸ì¶œ
     private Message invokeServiceBroker(Map<String, String> cancelInfo) throws Exception {
         String confPath = getConfigFilePath();
 
@@ -157,23 +194,25 @@ public class RenewPaymentService {
         return sb.invoke(requestMsg);
     }
 
-    // ¼³Á¤ ÆÄÀÏ °æ·Î
+    //ì„¤ì • íŒŒì¼
     private String getConfigFilePath() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("config.ini").getFile());
         return file.getAbsolutePath();
     }
 
-    // ¼³Á¤ ÆÄÀÏ À¯È¿¼º °ËÁõ
+    //ì„¤ì • íŒŒì¼ ìœ íš¨ì„± ê²€ì¦
     private GalaxiaCipher getCipher(String serviceId, String serviceCode) throws Exception {
         String confPath = getConfigFilePath();
+        log.info(confPath);
         if (!new File(confPath).exists()) {
             throw new FileNotFoundException("Configuration file not found at: " + confPath);
         }
         ConfigInfo config = new ConfigInfo(confPath, serviceCode);
+        log.info(config);
         GalaxiaCipher cipher = new Seed();
-        cipher.setKey(config.getKey().getBytes());
-        cipher.setIV(config.getIv().getBytes());
+        cipher.setKey("QkZJRlBDRTI4T0c1OUtBMw==".getBytes());
+        cipher.setIV("PRJ59Q2GHPT844TQ".getBytes());
         return cipher;
     }
 }

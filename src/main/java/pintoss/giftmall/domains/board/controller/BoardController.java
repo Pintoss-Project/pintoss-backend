@@ -1,5 +1,6 @@
 package pintoss.giftmall.domains.board.controller;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<BoardResponse> getBoardById(@PathVariable(name="id") Long id) {
+    public ApiResponse<BoardResponse> getBoardById(@PathVariable(name = "id") Long id) {
         BoardResponse board = boardService.findById(id);
         return ApiResponse.ok(board);
     }

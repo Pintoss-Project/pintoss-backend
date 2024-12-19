@@ -24,13 +24,13 @@ public class BoardAdminController {
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<Long> updateBoard(@PathVariable(name="id") Long id, @RequestBody @Valid BoardRequest requestDTO) {
+    public ApiResponse<Long> updateBoard(@PathVariable(name = "id") Long id, @RequestBody @Valid BoardRequest requestDTO) {
         Long boardId = boardService.update(id, requestDTO);
         return ApiResponse.ok(boardId);
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBoard(@PathVariable(name="id") Long id) {
+    public ApiResponse<String> deleteBoard(@PathVariable(name = "id") Long id) {
         boardService.delete(id);
         return ApiResponse.ok("게시글이 삭제되었습니다.");
     }

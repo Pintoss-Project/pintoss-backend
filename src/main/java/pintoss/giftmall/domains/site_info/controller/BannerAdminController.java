@@ -31,7 +31,7 @@ public class BannerAdminController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteBanner(@PathVariable(name ="id") Long id) {
+    public ApiResponse<String> deleteBanner(@PathVariable(name = "id") Long id) {
         bannerService.delete(id);
         return ApiResponse.ok("배너 삭제 완료");
     }

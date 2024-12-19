@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pintoss.giftmall.common.enums.BoardType;
+import pintoss.giftmall.common.exceptions.client.FieldMissingException;
 import pintoss.giftmall.domains.board.domain.Board;
 import pintoss.giftmall.domains.board.domain.BoardImage;
 import pintoss.giftmall.domains.board.dto.BoardRequest;
@@ -11,6 +12,7 @@ import pintoss.giftmall.domains.board.dto.BoardResponse;
 import pintoss.giftmall.domains.board.infra.BoardImageRepository;
 import pintoss.giftmall.domains.board.infra.BoardRepository;
 import pintoss.giftmall.domains.board.infra.BoardReader;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,18 +27,20 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardResponse> findAllByType(BoardType type) {
-       return boardRepository.findAllByType(type);
+        if (type == null) {
+            throw new FieldMissingException("type");
+        }
+
+        return boardRepository.findAllByType(type);
     }
 
     @Transactional(readOnly = true)
     public BoardResponse findById(Long id) {
         Board board = boardReader.findById(id);
-        List<String> imageUrls = boardImageRepository
-                .findAllByBoardId(board.getId())
-                .stream()
+        List<String> imageUrls = boardImageRepository.findAllByBoardId(board.getId()).stream()
                 .map(BoardImage::getUrl)
                 .collect(Collectors.toList());
-        return BoardResponse.fromEntity(board,imageUrls);
+        return BoardResponse.fromEntity(board, imageUrls);
     }
 
     public Long create(BoardRequest requestDTO) {
@@ -47,13 +51,11 @@ public class BoardService {
             saveBoardImages(requestDTO.getImageUrls(), board);
         }
 
-
         return board.getId();
     }
 
     public Long update(Long id, BoardRequest requestDTO) {
         Board board = boardReader.findById(id);
-
         board.update(requestDTO);
 
         List<BoardImage> existingImages = boardImageRepository.findAllByBoardId(board.getId());

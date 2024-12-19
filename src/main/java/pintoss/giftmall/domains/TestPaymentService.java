@@ -65,7 +65,6 @@ public class TestPaymentService {
                 .payMethod(dto.getPayMethod())
                 .payPrice(dto.getPayPrice())
                 .payStatus(dto.getPayStatus())
-                .checksum(dto.getChecksum())
                 .build();
         return renewPaymentRepository.save(renewPayment);
     }

@@ -3,12 +3,10 @@ package pintoss.giftmall.domains.image.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import pintoss.giftmall.common.exceptions.server.ImageUploadException;
 import pintoss.giftmall.domains.image.domain.Image;
+import pintoss.giftmall.domains.image.dto.ImageResponse;
 import pintoss.giftmall.domains.image.infra.ImageReader;
 import pintoss.giftmall.domains.image.infra.ImageRepository;
-import pintoss.giftmall.domains.image.dto.ImageResponse;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,4 +13,5 @@ public interface BoardImageRepository extends JpaRepository<BoardImage, Long> {
     List<BoardImage> findByBoard(Board board);
 
     void deleteByBoard(Board board);
+
 }
