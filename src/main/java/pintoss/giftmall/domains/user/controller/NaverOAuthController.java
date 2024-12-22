@@ -3,13 +3,14 @@ package pintoss.giftmall.domains.user.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.user.domain.User;
@@ -22,7 +23,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,7 +37,7 @@ public class NaverOAuthController {
 
     private String clientId = "ntP6_ogtZLkuD6J774IT";
 
-    private String redirectUri = "http://localhost:3000/my-page";
+    private String redirectUri = "https://pintossmall2.com/api/oauth/naver/callback";
 
     private String clientSecret = "9cIj0Lo1b_";
 
@@ -54,16 +54,13 @@ public class NaverOAuthController {
         response.sendRedirect(naverLoginUrl);
     }
 
-    @PostMapping("/callback")
-    public ApiResponse<String> connectNaver(@RequestBody NaverCallbackRequest request) {
-        String code = request.getCode();
-        String state = request.getState();
-
-        String accessToken = naverOAuthService.getAccessToken(code, state);
+    @GetMapping("/callback")
+    public ApiResponse<String> connectNaver(@ModelAttribute NaverCallbackRequest request) {
+        String accessToken = naverOAuthService.getAccessToken(request.getCode(),request.getState());
 
         NaverUserResponse naverUser = naverOAuthService.getUserInfo(accessToken);
 
-        Optional<User> userOpt = userRepository.findByEmail(naverUser.getEmail());
+        Optional<User> userOpt = userRepository.findByEmail(naverUser.getResponse().getEmail());
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
