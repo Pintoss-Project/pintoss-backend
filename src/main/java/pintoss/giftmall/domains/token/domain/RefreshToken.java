@@ -19,7 +19,7 @@ public class RefreshToken {
     @Column(name = "refresh_tokens_id")
     private Long id;
 
-    @Column(name = "users_uuid", columnDefinition = "VARCHAR(36)", unique = true)
+    @Column(name = "users_uuid", columnDefinition = "BINARY(50)", unique = true)
     private UUID userId;
 
     @Column(name = "token", nullable = false)

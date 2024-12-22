@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.responseobj.ApiResponse;
 import pintoss.giftmall.domains.user.dto.*;
 import pintoss.giftmall.domains.user.service.AuthService;
@@ -19,7 +18,6 @@ import pintoss.giftmall.domains.user.service.AuthService;
 public class AuthController {
 
     private final AuthService authService;
-    private final TokenProvider tokenProvider;
 
     @PostMapping("/register")
     public ApiResponse<Void> register(@RequestBody @Valid RegisterRequest request) {
@@ -30,6 +28,12 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         LoginResponse response = authService.login(request);
+        return ApiResponse.ok(response);
+    }
+
+    @PostMapping("/reissue")
+    public ApiResponse<?> reissue(@RequestBody RequestToken requestToken) {
+        LoginResponse response = authService.refreshToken(requestToken.getAccessToken(), requestToken.getRefreshToken());
         return ApiResponse.ok(response);
     }
 

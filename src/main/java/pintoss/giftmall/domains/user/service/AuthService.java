@@ -10,8 +10,11 @@ import pintoss.giftmall.common.enums.UserRole;
 import pintoss.giftmall.common.exceptions.client.ConflictException;
 import pintoss.giftmall.common.exceptions.client.NotFoundException;
 import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
+import pintoss.giftmall.common.oauth.PrincipalDetails;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.utils.MailService;
+import pintoss.giftmall.domains.token.domain.RefreshToken;
+import pintoss.giftmall.domains.token.infra.RefreshTokenRepository;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.LoginRequest;
 import pintoss.giftmall.domains.user.dto.LoginResponse;
@@ -27,11 +30,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MailService mailService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public void register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ConflictException("중복된 이메일이 존재합니다.");
+        }
+
+        if (checkPhoneDuplicate(request.getPhone())) {
+            throw new ConflictException("중복된 전화번호가 존재합니다.");
         }
 
         User user = request.toEntity(passwordEncoder.encode(request.getPassword()));
@@ -54,11 +62,65 @@ public class AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
+        // 리프레시 토큰을 저장
+        RefreshToken refreshTokenEntity = RefreshToken.builder()
+                .userId(user.getUserId()) // 사용자 UUID 설정
+                .token(refreshToken) // 생성된 리프레시 토큰 설정
+                .build();
+
+        refreshTokenRepository.save(refreshTokenEntity); // 저장
 
         return LoginResponse.builder()
                 .grantType("bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Transactional
+    public LoginResponse refreshToken(String accessToken, String refreshToken) {
+        // 리프레시 토큰 조회
+        RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new UnauthorizedException("리프레시 토큰이 유효하지 않습니다."));
+
+        // 유효한 경우, 새로운 액세스 토큰 생성
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String username = ((PrincipalDetails) authentication.getPrincipal()).getUsername();
+
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        // 새로운 at, rt를 발급
+        String newAccessToken = tokenProvider.reissueAccessToken(accessToken);
+        String newRefreshToken = tokenProvider.generateRefreshToken(authentication, newAccessToken);
+
+        if (refreshTokenRepository.existsByToken(storedToken.getToken())) {
+            refreshTokenRepository.delete(storedToken);
+        }
+
+        // 새로운 리프레시 토큰을 저장하기 전에 확인
+        if (refreshTokenRepository.existsByUserId(user.getUserId())) {
+            RefreshToken existingToken = refreshTokenRepository.findByToken(newRefreshToken)
+                    .orElseThrow(() -> new NotFoundException("Existing token not found"));
+            RefreshToken updatedToken = RefreshToken.builder()
+                    .token(existingToken.getToken()) // 기존 토큰 유지
+                    .userId(user.getUserId()) // 새로운 userId로 업데이트
+                    .build();
+            refreshTokenRepository.save(updatedToken);
+        } else {
+            // 새로운 리프레시 토큰을 저장
+            RefreshToken refreshToken1 = RefreshToken
+                    .builder()
+                    .token(newRefreshToken)
+                    .userId(user.getUserId())
+                    .build();
+            refreshTokenRepository.save(refreshToken1);
+        }
+        return LoginResponse
+                .builder()
+                .grantType("bearer")
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .build();
     }
 

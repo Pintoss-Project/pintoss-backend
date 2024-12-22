@@ -6,8 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pintoss.giftmall.common.enums.UserRole;
+import pintoss.giftmall.domains.payment.domain.Payment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -44,8 +48,14 @@ public class User {
     private boolean isNaverConnected = false;
     private boolean isKakaoConnected = false;
 
+    @Column(name = "user_uuid", unique = true, nullable = false, columnDefinition = "BINARY(50)")
+    private UUID userId; // 추가된 UUID 필드
+
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String name, String phone, UserRole role, String inflow) {
@@ -89,4 +99,8 @@ public class User {
         this.password = newPassword;
     }
 
+    @PrePersist
+    public void prePersist(){
+        this.userId = UUID.randomUUID();
+    }
 }

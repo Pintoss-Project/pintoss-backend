@@ -44,6 +44,9 @@ public class Payment {
     @Column
     private String transactionId;
 
+    @Column(length = 255)
+    private String returnUrl;
+
     @CreatedDate
     private LocalDateTime approvedAt;
 
@@ -56,12 +59,13 @@ public class Payment {
     private User user;
 
     @Builder
-    public Payment(PayStatus payStatus, PayMethod payMethod, String transactionId, BigDecimal amount, BigDecimal remainingAmount, User user, Order order) {
+    public Payment(PayStatus payStatus, PayMethod payMethod, String transactionId, BigDecimal amount, BigDecimal remainingAmount, String returnUrl, User user, Order order) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
         this.transactionId = transactionId;
         this.amount = amount;
         this.remainingAmount = amount;
+        this.returnUrl = returnUrl;
         this.user = user;
         this.order = order;
     }
