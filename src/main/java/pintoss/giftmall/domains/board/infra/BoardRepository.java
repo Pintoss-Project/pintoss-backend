@@ -6,7 +6,7 @@ import pintoss.giftmall.domains.board.domain.Board;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, CustomBoardRepository {
 
     List<Board> findByType(BoardType type);
 

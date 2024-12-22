@@ -31,14 +31,7 @@ public class BoardService {
             throw new FieldMissingException("type");
         }
 
-        return boardRepository.findByType(type).stream()
-                .map(board -> {
-                    List<String> imageUrls = boardImageRepository.findAllByBoardId(board.getId()).stream()
-                            .map(BoardImage::getUrl)
-                            .collect(Collectors.toList());
-                    return BoardResponse.fromEntity(board, imageUrls);
-                })
-                .collect(Collectors.toList());
+        return boardRepository.findAllByType(type);
     }
 
     @Transactional(readOnly = true)
