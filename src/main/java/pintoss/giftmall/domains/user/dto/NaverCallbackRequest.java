@@ -2,8 +2,10 @@ package pintoss.giftmall.domains.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class NaverCallbackRequest {
 
     @NotBlank(message = "코드는은 필수 항목입니다.")

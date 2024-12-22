@@ -16,7 +16,7 @@ spring:
           naver:
             client-id: ntP6_ogtZLkuD6J774IT
             client-secret: 9cIj0Lo1b_
-            redirect-uri: https://pintossmall2.com/login/oauth2/code/naver
+            redirect-uri: https://pintossmall2.com/api/oauth/naver/callback
             authorization-grant-type: authorization_code
             scope:
               - email
