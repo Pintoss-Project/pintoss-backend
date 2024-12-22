@@ -50,9 +50,14 @@ public class ProductRequest {
     @NotBlank(message = "로고 이미지는 필수 항목입니다.")
     private String logoImageUrl;
 
+    @NotBlank(message = "상품 유의사항은 필수 항목입니다.")
+    private String note;
+    //상품권의 인덱스
+    private int index;
+
     @Builder
     public ProductRequest(String name, boolean isPopular, BigDecimal cardDiscount, BigDecimal phoneDiscount,
-                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl) {
+                          String homePage, String csCenter, String description, String publisher, ProductCategory category, String logoImageUrl, String note, int index) {
         this.name = name;
         this.isPopular = isPopular;
         this.cardDiscount = cardDiscount;
@@ -63,6 +68,8 @@ public class ProductRequest {
         this.publisher = publisher;
         this.category = category;
         this.logoImageUrl = logoImageUrl;
+        this.note = note;
+        this.index = index;
     }
 
     public Product toEntity() {
@@ -76,6 +83,8 @@ public class ProductRequest {
                 .description(description)
                 .publisher(publisher)
                 .category(category)
+                .note(note)
+                .index(index)
                 .build();
     }
 }
