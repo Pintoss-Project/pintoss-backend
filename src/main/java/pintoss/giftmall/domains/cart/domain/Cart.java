@@ -50,7 +50,8 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(Product product, PriceCategory priceCategory, User user, int quantity, PayMethod payMethod) {
+    public Cart(Long id, Product product, PriceCategory priceCategory, User user, int quantity, PayMethod payMethod) {
+        this.id = id;
         this.product = product;
         this.priceCategory = priceCategory;
         this.user = user;

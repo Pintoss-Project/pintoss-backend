@@ -40,11 +40,11 @@ public class CartService {
         PriceCategory priceCategory = priceCategoryReader.findById(requestDTO.getPriceCategoryId());
         User user = userReader.findById(userId);
 
-        Optional<Cart> existingCartOptional = cartRepository.findByUserAndProductAndPriceCategory(user, product, priceCategory);
+        Optional<CartResponse> existingCartOptional = cartRepository.findByUserAndProductAndPriceCategory(user, product, priceCategory);
 
         Cart cart;
         if (existingCartOptional.isPresent()) {
-            cart = existingCartOptional.get();
+            cart = existingCartOptional.get().toEntity(existingCartOptional.get(),productReader,priceCategoryReader);
             cart.updateQuantity(cart.getQuantity() + requestDTO.getQuantity());
         } else {
             cart = requestDTO.toEntity(product, priceCategory, user);
