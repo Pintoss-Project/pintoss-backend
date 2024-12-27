@@ -53,7 +53,8 @@ public class PaymentServiceV2 {
             billgateService.approvePayment(
                     paymentRequest.getTransactionId(),
                     paymentRequest.getAmount(),
-                    paymentRequest.getPayMethod()
+                    paymentRequest.getPayMethod(),
+                    paymentRequest.getPayMessage()
             );
         } catch (HttpClientErrorException e) {
             // 결제 실패 처리

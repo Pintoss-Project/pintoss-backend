@@ -27,6 +27,9 @@ public class PaymentRequest {
 
     //거래 아이디
     private String transactionId;
+    //거래 응답값
+    private String payMessage;
+
     //가격 합계
     private BigDecimal amount;
 
@@ -36,13 +39,14 @@ public class PaymentRequest {
     private BigDecimal remainingAmount;
 
     @Builder
-    public PaymentRequest(PayStatus payStatus, PayMethod payMethod, int payPrice,String transactionId,BigDecimal amount,Long userId,Long orderId,
+    public PaymentRequest(PayStatus payStatus, PayMethod payMethod, int payPrice,String transactionId,BigDecimal amount, String payMessage, Long userId,Long orderId,
                           BigDecimal remainingAmount) {
         this.payStatus = payStatus;
         this.payMethod = payMethod;
         this.payPrice = payPrice;
         this.transactionId = transactionId;
         this.amount = amount;
+        this.payMessage = payMessage;
         this.orderId = orderId;
         this.userId = userId;
         this.remainingAmount = remainingAmount;
@@ -54,6 +58,7 @@ public class PaymentRequest {
                 .payMethod(this.payMethod)
                 .amount(this.amount)
                 .transactionId(this.transactionId)
+                .payMessage(this.payMessage)
                 .order(order)
                 .user(user)
                 .build();

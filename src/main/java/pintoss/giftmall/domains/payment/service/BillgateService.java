@@ -55,12 +55,12 @@ public class BillgateService {
     }
 
     //결제 승인
-    public ResponseEntity<String> approvePayment(String transactionId, BigDecimal amount, PayMethod payMethod) {
+    public ResponseEntity<String> approvePayment(String transactionId, BigDecimal amount, PayMethod payMethod, String payMessage) {
         String serviceCode = getServiceCode(payMethod);
         String url =  BASE_URL + "approve.jsp";
 
         MultiValueMap<String, String> params = createCommonParams(transactionId, amount, serviceCode);
-
+        params.add("PAY_MESSAGE",payMessage); // PAY_MESSAGE 추가.
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, createHeaders());
         System.out.println("Approve Payment Request: " + params);
         return restTemplate.postForEntity(url, request, String.class);
