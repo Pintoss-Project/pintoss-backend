@@ -49,15 +49,15 @@ public class PaymentRestController {
     }
 
     // 결제 결과 콜백 처리(승인 + 취소)
-    @PostMapping("/callback")
-    public ResponseEntity<String> handlePaymentCallback(@RequestParam Map<String, String> params) {
-        try {
-            paymentService.handleCallback(params);
-            return ResponseEntity.ok("콜백 처리 성공");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("콜백 처리 실패: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/callback")
+//    public ResponseEntity<String> handlePaymentCallback(@RequestParam Map<String, String> params) {
+//        try {
+//            paymentService.handleCallback(params);
+//            return ResponseEntity.ok("콜백 처리 성공");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("콜백 처리 실패: " + e.getMessage());
+//        }
+//    }
 
     // 결제 결과 조회(transactionId로 조회)
     @GetMapping("/{Id}")

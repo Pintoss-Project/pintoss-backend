@@ -74,8 +74,9 @@ public class Payment {
         this.order = order;
     }
 
-    public void completePayment() {
+    public boolean completePayment() {
         this.payStatus = PayStatus.COMPLETED;
+        return false;
     }
 
     public void failPayment() {

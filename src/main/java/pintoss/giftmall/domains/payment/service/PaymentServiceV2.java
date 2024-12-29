@@ -49,6 +49,7 @@ public class PaymentServiceV2 {
         Order order = orderReader.findById(orderId);
 
         // Billgate 결제 승인 요청
+        Payment payment = null;
         try {
             billgateService.approvePayment(
                     paymentRequest.getTransactionId(),
@@ -56,6 +57,13 @@ public class PaymentServiceV2 {
                     paymentRequest.getPayMethod(),
                     paymentRequest.getPayMessage()
             );
+
+            payment = paymentRequest.toEntity(user, order);
+            payment.setPayStatus(PayStatus.PENDING); // 승인 대기 상태
+            paymentRepository.save(payment);
+            //결제 콜백 처리.
+            handleCallback(payment.getTransactionId(), "0000", "Payment Approved", payment);
+
         } catch (HttpClientErrorException e) {
             // 결제 실패 처리
             Payment failedPayment = paymentRequest.toEntity(user, order);
@@ -65,9 +73,6 @@ public class PaymentServiceV2 {
         }
 
         // 결제 성공 처리
-        Payment payment = paymentRequest.toEntity(user, order);
-        payment.setPayStatus(PayStatus.PENDING);//승인 대기 -> 콜백 처리이후 승인으로 변경하기.
-        paymentRepository.save(payment);
         order.updatePayStatus(payment.getPayStatus());
         handleOrderSuccess(order);
         return PaymentResponse.fromEntity(payment);
@@ -90,6 +95,7 @@ public class PaymentServiceV2 {
     public void cancelPayment(Long paymentId) {
         Payment payment = paymentReader.findById(paymentId);
         billgateService.cancelPayment(payment.getTransactionId(), payment.getPayMethod());
+        //승인 취소시 콜백이 필요.
         paymentRepository.delete(payment);
     }
 
@@ -110,29 +116,47 @@ public class PaymentServiceV2 {
         paymentRepository.save(payment);
     }
 
+//    @Transactional
+//    public void handleCallback(Map<String, String> params) {
+//        String transactionId = params.get("TRANSACTION_ID");
+//        String responseCode = params.get("RESPONSE_CODE");
+//        String responseMessage = params.get("RESPONSE_MESSAGE");
+//
+//        Payment payment = paymentReader.findByTransactionId(transactionId);
+//        System.out.println(params);
+//        System.out.println("transactionId::"+transactionId);
+//        System.out.println("responseMessage::"+responseMessage);
+//        System.out.println("responseCode::"+responseCode);
+//
+//        if (payment == null) {
+//            throw new IllegalArgumentException("유효하지 않은 TRANSACTION_ID: " + transactionId);
+//        }
+//
+//        if ("0000".equals(responseCode)) {
+//            payment.completePayment();
+//        } else {
+//            payment.failPayment();
+//        }
+//
+//        paymentRepository.save(payment);
+//    }
+
     @Transactional
-    public void handleCallback(Map<String, String> params) {
-        String transactionId = params.get("TRANSACTION_ID");
-        String responseCode = params.get("RESPONSE_CODE");
-        String responseMessage = params.get("RESPONSE_MESSAGE");
-
-        Payment payment = paymentReader.findByTransactionId(transactionId);
-        System.out.println(params);
-        System.out.println("transactionId::"+transactionId);
-        System.out.println("responseMessage::"+responseMessage);
-        System.out.println("responseCode::"+responseCode);
-
-        if (payment == null) {
-            throw new IllegalArgumentException("유효하지 않은 TRANSACTION_ID: " + transactionId);
-        }
-
+    public void handleCallback(String transactionId, String responseCode, String responseMessage, Payment payment) {
+        // 결제 상태 갱신
         if ("0000".equals(responseCode)) {
-            payment.completePayment();
+            payment.completePayment(); // 결제 완료
         } else {
-            payment.failPayment();
+            payment.failPayment(); // 결제 실패
         }
 
+        // 결제 정보 저장
         paymentRepository.save(payment);
+
+        // 결제 후 상태 처리 (주문 처리)
+        if (payment.completePayment()) {
+            handleOrderSuccess(payment.getOrder()); // 결제 성공 후 주문 처리
+        }
     }
 
     private void handleOrderSuccess(Order order) {
