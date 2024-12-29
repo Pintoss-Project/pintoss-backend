@@ -1,6 +1,7 @@
 package pintoss.giftmall.domains.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,9 @@ import pintoss.giftmall.common.oauth.PrincipalDetails;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.utils.MailService;
 import pintoss.giftmall.domains.token.domain.RefreshToken;
+import pintoss.giftmall.domains.token.domain.Token;
 import pintoss.giftmall.domains.token.infra.RefreshTokenRepository;
+import pintoss.giftmall.domains.token.infra.TokenRepository;
 import pintoss.giftmall.domains.user.domain.User;
 import pintoss.giftmall.domains.user.dto.LoginRequest;
 import pintoss.giftmall.domains.user.dto.LoginResponse;
@@ -22,6 +25,10 @@ import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
 import pintoss.giftmall.domains.user.dto.RegisterRequest;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -30,6 +37,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MailService mailService;
+    private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
@@ -61,14 +69,11 @@ public class AuthService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
         String accessToken = tokenProvider.generateAccessToken(authentication);
+        //refreshToken 발급 및 accessToken저장.
         String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
-        // 리프레시 토큰을 저장
-        RefreshToken refreshTokenEntity = RefreshToken.builder()
-                .userId(user.getUserId()) // 사용자 UUID 설정
-                .token(refreshToken) // 생성된 리프레시 토큰 설정
-                .build();
 
-        refreshTokenRepository.save(refreshTokenEntity); // 저장
+        //refreshToken 저장 및 업데이트
+        saveOrUpdateRefreshToken(user.getUserId(),refreshToken);
 
         return LoginResponse.builder()
                 .grantType("bearer")
@@ -98,24 +103,6 @@ public class AuthService {
             refreshTokenRepository.delete(storedToken);
         }
 
-        // 새로운 리프레시 토큰을 저장하기 전에 확인
-        if (refreshTokenRepository.existsByUserId(user.getUserId())) {
-            RefreshToken existingToken = refreshTokenRepository.findByToken(newRefreshToken)
-                    .orElseThrow(() -> new NotFoundException("Existing token not found"));
-            RefreshToken updatedToken = RefreshToken.builder()
-                    .token(existingToken.getToken()) // 기존 토큰 유지
-                    .userId(user.getUserId()) // 새로운 userId로 업데이트
-                    .build();
-            refreshTokenRepository.save(updatedToken);
-        } else {
-            // 새로운 리프레시 토큰을 저장
-            RefreshToken refreshToken1 = RefreshToken
-                    .builder()
-                    .token(newRefreshToken)
-                    .userId(user.getUserId())
-                    .build();
-            refreshTokenRepository.save(refreshToken1);
-        }
         return LoginResponse
                 .builder()
                 .grantType("bearer")
@@ -149,8 +136,12 @@ public class AuthService {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword());
+        //at, rt 발급
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication, accessToken);
+
+        //기존의 토큰 엔티티에 저장된 값을 확인후 토큰값 업데이트 or 저장.
+        saveOrUpdateRefreshToken(user.getUserId(),refreshToken);
 
         return LoginResponse.builder()
                 .grantType("bearer")
@@ -204,5 +195,16 @@ public class AuthService {
         user.updatePassword(encodedPassword);
         userRepository.save(user);
     }
-
-}
+    
+    //토큰 업데이트 및 저장
+    private void saveOrUpdateRefreshToken(UUID userId, String newToken) {
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findByUserId(userId)
+                .map(existingToken -> existingToken.updateToken(newToken)) // 기존 토큰 업데이트
+                .orElseGet(() -> RefreshToken.builder() // 없으면 새로 생성
+                        .userId(userId)
+                        .token(newToken)
+                        .build());
+        log.info(refreshTokenEntity);
+        refreshTokenRepository.save(refreshTokenEntity); // 저장 (업데이트 또는 삽입)
+    }
+}  

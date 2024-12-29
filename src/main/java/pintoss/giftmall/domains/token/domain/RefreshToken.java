@@ -11,7 +11,6 @@ import java.util.UUID;
 @Builder
 @Getter
 @Table(name = "refresh_tokens")
-
 public class RefreshToken {
 
     @Id
@@ -19,10 +18,16 @@ public class RefreshToken {
     @Column(name = "refresh_tokens_id")
     private Long id;
 
-    @Column(name = "users_uuid", columnDefinition = "BINARY(50)", unique = true)
+    @Column(name = "users_uuid", columnDefinition = "BINARY(50)")
     private UUID userId;
 
     @Column(name = "token", nullable = false)
     private String token;
+    
+    //토큰 업데이트
+    public RefreshToken updateToken(String newToken) {
+        this.token = newToken;
+        return this;
+    }
 
 }

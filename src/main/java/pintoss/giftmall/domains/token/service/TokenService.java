@@ -18,7 +18,7 @@ public class TokenService {
     public void saveOrUpdate(String username, String refreshToken, String accessToken) {
         Token token = tokenRepository.findByUsername(username)
                 .map(existingToken -> {
-                    existingToken.updateTokens(accessToken, refreshToken);
+                    existingToken.updateTokens(accessToken,refreshToken);
                     return existingToken;
                 })
                 .orElse(new Token(username, accessToken, refreshToken));
