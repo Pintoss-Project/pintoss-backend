@@ -26,8 +26,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+    public ApiResponse<LoginResponse> login(@RequestBody @Valid LoginRequest request,HttpServletResponse httpResponse) {
         LoginResponse response = authService.login(request);
+        // JWT를 쿠키로 설정
+        setTokenInCookie(httpResponse, "accessToken", response.getAccessToken(), 3600);  // 1시간 유효
+        setTokenInCookie(httpResponse, "refreshToken", response.getRefreshToken(), 604800); // 7일 유효
         return ApiResponse.ok(response);
     }
 
@@ -91,6 +94,15 @@ public class AuthController {
     public ApiResponse<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         authService.resetPassword(request.getName(), request.getPhone(), request.getNewPassword());
         return ApiResponse.ok(null);
+    }
+
+    private void setTokenInCookie(HttpServletResponse response, String name, String token, int maxAge) {
+        Cookie cookie = new Cookie(name, token);
+        cookie.setHttpOnly(true); // JavaScript 접근 불가
+        cookie.setSecure(true);  // HTTPS에서만 동작 (테스트 환경에서는 false로 변경 가능)
+        cookie.setPath("/");     // 전체 경로에서 유효
+        cookie.setMaxAge(maxAge); // 유효 기간 (초 단위)
+        response.addCookie(cookie);
     }
 
 }
