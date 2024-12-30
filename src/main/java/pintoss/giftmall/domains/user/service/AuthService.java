@@ -14,15 +14,13 @@ import pintoss.giftmall.common.exceptions.client.UnauthorizedException;
 import pintoss.giftmall.common.oauth.PrincipalDetails;
 import pintoss.giftmall.common.oauth.TokenProvider;
 import pintoss.giftmall.common.utils.MailService;
+import pintoss.giftmall.common.utils.SmsCertificationUtil;
 import pintoss.giftmall.domains.token.domain.RefreshToken;
 import pintoss.giftmall.domains.token.domain.Token;
 import pintoss.giftmall.domains.token.infra.RefreshTokenRepository;
 import pintoss.giftmall.domains.token.infra.TokenRepository;
 import pintoss.giftmall.domains.user.domain.User;
-import pintoss.giftmall.domains.user.dto.LoginRequest;
-import pintoss.giftmall.domains.user.dto.LoginResponse;
-import pintoss.giftmall.domains.user.dto.OAuthRegisterRequest;
-import pintoss.giftmall.domains.user.dto.RegisterRequest;
+import pintoss.giftmall.domains.user.dto.*;
 import pintoss.giftmall.domains.user.infra.UserRepository;
 
 import java.util.Optional;
@@ -37,8 +35,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final MailService mailService;
-    private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final SmsCertificationUtil smsCertificationUtil;
 
     @Transactional
     public void register(RegisterRequest request) {
@@ -195,7 +193,15 @@ public class AuthService {
         user.updatePassword(encodedPassword);
         userRepository.save(user);
     }
-    
+
+    //휴대폰 본인 인증
+    public String SendSms(UserPhoneRequestDto request) {
+        String userPhone = request.getPhone();
+        String certificationCode = Integer.toString((int)(Math.random() * (999999 - 100000 + 1)) + 100000); // 6자리 인증 코드를 랜덤으로 생성
+        smsCertificationUtil.sendSMS(userPhone, certificationCode); // SMS 인증 유틸리티를 사용하여 SMS 발송
+        return certificationCode;
+    }
+
     //토큰 업데이트 및 저장
     private void saveOrUpdateRefreshToken(UUID userId, String newToken) {
         RefreshToken refreshTokenEntity = refreshTokenRepository.findByUserId(userId)

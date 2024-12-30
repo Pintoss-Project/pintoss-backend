@@ -96,6 +96,12 @@ public class AuthController {
         return ApiResponse.ok(null);
     }
 
+    @PostMapping("/send")
+    public ApiResponse<?> SendSms(@RequestBody @Valid UserPhoneRequestDto request) {
+        String code = authService.SendSms(request);
+        return ApiResponse.ok(code);
+    }
+
     private void setTokenInCookie(HttpServletResponse response, String name, String token, int maxAge) {
         Cookie cookie = new Cookie(name, token);
         cookie.setHttpOnly(true); // JavaScript 접근 불가
