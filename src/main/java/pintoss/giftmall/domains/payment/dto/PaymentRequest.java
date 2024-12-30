@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import pintoss.giftmall.common.enums.PayMethod;
 import pintoss.giftmall.common.enums.PayStatus;
 import pintoss.giftmall.domains.payment.domain.Payment;
@@ -13,6 +14,7 @@ import pintoss.giftmall.domains.user.domain.User;
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class PaymentRequest {
 

@@ -19,7 +19,7 @@ public class PaymentRestController {
 
     // 결제 승인
     @PostMapping("/approve")
-    public ResponseEntity<PaymentResponse> approvePayment(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<PaymentResponse> approvePayment(@ModelAttribute PaymentRequest paymentRequest) {
         PaymentResponse response = paymentService.processPayment(paymentRequest.getUserId(), paymentRequest.getOrderId(), paymentRequest);
         return ResponseEntity.ok(response);
     }
