@@ -21,7 +21,7 @@ public class BillgateService {
 
     private final RestTemplate restTemplate;
 
-    private static final String SERVICE_ID = "M2103135"; // 실제 서비스 ID로 설정
+    private static final String SERVICE_ID = "M2483583"; // 실제 서비스 ID로 설정
     private static final String BASE_URL = "https://webapi.billgate.net:8443/webapi/";
 
     //결제 서비스 코드(신용카드/ 휴대폰)
