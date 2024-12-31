@@ -35,4 +35,4 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
 server:
-  port: 88
+  port: 8080

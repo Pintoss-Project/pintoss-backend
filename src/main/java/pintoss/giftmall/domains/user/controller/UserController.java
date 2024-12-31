@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user_info")
-    public ApiResponse<UserResponse> getUser(@RequestHeader("Authorization") @NotBlank String token) {
+    public ApiResponse<UserResponse> getUser(@CookieValue("accessToken") @NotBlank String token) {
         String cleanedToken = token.replace("bearer ", "");
         UserResponse user = userService.getUserInfo(cleanedToken);
         return ApiResponse.ok(user);
